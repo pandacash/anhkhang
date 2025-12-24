@@ -17,55 +17,94 @@ export const PandaAvatar = ({ className, size = 120, selected = false }: PandaAv
       style={{ width: size, height: size }}
     >
       <svg viewBox="0 0 120 120" fill="none" className="w-full h-full">
-        {/* Background circle */}
-        <circle cx="60" cy="60" r="58" fill="url(#pandaBg)" stroke="hsl(170, 50%, 55%)" strokeWidth="3"/>
+        <defs>
+          <radialGradient id="pandaBgMale" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="hsl(200, 60%, 90%)"/>
+            <stop offset="100%" stopColor="hsl(210, 50%, 82%)"/>
+          </radialGradient>
+          <linearGradient id="pandaBlack" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="hsl(0, 0%, 20%)"/>
+            <stop offset="100%" stopColor="hsl(0, 0%, 10%)"/>
+          </linearGradient>
+        </defs>
         
-        {/* Ears */}
-        <circle cx="28" cy="32" r="16" fill="hsl(0, 0%, 15%)"/>
-        <circle cx="92" cy="32" r="16" fill="hsl(0, 0%, 15%)"/>
+        {/* Background circle - blue for boy */}
+        <circle cx="60" cy="60" r="58" fill="url(#pandaBgMale)" stroke="hsl(200, 50%, 60%)" strokeWidth="3"/>
         
-        {/* Head */}
-        <ellipse cx="60" cy="60" rx="38" ry="36" fill="white"/>
+        {/* Ears - black and bigger */}
+        <circle cx="25" cy="28" r="18" fill="url(#pandaBlack)"/>
+        <circle cx="95" cy="28" r="18" fill="url(#pandaBlack)"/>
         
-        {/* Eye patches */}
-        <ellipse cx="42" cy="52" rx="14" ry="16" fill="hsl(0, 0%, 15%)" transform="rotate(-10 42 52)"/>
-        <ellipse cx="78" cy="52" rx="14" ry="16" fill="hsl(0, 0%, 15%)" transform="rotate(10 78 52)"/>
+        {/* Head - white */}
+        <ellipse cx="60" cy="58" rx="40" ry="38" fill="hsl(0, 0%, 98%)"/>
         
-        {/* Eyes */}
-        <ellipse cx="42" cy="52" rx="7" ry="9" fill="white"/>
-        <ellipse cx="78" cy="52" rx="7" ry="9" fill="white"/>
-        <circle cx="44" cy="54" r="4" fill="hsl(250, 40%, 25%)"/>
-        <circle cx="80" cy="54" r="4" fill="hsl(250, 40%, 25%)"/>
-        <circle cx="45" cy="52" r="2" fill="white"/>
-        <circle cx="81" cy="52" r="2" fill="white"/>
+        {/* Eye patches - bold and angular */}
+        <ellipse cx="40" cy="50" rx="16" ry="18" fill="url(#pandaBlack)" transform="rotate(-15 40 50)"/>
+        <ellipse cx="80" cy="50" rx="16" ry="18" fill="url(#pandaBlack)" transform="rotate(15 80 50)"/>
         
-        {/* Nose */}
-        <ellipse cx="60" cy="68" rx="6" ry="4" fill="hsl(0, 0%, 20%)"/>
+        {/* Eyes - determined look */}
+        <ellipse cx="40" cy="50" rx="8" ry="10" fill="white"/>
+        <ellipse cx="80" cy="50" rx="8" ry="10" fill="white"/>
         
-        {/* Mouth */}
+        {/* Pupils - looking slightly up for confident look */}
+        <circle cx="41" cy="48" r="5" fill="hsl(200, 60%, 15%)"/>
+        <circle cx="81" cy="48" r="5" fill="hsl(200, 60%, 15%)"/>
+        <circle cx="43" cy="46" r="2" fill="white"/>
+        <circle cx="83" cy="46" r="2" fill="white"/>
+        
+        {/* Eyebrows - bold, masculine */}
+        <path d="M28 38 L48 42" stroke="hsl(0, 0%, 15%)" strokeWidth="3" strokeLinecap="round"/>
+        <path d="M92 38 L72 42" stroke="hsl(0, 0%, 15%)" strokeWidth="3" strokeLinecap="round"/>
+        
+        {/* Nose - bigger */}
+        <ellipse cx="60" cy="68" rx="8" ry="5" fill="hsl(0, 0%, 15%)"/>
+        <ellipse cx="60" cy="66" rx="3" ry="2" fill="hsl(0, 0%, 30%)"/>
+        
+        {/* Confident smile */}
         <path 
-          d="M52 75 Q60 82 68 75" 
-          stroke="hsl(0, 0%, 25%)"
-          strokeWidth="2"
+          d="M48 78 Q60 88 72 78" 
+          stroke="hsl(0, 0%, 20%)"
+          strokeWidth="3"
           fill="none"
           strokeLinecap="round"
         />
         
-        {/* Cheeks */}
-        <circle cx="35" cy="70" r="8" fill="hsl(350, 70%, 80%)" fillOpacity="0.7"/>
-        <circle cx="85" cy="70" r="8" fill="hsl(350, 70%, 80%)" fillOpacity="0.7"/>
+        {/* Teeth showing in smile */}
+        <path 
+          d="M52 80 L52 84 L56 84 L56 80" 
+          fill="white"
+          stroke="hsl(0, 0%, 85%)"
+          strokeWidth="0.5"
+        />
+        <path 
+          d="M64 80 L64 84 L68 84 L68 80" 
+          fill="white"
+          stroke="hsl(0, 0%, 85%)"
+          strokeWidth="0.5"
+        />
         
-        {/* Bamboo accessory */}
-        <rect x="88" y="75" width="4" height="25" rx="2" fill="hsl(100, 50%, 45%)"/>
-        <ellipse cx="90" cy="78" rx="6" ry="3" fill="hsl(100, 60%, 55%)"/>
-        <ellipse cx="90" cy="85" rx="5" ry="2" fill="hsl(100, 60%, 55%)"/>
+        {/* Subtle cheek marks */}
+        <ellipse cx="28" cy="65" rx="5" ry="3" fill="hsl(0, 0%, 90%)"/>
+        <ellipse cx="92" cy="65" rx="5" ry="3" fill="hsl(0, 0%, 90%)"/>
         
-        <defs>
-          <radialGradient id="pandaBg" cx="50%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="hsl(170, 50%, 90%)"/>
-            <stop offset="100%" stopColor="hsl(170, 45%, 80%)"/>
-          </radialGradient>
-        </defs>
+        {/* Cool headband */}
+        <path 
+          d="M22 35 Q60 28 98 35" 
+          stroke="hsl(200, 70%, 50%)"
+          strokeWidth="5"
+          fill="none"
+          strokeLinecap="round"
+        />
+        <circle cx="60" cy="30" r="6" fill="hsl(200, 70%, 50%)"/>
+        <text x="60" y="33" textAnchor="middle" fill="white" fontSize="8" fontWeight="bold">★</text>
+        
+        {/* Bamboo stick */}
+        <g transform="translate(92, 70) rotate(25)">
+          <rect x="0" y="0" width="5" height="30" rx="2" fill="hsl(100, 45%, 40%)"/>
+          <rect x="0" y="8" width="5" height="2" fill="hsl(100, 40%, 35%)"/>
+          <rect x="0" y="18" width="5" height="2" fill="hsl(100, 40%, 35%)"/>
+          <ellipse cx="2.5" cy="-3" rx="6" ry="4" fill="hsl(100, 55%, 50%)"/>
+        </g>
       </svg>
       
       {selected && (
