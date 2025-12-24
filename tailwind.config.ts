@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Quicksand', 'sans-serif'],
-        display: ['Fredoka One', 'cursive'],
+        display: ['Baloo 2', 'cursive'],
       },
       colors: {
         border: "hsl(var(--border))",
