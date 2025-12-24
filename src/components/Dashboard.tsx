@@ -39,18 +39,34 @@ export const Dashboard = ({
   const isElephant = player.animal === 'elephant';
 
   const handleRedeem = async (diamonds: number, voucherValue: number) => {
-    const newDiamonds = player.diamonds - diamonds;
-    
-    // Update player diamonds
-    await supabase.from('players')
-      .update({ diamonds: newDiamonds })
-      .eq('id', player.id);
+    // Use atomic RPC to deduct diamonds safely
+    const { error: rpcError } = await supabase.rpc('apply_player_diamond_delta', {
+      p_player_id: player.id,
+      p_change: -diamonds
+    });
+
+    if (rpcError) {
+      console.error('Error redeeming:', rpcError);
+      toast({
+        title: "Lỗi",
+        description: "Không thể đổi thưởng. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+      return;
+    }
 
     // Log redemption
     await supabase.from('voucher_redemptions').insert({
       player_id: player.id,
       diamonds_spent: diamonds,
       voucher_value: voucherValue
+    });
+
+    // Log the diamond change in admin_logs for history
+    await supabase.from('admin_logs').insert({
+      player_id: player.id,
+      diamond_change: -diamonds,
+      reason: `Đổi phiếu ${voucherValue.toLocaleString('vi-VN')}đ`
     });
 
     toast({
