@@ -88,19 +88,23 @@ export const Dashboard = ({
             className="gap-2"
           >
             <History className="w-4 h-4" />
-            Lịch sử
+            Lịch sử thưởng phạt
           </Button>
           <Button
-            variant="outline"
             size="sm"
             onClick={() => setShowRedemption(true)}
             className={cn(
-              "gap-2",
-              player.diamonds >= 30 && "border-warning text-warning hover:bg-warning/10"
+              "gap-2 relative overflow-hidden",
+              "bg-gradient-to-r from-warning via-accent to-warning",
+              "hover:from-warning/90 hover:via-accent/90 hover:to-warning/90",
+              "text-white font-bold shadow-lg",
+              "animate-pulse border-2 border-warning/50",
+              "hover:scale-105 transition-transform"
             )}
           >
-            <Gift className="w-4 h-4" />
-            Đổi quà
+            <Gift className="w-5 h-5 animate-bounce" />
+            🎁 Đổi Quà
+            <span className="absolute inset-0 bg-white/20 animate-[shimmer_2s_infinite]" />
           </Button>
           <DiamondCounter count={player.diamonds} size="lg" />
         </div>

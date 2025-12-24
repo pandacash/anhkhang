@@ -36,30 +36,75 @@ export const RewardRedemption = ({ player, onClose, onRedeem }: RewardRedemption
 
   if (redeemed && selectedTier !== null) {
     const tier = VOUCHER_TIERS[selectedTier];
+    const today = new Date().toLocaleDateString('vi-VN', { 
+      day: '2-digit', 
+      month: '2-digit',
+      year: 'numeric'
+    });
+    
     return (
       <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div className="bg-card rounded-3xl p-8 shadow-kid border-4 border-success max-w-md w-full text-center animate-pulse-success">
+        <div className="bg-card rounded-3xl p-6 md:p-8 shadow-kid border-4 border-success max-w-md w-full text-center animate-pulse-success overflow-y-auto max-h-[90vh]">
           <div className="w-20 h-20 bg-success/20 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="w-10 h-10 text-success" />
           </div>
           
-          <h2 className="text-2xl font-display text-success mb-4">
+          <h2 className="text-2xl font-display text-success mb-6">
             🎉 Đổi thưởng thành công!
           </h2>
           
-          <div className="bg-gradient-to-r from-warning/20 to-warning/10 rounded-2xl p-6 mb-6 border-2 border-warning">
-            <Gift className="w-12 h-12 text-warning mx-auto mb-3" />
-            <p className="text-lg font-bold text-foreground">Phiếu Mua Đồ Chơi</p>
-            <p className="text-3xl font-display text-warning mt-2">
-              {tier.value.toLocaleString('vi-VN')}đ
-            </p>
+          {/* Voucher Card Preview */}
+          <div className="relative overflow-hidden rounded-3xl p-1 bg-gradient-to-br from-warning via-accent to-warning mb-6">
+            <div className="relative bg-gradient-to-br from-card via-card to-muted rounded-2xl p-5 border-2 border-dashed border-warning/50">
+              {/* Corner decorations */}
+              <div className="absolute top-2 left-2">
+                <Star className="w-3 h-3 text-warning fill-warning" />
+              </div>
+              <div className="absolute top-2 right-2">
+                <Star className="w-3 h-3 text-warning fill-warning" />
+              </div>
+              
+              {/* Header */}
+              <div className="text-center mb-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-warning/20 to-accent/20 rounded-full">
+                  <Gift className="w-4 h-4 text-warning" />
+                  <span className="font-display text-xs text-foreground">PHIẾU MUA ĐỒ CHƠI</span>
+                  <Gift className="w-4 h-4 text-warning" />
+                </div>
+              </div>
+              
+              {/* Value */}
+              <div className="text-center mb-3">
+                <span className="text-3xl font-display bg-gradient-to-r from-warning via-accent to-warning bg-clip-text text-transparent">
+                  {tier.value.toLocaleString('vi-VN')}đ
+                </span>
+                <div className="absolute top-1/3 right-4 animate-bounce">
+                  <span className="text-xl">🎁</span>
+                </div>
+              </div>
+              
+              {/* Player name */}
+              <div className="text-center mb-2">
+                <p className="text-xs text-muted-foreground">Dành cho</p>
+                <p className="font-bold text-foreground">{player.name}</p>
+              </div>
+              
+              {/* Date */}
+              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
+                <span>📅 Ngày đổi: {today}</span>
+              </div>
+              
+              {/* Sparkle animation */}
+              <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-warning rounded-full animate-ping" />
+              <div className="absolute top-1/3 right-1/4 w-1.5 h-1.5 bg-accent rounded-full animate-ping delay-300" />
+            </div>
           </div>
           
-          <p className="text-muted-foreground mb-6">
-            {player.name} được mua một món đồ chơi có giá trị tối đa {tier.label}!
+          <p className="text-muted-foreground mb-6 text-sm">
+            🎊 {player.name} được mua một món đồ chơi có giá trị tối đa {tier.label}!
           </p>
           
-          <Button onClick={onClose} className="w-full py-6 text-lg rounded-2xl">
+          <Button onClick={onClose} className="w-full py-6 text-lg rounded-2xl bg-success hover:bg-success/90">
             Tuyệt vời! ✨
           </Button>
         </div>
