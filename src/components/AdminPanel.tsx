@@ -120,9 +120,11 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
 
     setLoading(true);
     try {
-      await supabase.from('players')
-        .update({ diamonds: 0 })
-        .eq('id', player.id);
+      // Use atomic RPC to reset diamonds safely
+      await supabase.rpc('apply_player_diamond_delta', {
+        p_player_id: player.id,
+        p_change: -player.diamonds
+      });
 
       await supabase.from('admin_logs').insert({
         player_id: player.id,
@@ -161,13 +163,13 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
 
     setLoading(true);
     const change = isReward ? diamondChange : -diamondChange;
-    const newDiamonds = Math.max(0, selectedPlayer.diamonds + change);
 
     try {
-      // Update player diamonds
-      await supabase.from('players')
-        .update({ diamonds: newDiamonds })
-        .eq('id', selectedPlayer.id);
+      // Use atomic RPC to update diamonds safely
+      await supabase.rpc('apply_player_diamond_delta', {
+        p_player_id: selectedPlayer.id,
+        p_change: change
+      });
 
       // Log the action
       await supabase.from('admin_logs').insert({
@@ -227,11 +229,14 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
     setShowResetAllDialog(false);
     setLoading(true);
     try {
-      // Reset all players' diamonds to 0
+      // Reset all players' diamonds to 0 using atomic RPC
       for (const player of players) {
-        await supabase.from('players')
-          .update({ diamonds: 0 })
-          .eq('id', player.id);
+        if (player.diamonds > 0) {
+          await supabase.rpc('apply_player_diamond_delta', {
+            p_player_id: player.id,
+            p_change: -player.diamonds
+          });
+        }
       }
       
       // Delete all admin logs

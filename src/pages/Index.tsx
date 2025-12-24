@@ -81,31 +81,19 @@ const Index = () => {
   const handleDiamondChange = useCallback(async (change: number) => {
     if (!currentPlayer) return;
 
-    const today = new Date().toISOString().split('T')[0];
-    const newDiamonds = Math.max(0, currentPlayer.diamonds + change);
-    
-    // Update player diamonds
-    await supabase.from('players')
-      .update({ diamonds: newDiamonds })
-      .eq('id', currentPlayer.id);
+    // Use atomic RPC to update diamonds safely (avoids stale overwrites)
+    const { data, error } = await supabase.rpc('apply_player_diamond_delta', {
+      p_player_id: currentPlayer.id,
+      p_change: change
+    });
 
-    // Update daily stats
-    const { data: existingStat } = await supabase
-      .from('daily_stats')
-      .select('*')
-      .eq('player_id', currentPlayer.id)
-      .eq('date', today)
-      .maybeSingle();
-
-    if (existingStat) {
-      const newStatDiamonds = Math.max(0, existingStat.diamonds + change);
-      await supabase.from('daily_stats')
-        .update({ diamonds: newStatDiamonds })
-        .eq('id', existingStat.id);
-    } else if (change > 0) {
-      await supabase.from('daily_stats')
-        .insert({ player_id: currentPlayer.id, date: today, diamonds: change });
+    if (error) {
+      console.error('Error updating diamonds:', error);
+      return;
     }
+
+    // Get new diamonds from RPC result
+    const newDiamonds = data?.[0]?.new_diamonds ?? Math.max(0, currentPlayer.diamonds + change);
 
     // Refresh data
     setCurrentPlayer(prev => prev ? { ...prev, diamonds: newDiamonds } : null);
