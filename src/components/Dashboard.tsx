@@ -7,6 +7,7 @@ import { Leaderboard } from "./Leaderboard";
 import { StatsChart } from "./StatsChart";
 import { RewardRedemption } from "./RewardRedemption";
 import { PunishmentRulesTable } from "./PunishmentRulesTable";
+import { RewardRulesTable } from "./RewardRulesTable";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { Button } from "./ui/button";
@@ -149,8 +150,9 @@ export const Dashboard = ({
         <Leaderboard players={allPlayers} />
       </div>
 
-      {/* Punishment Rules - visible to kids */}
-      <div className="max-w-2xl mx-auto">
+      {/* Rules Tables */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <RewardRulesTable />
         <PunishmentRulesTable />
       </div>
     </div>
