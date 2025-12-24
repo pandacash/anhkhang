@@ -88,7 +88,9 @@ serve(async (req) => {
          - Sử dụng từ vựng đơn giản, dễ hiểu
          - Có thể hỏi bằng Tiếng Việt hoặc Tiếng Anh
          - Đáp án sai phải hợp lý, không quá dễ đoán
-         - Trong phần explanation, LUÔN dịch đầy đủ câu hỏi và đáp án đúng sang tiếng Việt để bé dễ hiểu`;
+         - Trong phần explanation, LUÔN dịch đầy đủ câu hỏi và đáp án đúng sang tiếng Việt để bé dễ hiểu
+         - KHÔNG sử dụng dạng bài hỏi "What is this? (picture of ...)" vì hệ thống không hỗ trợ hiển thị hình ảnh
+         - Thay vào đó, hãy dùng các dạng bài như: dịch từ, điền từ, chọn nghĩa đúng, sắp xếp câu, v.v.`;
 
     const userPrompt = isMath 
       ? `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
@@ -99,7 +101,18 @@ serve(async (req) => {
   "explanation": "Giải thích ngắn gọn"
 }
 Chỉ trả về JSON, không có text khác.`
-      : `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
+      : `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. 
+
+QUAN TRỌNG: KHÔNG tạo bài tập dạng "What is this?" kèm mô tả hình ảnh như "(picture of a table)" vì hệ thống không hiển thị được hình ảnh.
+
+Thay vào đó, hãy tạo các dạng bài như:
+- Dịch từ tiếng Anh sang tiếng Việt hoặc ngược lại
+- Điền từ vào chỗ trống
+- Chọn nghĩa đúng của từ
+- Hoàn thành câu
+- Chọn từ đúng để điền vào câu
+
+Trả về JSON với format:
 {
   "question": "Câu hỏi bằng tiếng Anh",
   "questionVi": "Dịch câu hỏi sang tiếng Việt",
