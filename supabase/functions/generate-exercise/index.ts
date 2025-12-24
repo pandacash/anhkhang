@@ -23,7 +23,8 @@ serve(async (req) => {
     const systemPrompt = isMath
       ? `Bạn là giáo viên Toán vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài toán phù hợp với trình độ:
          - Lớp 2: Cộng trừ trong 100, bảng nhân 2-5
-         - Lớp 3: Nhân chia, phép tính hỗn hợp đơn giản
+         - Lớp 3: Cộng trừ nhân chia trong phạm vi 1000, bảng nhân chia 6-10, phép tính hỗn hợp đơn giản (không dùng số lớn hơn 1000)
+         QUAN TRỌNG: Với lớp 3, CHỈ dùng số trong phạm vi từ 0 đến 1000. KHÔNG dùng số 10000 hay 100000.
          Câu hỏi phải rõ ràng, dễ hiểu với trẻ em.`
       : `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập từ vựng đơn giản:
          - Hỏi nghĩa của từ tiếng Anh cơ bản

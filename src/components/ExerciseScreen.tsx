@@ -67,12 +67,12 @@ export const ExerciseScreen = ({
   const handleExitPenalty = useCallback(async () => {
     if (!showResult && exercise && !hasAnswered && player.diamonds > 0) {
       playWrongSound();
-      onDiamondChange(-1);
+      onDiamondChange(-2);
       
       // Log the exit penalty
       await supabase.from('admin_logs').insert({
         player_id: player.id,
-        diamond_change: -1,
+        diamond_change: -2,
         reason: 'Thoát bài tập khi chưa trả lời'
       });
     }

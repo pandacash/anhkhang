@@ -33,7 +33,7 @@ export const PunishmentRulesTable = ({ compact = false }: PunishmentRulesTablePr
             <span className="text-foreground flex-1 pr-2">{rule.reason}</span>
             <span className="font-bold text-destructive whitespace-nowrap flex items-center gap-1">
               bị trừ {rule.diamonds} <DiamondIcon size={compact ? 14 : 16} />
-              {rule.perPerson && <span className="text-xs font-normal"> mỗi bạn</span>}
+              {rule.perPerson && <span className="text-xs font-bold"> mỗi bạn</span>}
             </span>
           </div>
         ))}
