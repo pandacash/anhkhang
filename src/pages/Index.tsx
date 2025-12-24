@@ -4,11 +4,12 @@ import { PlayerSelect } from "@/components/PlayerSelect";
 import { Dashboard } from "@/components/Dashboard";
 import { ExerciseScreen } from "@/components/ExerciseScreen";
 import { AdminPanel } from "@/components/AdminPanel";
+import { RewardHistory } from "@/components/RewardHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-type Screen = 'select' | 'dashboard' | 'exercise' | 'admin';
+type Screen = 'select' | 'dashboard' | 'exercise' | 'admin' | 'history';
 
 const Index = () => {
   const [screen, setScreen] = useState<Screen>('select');
@@ -25,13 +26,22 @@ const Index = () => {
       console.error('Error fetching players:', error);
       return;
     }
-    setPlayers(data.map(p => ({
+    const updatedPlayers = data.map(p => ({
       id: p.id,
       name: p.name,
       grade: p.grade,
       animal: p.animal as 'elephant' | 'panda',
       diamonds: p.diamonds
-    })));
+    }));
+    setPlayers(updatedPlayers);
+    
+    // Update current player if exists
+    if (currentPlayer) {
+      const updated = updatedPlayers.find(p => p.id === currentPlayer.id);
+      if (updated) {
+        setCurrentPlayer(updated);
+      }
+    }
   };
 
   const fetchStats = async (playerId: string) => {
@@ -108,12 +118,10 @@ const Index = () => {
 
   const handleAdminAction = async () => {
     await fetchPlayers();
-    if (currentPlayer) {
-      const updated = players.find(p => p.id === currentPlayer.id);
-      if (updated) {
-        setCurrentPlayer(updated);
-      }
-    }
+  };
+
+  const handleViewHistory = () => {
+    setScreen('history');
   };
 
   if (loading) {
@@ -130,6 +138,15 @@ const Index = () => {
         players={players}
         onBack={() => setScreen('select')}
         onActionComplete={handleAdminAction}
+      />
+    );
+  }
+
+  if (screen === 'history' && currentPlayer) {
+    return (
+      <RewardHistory
+        player={currentPlayer}
+        onBack={() => setScreen('dashboard')}
       />
     );
   }
@@ -156,6 +173,7 @@ const Index = () => {
           setCurrentPlayer(null);
           setScreen('select');
         }}
+        onViewHistory={handleViewHistory}
       />
     );
   }

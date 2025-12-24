@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Player, Subject, DailyStats } from "@/types/app";
-import { PlayerCard } from "./PlayerCard";
 import { SubjectButton } from "./SubjectButton";
 import { DiamondCounter } from "./DiamondCounter";
 import { Leaderboard } from "./Leaderboard";
@@ -9,7 +8,7 @@ import { StatsChart } from "./StatsChart";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { Button } from "./ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, History } from "lucide-react";
 
 interface DashboardProps {
   player: Player;
@@ -17,6 +16,7 @@ interface DashboardProps {
   stats: DailyStats[];
   onSelectSubject: (subject: Subject) => void;
   onBack: () => void;
+  onViewHistory: () => void;
 }
 
 export const Dashboard = ({ 
@@ -24,7 +24,8 @@ export const Dashboard = ({
   allPlayers,
   stats,
   onSelectSubject, 
-  onBack 
+  onBack,
+  onViewHistory
 }: DashboardProps) => {
   const isElephant = player.animal === 'elephant';
   
@@ -41,7 +42,18 @@ export const Dashboard = ({
           Đổi người chơi
         </Button>
         
-        <DiamondCounter count={player.diamonds} size="lg" />
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onViewHistory}
+            className="gap-2"
+          >
+            <History className="w-4 h-4" />
+            Lịch sử
+          </Button>
+          <DiamondCounter count={player.diamonds} size="lg" />
+        </div>
       </div>
       
       {/* Welcome section */}
