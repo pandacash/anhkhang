@@ -26,10 +26,6 @@ export const PandaAvatar = ({ className, size = 120, selected = false }: PandaAv
             <stop offset="0%" stopColor="hsl(0, 0%, 100%)"/>
             <stop offset="100%" stopColor="hsl(0, 0%, 95%)"/>
           </linearGradient>
-          <radialGradient id="cheekGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(350, 100%, 85%)"/>
-            <stop offset="100%" stopColor="hsl(350, 80%, 80%)" stopOpacity="0"/>
-          </radialGradient>
         </defs>
         
         {/* Background circle - blue for boy */}
@@ -68,20 +64,6 @@ export const PandaAvatar = ({ className, size = 120, selected = false }: PandaAv
         
         {/* Mouth - cute smile */}
         <path d="M52 76 Q60 84 68 76" stroke="hsl(0, 0%, 30%)" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-        
-        {/* Rosy cheeks */}
-        <ellipse cx="28" cy="65" rx="8" ry="6" fill="url(#cheekGlow)"/>
-        <ellipse cx="92" cy="65" rx="8" ry="6" fill="url(#cheekGlow)"/>
-        
-        {/* Bamboo accessory */}
-        <g transform="translate(85, 15) rotate(30)">
-          <rect x="0" y="0" width="6" height="30" rx="3" fill="hsl(120, 50%, 45%)"/>
-          <rect x="0" y="0" width="6" height="5" rx="2" fill="hsl(120, 60%, 55%)"/>
-          <rect x="0" y="10" width="6" height="3" rx="1" fill="hsl(120, 40%, 35%)"/>
-          <rect x="0" y="20" width="6" height="3" rx="1" fill="hsl(120, 40%, 35%)"/>
-          <ellipse cx="8" cy="5" rx="6" ry="4" fill="hsl(120, 60%, 50%)"/>
-          <ellipse cx="10" cy="3" rx="4" ry="3" fill="hsl(120, 70%, 55%)"/>
-        </g>
         
         {/* Sparkles */}
         <circle cx="25" cy="90" r="2" fill="hsl(50, 100%, 70%)"/>

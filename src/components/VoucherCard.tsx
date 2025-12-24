@@ -6,10 +6,11 @@ interface VoucherCardProps {
   redeemedAt: string;
   playerName: string;
   used?: boolean;
+  compact?: boolean;
   className?: string;
 }
 
-export const VoucherCard = ({ value, redeemedAt, playerName, used = false, className }: VoucherCardProps) => {
+export const VoucherCard = ({ value, redeemedAt, playerName, used = false, compact = false, className }: VoucherCardProps) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('vi-VN', { 
@@ -18,6 +19,31 @@ export const VoucherCard = ({ value, redeemedAt, playerName, used = false, class
       year: 'numeric'
     });
   };
+
+  if (compact) {
+    return (
+      <div className={cn(
+        "relative overflow-hidden rounded-2xl p-0.5 bg-gradient-to-br from-warning via-accent to-warning",
+        used && "opacity-50",
+        className
+      )}>
+        <div className="relative bg-gradient-to-br from-card via-card to-muted rounded-xl p-3 border border-dashed border-warning/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Gift className="w-4 h-4 text-warning" />
+              <span className="font-display text-lg bg-gradient-to-r from-warning to-accent bg-clip-text text-transparent">
+                {value.toLocaleString('vi-VN')}đ
+              </span>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar className="w-3 h-3" />
+              <span>{formatDate(redeemedAt)}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn(
