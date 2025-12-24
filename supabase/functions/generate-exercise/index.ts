@@ -141,6 +141,27 @@ Chỉ trả về JSON, không có text khác.`;
     
     const exercise = JSON.parse(jsonMatch[0]);
     
+    // Shuffle options to prevent first answer from always being correct
+    if (exercise.options && exercise.options.length > 0 && typeof exercise.correctAnswer === 'number') {
+      const correctOption = exercise.options[exercise.correctAnswer];
+      
+      // Create array of indices and shuffle
+      const indices = exercise.options.map((_: any, i: number) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      
+      // Reorder options based on shuffled indices
+      const shuffledOptions = indices.map((i: number) => exercise.options[i]);
+      
+      // Find new position of correct answer
+      const newCorrectAnswer = shuffledOptions.indexOf(correctOption);
+      
+      exercise.options = shuffledOptions;
+      exercise.correctAnswer = newCorrectAnswer;
+    }
+    
     return new Response(JSON.stringify(exercise), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
