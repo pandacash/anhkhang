@@ -75,6 +75,78 @@ export type Database = {
           },
         ]
       }
+      items: {
+        Row: {
+          animal_type: string
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image_key: string
+          name: string
+          price: number
+        }
+        Insert: {
+          animal_type: string
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_key: string
+          name: string
+          price?: number
+        }
+        Update: {
+          animal_type?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image_key?: string
+          name?: string
+          price?: number
+        }
+        Relationships: []
+      }
+      player_items: {
+        Row: {
+          equipped: boolean
+          id: string
+          item_id: string
+          player_id: string
+          purchased_at: string
+        }
+        Insert: {
+          equipped?: boolean
+          id?: string
+          item_id: string
+          player_id: string
+          purchased_at?: string
+        }
+        Update: {
+          equipped?: boolean
+          id?: string
+          item_id?: string
+          player_id?: string
+          purchased_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "player_items_item_id_fkey"
+            columns: ["item_id"]
+            isOneToOne: false
+            referencedRelation: "items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "player_items_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       players: {
         Row: {
           animal: string
