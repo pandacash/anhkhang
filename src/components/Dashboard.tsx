@@ -6,6 +6,7 @@ import { DiamondCounter } from "./DiamondCounter";
 import { Leaderboard } from "./Leaderboard";
 import { StatsChart } from "./StatsChart";
 import { RewardRedemption } from "./RewardRedemption";
+import { PunishmentRulesTable } from "./PunishmentRulesTable";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { Button } from "./ui/button";
@@ -143,9 +144,14 @@ export const Dashboard = ({
       </div>
       
       {/* Stats and Leaderboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto mb-8">
         <StatsChart stats={stats} playerName={player.name} />
         <Leaderboard players={allPlayers} />
+      </div>
+
+      {/* Punishment Rules - visible to kids */}
+      <div className="max-w-2xl mx-auto">
+        <PunishmentRulesTable />
       </div>
     </div>
   );
