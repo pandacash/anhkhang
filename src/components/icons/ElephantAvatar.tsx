@@ -27,21 +27,17 @@ export const ElephantAvatar = ({ className, size = 120, selected = false }: Elep
             <stop offset="50%" stopColor="hsl(220, 18%, 72%)"/>
             <stop offset="100%" stopColor="hsl(220, 15%, 65%)"/>
           </linearGradient>
-          <radialGradient id="elephantCheek" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="hsl(350, 100%, 85%)"/>
-            <stop offset="100%" stopColor="hsl(350, 80%, 80%)" stopOpacity="0"/>
-          </radialGradient>
         </defs>
         
         {/* Background circle - pink for girl */}
         <circle cx="60" cy="60" r="58" fill="url(#elephantBg)" stroke="hsl(340, 70%, 75%)" strokeWidth="3"/>
         
         {/* Large elephant ears */}
-        <ellipse cx="18" cy="50" rx="20" ry="28" fill="url(#elephantBody)" stroke="hsl(220, 15%, 60%)" strokeWidth="1"/>
-        <ellipse cx="18" cy="50" rx="14" ry="20" fill="hsl(350, 60%, 85%)" fillOpacity="0.6"/>
+        <ellipse cx="18" cy="50" rx="22" ry="30" fill="url(#elephantBody)" stroke="hsl(220, 15%, 60%)" strokeWidth="1"/>
+        <ellipse cx="18" cy="50" rx="15" ry="22" fill="hsl(350, 60%, 85%)" fillOpacity="0.5"/>
         
-        <ellipse cx="102" cy="50" rx="20" ry="28" fill="url(#elephantBody)" stroke="hsl(220, 15%, 60%)" strokeWidth="1"/>
-        <ellipse cx="102" cy="50" rx="14" ry="20" fill="hsl(350, 60%, 85%)" fillOpacity="0.6"/>
+        <ellipse cx="102" cy="50" rx="22" ry="30" fill="url(#elephantBody)" stroke="hsl(220, 15%, 60%)" strokeWidth="1"/>
+        <ellipse cx="102" cy="50" rx="15" ry="22" fill="hsl(350, 60%, 85%)" fillOpacity="0.5"/>
         
         {/* Head */}
         <ellipse cx="60" cy="52" rx="36" ry="34" fill="url(#elephantBody)"/>
@@ -69,31 +65,32 @@ export const ElephantAvatar = ({ className, size = 120, selected = false }: Elep
         <path d="M87 38 L83 43" stroke="hsl(220, 20%, 40%)" strokeWidth="2" strokeLinecap="round"/>
         <path d="M89 43 L84 46" stroke="hsl(220, 20%, 40%)" strokeWidth="2" strokeLinecap="round"/>
         
-        {/* Trunk - cute curled */}
+        {/* Trunk - realistic elephant trunk shape */}
         <path 
-          d="M60 55 
-             Q60 65 57 72 
-             Q54 80 50 85 
-             Q46 90 42 88
-             Q38 86 40 82
-             Q42 78 46 76
-             Q50 74 53 70
-             Q56 66 57 60"
+          d="M60 58 
+             C60 62 58 68 56 74
+             C54 80 50 88 48 94
+             C46 100 48 104 52 104
+             C56 104 58 100 58 96
+             C58 92 56 88 58 84
+             C60 80 62 76 62 70
+             C62 64 60 58 60 58"
           fill="url(#elephantBody)"
           stroke="hsl(220, 15%, 58%)"
           strokeWidth="1.5"
         />
-        {/* Trunk tip */}
-        <ellipse cx="41" cy="85" rx="5" ry="4" fill="hsl(220, 18%, 70%)"/>
-        <circle cx="39" cy="85" r="2" fill="hsl(220, 15%, 55%)"/>
-        <circle cx="43" cy="85" r="2" fill="hsl(220, 15%, 55%)"/>
+        {/* Trunk tip nostrils */}
+        <ellipse cx="50" cy="102" rx="4" ry="3" fill="hsl(220, 20%, 60%)"/>
+        <circle cx="48" cy="101" r="1.5" fill="hsl(220, 15%, 45%)"/>
+        <circle cx="52" cy="101" r="1.5" fill="hsl(220, 15%, 45%)"/>
         
-        {/* Rosy cheeks */}
-        <ellipse cx="30" cy="58" rx="8" ry="6" fill="url(#elephantCheek)"/>
-        <ellipse cx="90" cy="58" rx="8" ry="6" fill="url(#elephantCheek)"/>
+        {/* Trunk wrinkles */}
+        <path d="M54 78 Q58 80 62 78" stroke="hsl(220, 15%, 55%)" strokeWidth="1" fill="none"/>
+        <path d="M52 84 Q56 86 60 84" stroke="hsl(220, 15%, 55%)" strokeWidth="1" fill="none"/>
+        <path d="M50 90 Q54 92 58 90" stroke="hsl(220, 15%, 55%)" strokeWidth="1" fill="none"/>
         
         {/* Cute smile */}
-        <path d="M65 70 Q68 75 73 72" stroke="hsl(220, 15%, 50%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        <path d="M68 68 Q72 74 78 70" stroke="hsl(220, 15%, 50%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
         
         {/* Pink bow for girl */}
         <g transform="translate(60, 20)">

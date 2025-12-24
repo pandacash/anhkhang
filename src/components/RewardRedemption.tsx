@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Player } from "@/types/app";
 import { Button } from "./ui/button";
-import { Gift, ArrowRight, Check, Star } from "lucide-react";
+import { Gift, ArrowRight, Check, Star, Calendar } from "lucide-react";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
+import { VoucherCard } from "./VoucherCard";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RewardRedemptionProps {
   player: Player;
@@ -13,18 +15,44 @@ interface RewardRedemptionProps {
   onRedeem: (diamonds: number, voucherValue: number) => void;
 }
 
+interface VoucherRedemption {
+  id: string;
+  voucher_value: number;
+  redeemed_at: string;
+  used: boolean;
+}
+
+// 1 kim cương = 1000 đồng (300 kim cương = 300K)
 const VOUCHER_TIERS = [
-  { diamonds: 30, value: 30000, label: "30K" },
-  { diamonds: 50, value: 50000, label: "50K" },
-  { diamonds: 80, value: 80000, label: "80K" },
   { diamonds: 100, value: 100000, label: "100K" },
-  { diamonds: 150, value: 150000, label: "150K" },
+  { diamonds: 200, value: 200000, label: "200K" },
+  { diamonds: 300, value: 300000, label: "300K" },
+  { diamonds: 500, value: 500000, label: "500K" },
+  { diamonds: 1000, value: 1000000, label: "1 Triệu" },
 ];
 
 export const RewardRedemption = ({ player, onClose, onRedeem }: RewardRedemptionProps) => {
   const [selectedTier, setSelectedTier] = useState<number | null>(null);
   const [redeemed, setRedeemed] = useState(false);
+  const [existingVouchers, setExistingVouchers] = useState<VoucherRedemption[]>([]);
   const isElephant = player.animal === 'elephant';
+
+  useEffect(() => {
+    fetchExistingVouchers();
+  }, [player.id]);
+
+  const fetchExistingVouchers = async () => {
+    const { data } = await supabase
+      .from('voucher_redemptions')
+      .select('*')
+      .eq('player_id', player.id)
+      .eq('used', false)
+      .order('redeemed_at', { ascending: false });
+    
+    if (data) {
+      setExistingVouchers(data);
+    }
+  };
 
   const handleRedeem = () => {
     if (selectedTier !== null) {
@@ -193,6 +221,28 @@ export const RewardRedemption = ({ player, onClose, onRedeem }: RewardRedemption
             );
           })}
         </div>
+
+        {/* Existing vouchers */}
+        {existingVouchers.length > 0 && (
+          <div className="mb-6">
+            <p className="font-medium text-foreground flex items-center gap-2 mb-3">
+              <Gift className="w-5 h-5 text-warning" />
+              Phiếu đang chờ sử dụng:
+            </p>
+            <div className="space-y-3 max-h-[200px] overflow-y-auto">
+              {existingVouchers.map((voucher) => (
+                <VoucherCard
+                  key={voucher.id}
+                  value={voucher.voucher_value}
+                  redeemedAt={voucher.redeemed_at}
+                  playerName={player.name}
+                  used={voucher.used}
+                  compact
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Progress to next tier */}
         {player.diamonds < VOUCHER_TIERS[0].diamonds && (

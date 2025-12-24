@@ -329,13 +329,20 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
             >
               <Minus className="w-6 h-6" />
             </Button>
-            <div className="flex items-center gap-2 px-6 py-3 bg-muted rounded-xl">
+            <div className="flex items-center gap-2 bg-muted rounded-xl">
               <span className={cn(
-                "text-3xl font-bold",
+                "text-xl font-bold px-2",
                 isReward ? "text-success" : "text-destructive"
               )}>
-                {isReward ? "+" : "-"}{diamondChange}
+                {isReward ? "+" : "-"}
               </span>
+              <Input
+                type="number"
+                min={1}
+                value={diamondChange}
+                onChange={(e) => setDiamondChange(Math.max(1, parseInt(e.target.value) || 1))}
+                className="w-20 text-center text-2xl font-bold border-0 bg-transparent p-0 h-12"
+              />
               <DiamondIcon size={32} animate />
             </div>
             <Button
