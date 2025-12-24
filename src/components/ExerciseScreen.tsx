@@ -5,11 +5,17 @@ import { DiamondCounter } from "./DiamondCounter";
 import { Confetti } from "./Confetti";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ArrowLeft, Loader2, CheckCircle, XCircle, Timer, ArrowUpDown, Link2 } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, XCircle, Timer, ArrowUpDown, Link2, Languages } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExerciseScreenProps {
   player: Player;
@@ -26,9 +32,11 @@ interface ExtendedExercise extends Exercise {
   pairs?: { left: string; right: string }[];
   orderItems?: string[];
   correctOrder?: number[];
+  questionVi?: string;
 }
 
 const TIME_LIMIT = 60;
+const MAX_TRANSLATIONS = 2;
 
 export const ExerciseScreen = ({ 
   player, 
@@ -63,6 +71,10 @@ export const ExerciseScreen = ({
 
   // Track if exercise has been answered
   const [hasAnswered, setHasAnswered] = useState(false);
+  
+  // Translation help for English exercises (max 2 per exercise)
+  const [translationsUsed, setTranslationsUsed] = useState(0);
+  const [showTranslation, setShowTranslation] = useState(false);
 
   const handleExitPenalty = useCallback(async () => {
     if (!showResult && exercise && !hasAnswered && player.diamonds > 0) {
@@ -112,6 +124,8 @@ export const ExerciseScreen = ({
     setLeftSelected(null);
     setOrderedItems([]);
     setHasAnswered(false);
+    setTranslationsUsed(0);
+    setShowTranslation(false);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-exercise', {
@@ -466,12 +480,57 @@ export const ExerciseScreen = ({
         return (
           <div className="space-y-6">
             <div className={cn(
-              "bg-card rounded-3xl p-6 md:p-8 shadow-kid border-4",
+              "bg-card rounded-3xl p-6 md:p-8 shadow-kid border-4 relative",
               isMath ? "border-warning/30" : "border-secondary/30"
             )}>
               <h2 className="text-xl md:text-2xl font-display text-foreground text-center">
                 {exercise.question}
               </h2>
+              
+              {/* Translation button for English exercises */}
+              {!isMath && !showResult && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (translationsUsed < MAX_TRANSLATIONS) {
+                            setShowTranslation(!showTranslation);
+                            if (!showTranslation) {
+                              setTranslationsUsed(prev => prev + 1);
+                            }
+                          }
+                        }}
+                        disabled={translationsUsed >= MAX_TRANSLATIONS && !showTranslation}
+                        className={cn(
+                          "absolute top-3 right-3 gap-1 text-xs",
+                          showTranslation && "bg-secondary/20"
+                        )}
+                      >
+                        <Languages className="w-4 h-4" />
+                        Hỗ trợ dịch ({MAX_TRANSLATIONS - translationsUsed}/{MAX_TRANSLATIONS})
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {translationsUsed >= MAX_TRANSLATIONS 
+                        ? "Đã hết lượt hỗ trợ dịch" 
+                        : "Nhấn để xem bản dịch tiếng Việt"}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              
+              {/* Show Vietnamese translation */}
+              {!isMath && showTranslation && exercise.questionVi && (
+                <div className="mt-4 p-3 bg-secondary/10 rounded-xl border border-secondary/30">
+                  <p className="text-sm text-muted-foreground flex items-center gap-2">
+                    <Languages className="w-4 h-4" />
+                    <span className="font-medium">Dịch:</span> {exercise.questionVi}
+                  </p>
+                </div>
+              )}
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
