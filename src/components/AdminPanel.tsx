@@ -4,12 +4,22 @@ import { Player } from "@/types/app";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { ArrowLeft, Lock, Plus, Minus, History, Shield, Gift, Trash2, Calendar, RotateCcw } from "lucide-react";
+import { ArrowLeft, Lock, Plus, Minus, History, Shield, Gift, Trash2, Calendar, RotateCcw, AlertTriangle } from "lucide-react";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface AdminPanelProps {
   players: Player[];
@@ -48,6 +58,8 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
   const [showLogs, setShowLogs] = useState(false);
   const [showVouchers, setShowVouchers] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showResetHistoryDialog, setShowResetHistoryDialog] = useState(false);
+  const [showResetAllDialog, setShowResetAllDialog] = useState(false);
   const { toast } = useToast();
 
   const handleLogin = () => {
@@ -180,6 +192,70 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
       toast({
         title: "Lỗi",
         description: "Không thể thực hiện. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetHistory = async () => {
+    setShowResetHistoryDialog(false);
+    setLoading(true);
+    try {
+      await supabase.from('admin_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      toast({
+        title: "Đã xóa!",
+        description: "Lịch sử thưởng/phạt đã được xóa",
+      });
+      
+      setLogs([]);
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể xóa lịch sử. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetAll = async () => {
+    setShowResetAllDialog(false);
+    setLoading(true);
+    try {
+      // Reset all players' diamonds to 0
+      for (const player of players) {
+        await supabase.from('players')
+          .update({ diamonds: 0 })
+          .eq('id', player.id);
+      }
+      
+      // Delete all admin logs
+      await supabase.from('admin_logs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      // Delete all daily stats
+      await supabase.from('daily_stats').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      // Delete all voucher redemptions
+      await supabase.from('voucher_redemptions').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      
+      toast({
+        title: "Đã reset toàn bộ!",
+        description: "Tất cả dữ liệu đã được xóa và kim cương đã reset về 0",
+      });
+      
+      setLogs([]);
+      setVouchers([]);
+      onActionComplete();
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể reset. Vui lòng thử lại.",
         variant: "destructive"
       });
     } finally {
@@ -543,7 +619,94 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
             </div>
           </div>
         )}
+
+        {/* Danger Zone */}
+        <div className="bg-card rounded-3xl p-6 shadow-kid border-2 border-destructive/30">
+          <h3 className="font-display text-lg mb-4 text-destructive flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5" />
+            Vùng nguy hiểm
+          </h3>
+          <div className="space-y-3">
+            <Button
+              variant="outline"
+              onClick={() => setShowResetHistoryDialog(true)}
+              disabled={loading || logs.length === 0}
+              className="w-full gap-2 border-warning text-warning hover:bg-warning/10"
+            >
+              <History className="w-4 h-4" />
+              Reset lịch sử thưởng/phạt
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowResetAllDialog(true)}
+              disabled={loading}
+              className="w-full gap-2 border-destructive text-destructive hover:bg-destructive/10"
+            >
+              <Trash2 className="w-4 h-4" />
+              Reset toàn bộ dữ liệu
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Reset History Dialog */}
+      <AlertDialog open={showResetHistoryDialog} onOpenChange={setShowResetHistoryDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-warning">
+              <History className="w-5 h-5" />
+              Xóa lịch sử thưởng/phạt?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Hành động này sẽ <span className="font-bold">xóa toàn bộ lịch sử thưởng/phạt</span> của tất cả các bé. 
+              Kim cương và phiếu đổi quà sẽ không bị ảnh hưởng.
+              <br /><br />
+              <span className="text-destructive font-medium">Không thể hoàn tác!</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleResetHistory}
+              className="bg-warning hover:bg-warning/90"
+            >
+              Xác nhận xóa
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Reset All Dialog */}
+      <AlertDialog open={showResetAllDialog} onOpenChange={setShowResetAllDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-destructive">
+              <AlertTriangle className="w-5 h-5" />
+              Reset toàn bộ dữ liệu?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Hành động này sẽ:
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li><span className="font-bold">Reset kim cương</span> của tất cả các bé về 0</li>
+                <li><span className="font-bold">Xóa toàn bộ lịch sử</span> thưởng/phạt</li>
+                <li><span className="font-bold">Xóa toàn bộ thống kê</span> hàng ngày</li>
+                <li><span className="font-bold">Xóa toàn bộ phiếu</span> đổi quà</li>
+              </ul>
+              <br />
+              <span className="text-destructive font-bold">⚠️ KHÔNG THỂ HOÀN TÁC!</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Hủy</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleResetAll}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Xác nhận reset tất cả
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
