@@ -3,11 +3,12 @@ import { Player, Subject, DailyStats } from "@/types/app";
 import { PlayerSelect } from "@/components/PlayerSelect";
 import { Dashboard } from "@/components/Dashboard";
 import { ExerciseScreen } from "@/components/ExerciseScreen";
+import { AdminPanel } from "@/components/AdminPanel";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 
-type Screen = 'select' | 'dashboard' | 'exercise';
+type Screen = 'select' | 'dashboard' | 'exercise' | 'admin';
 
 const Index = () => {
   const [screen, setScreen] = useState<Screen>('select');
@@ -66,14 +67,15 @@ const Index = () => {
     setScreen('exercise');
   };
 
-  const handleDiamondEarned = useCallback(async () => {
+  const handleDiamondChange = useCallback(async (change: number) => {
     if (!currentPlayer) return;
 
     const today = new Date().toISOString().split('T')[0];
+    const newDiamonds = Math.max(0, currentPlayer.diamonds + change);
     
     // Update player diamonds
     await supabase.from('players')
-      .update({ diamonds: currentPlayer.diamonds + 1 })
+      .update({ diamonds: newDiamonds })
       .eq('id', currentPlayer.id);
 
     // Update daily stats
@@ -85,19 +87,34 @@ const Index = () => {
       .maybeSingle();
 
     if (existingStat) {
+      const newStatDiamonds = Math.max(0, existingStat.diamonds + change);
       await supabase.from('daily_stats')
-        .update({ diamonds: existingStat.diamonds + 1 })
+        .update({ diamonds: newStatDiamonds })
         .eq('id', existingStat.id);
-    } else {
+    } else if (change > 0) {
       await supabase.from('daily_stats')
-        .insert({ player_id: currentPlayer.id, date: today, diamonds: 1 });
+        .insert({ player_id: currentPlayer.id, date: today, diamonds: change });
     }
 
     // Refresh data
-    setCurrentPlayer(prev => prev ? { ...prev, diamonds: prev.diamonds + 1 } : null);
+    setCurrentPlayer(prev => prev ? { ...prev, diamonds: newDiamonds } : null);
     fetchPlayers();
     fetchStats(currentPlayer.id);
   }, [currentPlayer]);
+
+  const handleOpenAdmin = () => {
+    setScreen('admin');
+  };
+
+  const handleAdminAction = async () => {
+    await fetchPlayers();
+    if (currentPlayer) {
+      const updated = players.find(p => p.id === currentPlayer.id);
+      if (updated) {
+        setCurrentPlayer(updated);
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -107,13 +124,23 @@ const Index = () => {
     );
   }
 
+  if (screen === 'admin') {
+    return (
+      <AdminPanel
+        players={players}
+        onBack={() => setScreen('select')}
+        onActionComplete={handleAdminAction}
+      />
+    );
+  }
+
   if (screen === 'exercise' && currentPlayer && currentSubject) {
     return (
       <ExerciseScreen
         player={currentPlayer}
         subject={currentSubject}
         onBack={() => setScreen('dashboard')}
-        onDiamondEarned={handleDiamondEarned}
+        onDiamondChange={handleDiamondChange}
       />
     );
   }
@@ -133,7 +160,13 @@ const Index = () => {
     );
   }
 
-  return <PlayerSelect players={players} onSelectPlayer={handleSelectPlayer} />;
+  return (
+    <PlayerSelect 
+      players={players} 
+      onSelectPlayer={handleSelectPlayer}
+      onOpenAdmin={handleOpenAdmin}
+    />
+  );
 };
 
 export default Index;

@@ -1,15 +1,28 @@
 import { Player } from "@/types/app";
 import { PlayerCard } from "./PlayerCard";
 import { DiamondIcon } from "./icons/DiamondIcon";
+import { Button } from "./ui/button";
+import { Settings } from "lucide-react";
 
 interface PlayerSelectProps {
   players: Player[];
   onSelectPlayer: (player: Player) => void;
+  onOpenAdmin: () => void;
 }
 
-export const PlayerSelect = ({ players, onSelectPlayer }: PlayerSelectProps) => {
+export const PlayerSelect = ({ players, onSelectPlayer, onOpenAdmin }: PlayerSelectProps) => {
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 relative">
+      {/* Admin button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onOpenAdmin}
+        className="absolute top-4 right-4 opacity-50 hover:opacity-100"
+      >
+        <Settings className="w-6 h-6" />
+      </Button>
+      
       {/* Title */}
       <div className="text-center mb-12">
         <div className="flex items-center justify-center gap-3 mb-4">

@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_logs: {
+        Row: {
+          created_at: string
+          diamond_change: number
+          id: string
+          player_id: string
+          reason: string
+        }
+        Insert: {
+          created_at?: string
+          diamond_change: number
+          id?: string
+          player_id: string
+          reason: string
+        }
+        Update: {
+          created_at?: string
+          diamond_change?: number
+          id?: string
+          player_id?: string
+          reason?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_logs_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       daily_stats: {
         Row: {
           date: string
