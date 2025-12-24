@@ -53,17 +53,11 @@ export const PandaAvatar = ({
         {/* Background circle - blue for boy */}
         <circle cx="60" cy="60" r="58" fill="url(#pandaBg)" stroke="hsl(200, 70%, 75%)" strokeWidth="3"/>
         
-        {/* Extra bamboo decorations */}
+        {/* Sparkle decorations */}
         {showDecorations && (
           <>
-            <rect x="8" y="75" width="4" height="30" fill="hsl(120, 40%, 50%)" rx="2"/>
-            <rect x="14" y="80" width="3" height="25" fill="hsl(120, 35%, 45%)" rx="1.5"/>
-            <ellipse cx="10" cy="73" rx="6" ry="4" fill="hsl(120, 50%, 55%)"/>
-            <ellipse cx="16" cy="78" rx="5" ry="3" fill="hsl(120, 45%, 50%)"/>
-            
-            <rect x="105" y="70" width="4" height="35" fill="hsl(120, 40%, 50%)" rx="2"/>
-            <rect x="100" y="78" width="3" height="27" fill="hsl(120, 35%, 45%)" rx="1.5"/>
-            <ellipse cx="107" cy="68" rx="6" ry="4" fill="hsl(120, 50%, 55%)"/>
+            <circle cx="15" cy="85" r="3" fill="hsl(200, 100%, 70%)" className="animate-sparkle"/>
+            <circle cx="105" cy="80" r="2.5" fill="hsl(50, 100%, 70%)" className="animate-sparkle"/>
           </>
         )}
         
