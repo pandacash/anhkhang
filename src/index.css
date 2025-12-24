@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Fredoka+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Baloo+2:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -137,7 +137,8 @@
   }
 
   h1, h2, h3 {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Baloo 2', cursive;
+    font-weight: 700;
   }
 }
 
