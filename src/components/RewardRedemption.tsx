@@ -22,13 +22,12 @@ interface VoucherRedemption {
   used: boolean;
 }
 
-// 1 kim cương = 1000 đồng (300 kim cương = 300K)
+// 100 kim cương = 10 ngàn đồng
 const VOUCHER_TIERS = [
-  { diamonds: 100, value: 100000, label: "100K" },
-  { diamonds: 200, value: 200000, label: "200K" },
-  { diamonds: 300, value: 300000, label: "300K" },
-  { diamonds: 500, value: 500000, label: "500K" },
-  { diamonds: 1000, value: 1000000, label: "1 Triệu" },
+  { diamonds: 200, value: 20000, label: "20K" },
+  { diamonds: 500, value: 50000, label: "50K" },
+  { diamonds: 1000, value: 100000, label: "100K" },
+  { diamonds: 2000, value: 200000, label: "200K" },
 ];
 
 export const RewardRedemption = ({ player, onClose, onRedeem }: RewardRedemptionProps) => {
@@ -227,7 +226,7 @@ export const RewardRedemption = ({ player, onClose, onRedeem }: RewardRedemption
           <div className="mb-6">
             <p className="font-medium text-foreground flex items-center gap-2 mb-3">
               <Gift className="w-5 h-5 text-warning" />
-              Phiếu đang chờ sử dụng:
+              Phiếu đang chờ đổi quà:
             </p>
             <div className="space-y-3 max-h-[200px] overflow-y-auto">
               {existingVouchers.map((voucher) => (

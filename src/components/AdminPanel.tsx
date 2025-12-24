@@ -4,7 +4,7 @@ import { Player } from "@/types/app";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { ArrowLeft, Lock, Plus, Minus, History, Shield, Gift, Trash2, Calendar } from "lucide-react";
+import { ArrowLeft, Lock, Plus, Minus, History, Shield, Gift, Trash2, Calendar, RotateCcw } from "lucide-react";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { DiamondIcon } from "./icons/DiamondIcon";
@@ -100,6 +100,42 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
       fetchVouchers();
     }
   }, [isAuthenticated]);
+
+  const handleResetDiamonds = async (player: Player) => {
+    if (!confirm(`Bạn có chắc muốn reset kim cương của ${player.name} về 0?`)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await supabase.from('players')
+        .update({ diamonds: 0 })
+        .eq('id', player.id);
+
+      await supabase.from('admin_logs').insert({
+        player_id: player.id,
+        diamond_change: -player.diamonds,
+        reason: 'Reset kim cương về 0'
+      });
+
+      toast({
+        title: "Đã reset!",
+        description: `${player.name} đã được reset về 0 kim cương`,
+      });
+
+      onActionComplete();
+      fetchLogs();
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Lỗi",
+        description: "Không thể reset. Vui lòng thử lại.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!selectedPlayer || !reason.trim()) {
@@ -260,27 +296,42 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
               const isElephant = player.animal === 'elephant';
               
               return (
-                <button
-                  key={player.id}
-                  onClick={() => setSelectedPlayer(player)}
-                  className={cn(
-                    "flex flex-col items-center p-4 rounded-2xl transition-all border-3",
-                    isSelected 
-                      ? (isElephant ? "border-accent bg-accent/10" : "border-secondary bg-secondary/10")
-                      : "border-border bg-muted/30 hover:border-primary"
+                <div key={player.id} className="relative">
+                  <button
+                    onClick={() => setSelectedPlayer(player)}
+                    className={cn(
+                      "w-full flex flex-col items-center p-4 rounded-2xl transition-all border-3",
+                      isSelected 
+                        ? (isElephant ? "border-accent bg-accent/10" : "border-secondary bg-secondary/10")
+                        : "border-border bg-muted/30 hover:border-primary"
+                    )}
+                  >
+                    {isElephant ? (
+                      <ElephantAvatar size={60} />
+                    ) : (
+                      <PandaAvatar size={60} />
+                    )}
+                    <span className="font-bold mt-2 text-foreground">{player.name}</span>
+                    <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <DiamondIcon size={14} />
+                      <span>{player.diamonds}</span>
+                    </div>
+                  </button>
+                  {player.diamonds > 0 && (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleResetDiamonds(player);
+                      }}
+                      className="absolute -top-2 -right-2 h-8 w-8 p-0 rounded-full bg-destructive/10 hover:bg-destructive/20 text-destructive"
+                      title="Reset kim cương"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                    </Button>
                   )}
-                >
-                  {isElephant ? (
-                    <ElephantAvatar size={60} />
-                  ) : (
-                    <PandaAvatar size={60} />
-                  )}
-                  <span className="font-bold mt-2 text-foreground">{player.name}</span>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <DiamondIcon size={14} />
-                    <span>{player.diamonds}</span>
-                  </div>
-                </button>
+                </div>
               );
             })}
           </div>
