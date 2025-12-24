@@ -145,7 +145,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      apply_player_diamond_delta: {
+        Args: { p_change: number; p_player_id: string }
+        Returns: {
+          new_diamonds: number
+          old_diamonds: number
+          player_id: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
