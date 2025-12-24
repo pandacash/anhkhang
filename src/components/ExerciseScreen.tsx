@@ -4,38 +4,40 @@ import { Exercise, Subject, Player } from "@/types/app";
 import { DiamondCounter } from "./DiamondCounter";
 import { Confetti } from "./Confetti";
 import { Button } from "./ui/button";
-import { ArrowLeft, Loader2, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, XCircle, Minus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { DiamondIcon } from "./icons/DiamondIcon";
 
 interface ExerciseScreenProps {
   player: Player;
   subject: Subject;
   onBack: () => void;
-  onDiamondEarned: () => void;
+  onDiamondChange: (change: number) => void;
 }
 
 export const ExerciseScreen = ({ 
   player, 
   subject, 
   onBack,
-  onDiamondEarned 
+  onDiamondChange 
 }: ExerciseScreenProps) => {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
-  const [earnedDiamond, setEarnedDiamond] = useState(false);
+  const [diamondChange, setDiamondChange] = useState<number>(0);
   const { toast } = useToast();
   
   const isMath = subject === 'math';
+  const diamondReward = isMath ? 1 : 2; // Math = 1, English = 2
   
   const fetchExercise = async () => {
     setLoading(true);
     setSelectedAnswer(null);
     setShowResult(false);
-    setEarnedDiamond(false);
+    setDiamondChange(0);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-exercise', {
@@ -75,8 +77,14 @@ export const ExerciseScreen = ({
     
     if (isCorrect) {
       setShowConfetti(true);
-      setEarnedDiamond(true);
-      onDiamondEarned();
+      setDiamondChange(diamondReward);
+      onDiamondChange(diamondReward);
+    } else {
+      // Wrong answer: -1 diamond (but not below 0)
+      if (player.diamonds > 0) {
+        setDiamondChange(-1);
+        onDiamondChange(-1);
+      }
     }
   };
   
@@ -99,13 +107,15 @@ export const ExerciseScreen = ({
           Quay lại
         </Button>
         
-        <div className={cn(
-          "px-4 py-2 rounded-full font-display text-lg",
-          isMath 
-            ? "bg-warning/20 text-warning" 
-            : "bg-secondary/20 text-secondary"
-        )}>
-          {isMath ? "📐 Toán" : "📚 Tiếng Anh"}
+        <div className="flex items-center gap-4">
+          <div className={cn(
+            "px-4 py-2 rounded-full font-display text-lg",
+            isMath 
+              ? "bg-warning/20 text-warning" 
+              : "bg-secondary/20 text-secondary"
+          )}>
+            {isMath ? "📐 Toán (+1💎)" : "📚 Tiếng Anh (+2💎)"}
+          </div>
         </div>
       </div>
       
@@ -168,22 +178,31 @@ export const ExerciseScreen = ({
             {showResult && (
               <div className={cn(
                 "rounded-2xl p-6 text-center animate-pulse-success",
-                earnedDiamond ? "bg-success/20" : "bg-destructive/20"
+                diamondChange > 0 ? "bg-success/20" : "bg-destructive/20"
               )}>
-                {earnedDiamond ? (
+                {diamondChange > 0 ? (
                   <div className="space-y-3">
                     <p className="text-2xl font-display text-success">
                       🎉 Chính xác!
                     </p>
-                    <DiamondCounter count={1} size="lg" showPlus />
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-xl font-bold text-success">+{diamondChange}</span>
+                      <DiamondIcon size={28} animate />
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
                     <p className="text-2xl font-display text-destructive">
                       😅 Chưa đúng rồi!
                     </p>
+                    {diamondChange < 0 && (
+                      <div className="flex items-center justify-center gap-2">
+                        <span className="text-xl font-bold text-destructive">{diamondChange}</span>
+                        <DiamondIcon size={28} />
+                      </div>
+                    )}
                     {exercise.explanation && (
-                      <p className="text-foreground">{exercise.explanation}</p>
+                      <p className="text-foreground mt-2">{exercise.explanation}</p>
                     )}
                   </div>
                 )}
@@ -192,7 +211,7 @@ export const ExerciseScreen = ({
                   onClick={handleNext}
                   className={cn(
                     "mt-6 text-lg px-8 py-6 rounded-2xl font-bold",
-                    earnedDiamond 
+                    diamondChange > 0 
                       ? "bg-success hover:bg-success/90" 
                       : "bg-primary hover:bg-primary/90"
                   )}
