@@ -420,27 +420,27 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between items-center py-1 border-b border-destructive/20">
                   <span className="text-foreground">Luộm thuộm</span>
-                  <span className="font-bold text-destructive">-3 💎</span>
+                  <span className="font-bold text-destructive">bị trừ 3 💎</span>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-destructive/20">
                   <span className="text-foreground">Dậy muộn để bố mẹ gọi nhiều, không đánh răng buổi tối</span>
-                  <span className="font-bold text-destructive">-3 💎</span>
+                  <span className="font-bold text-destructive">bị trừ 3 💎</span>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-destructive/20">
                   <span className="text-foreground">Không tự giác học bài để bố mẹ phải nhắc nhở nhiều (trước 19h tối)</span>
-                  <span className="font-bold text-destructive">-5 💎</span>
+                  <span className="font-bold text-destructive">bị trừ 5 💎</span>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-destructive/20">
                   <span className="text-foreground">Tranh cãi nhau</span>
-                  <span className="font-bold text-destructive">-10 💎/bạn</span>
+                  <span className="font-bold text-destructive">bị trừ 10 💎 mỗi bạn</span>
                 </div>
                 <div className="flex justify-between items-center py-1 border-b border-destructive/20">
                   <span className="text-foreground">La hét trong nhà</span>
-                  <span className="font-bold text-destructive">-10 💎/bạn</span>
+                  <span className="font-bold text-destructive">bị trừ 10 💎 mỗi bạn</span>
                 </div>
                 <div className="flex justify-between items-center py-1">
                   <span className="text-foreground font-medium">Nói các từ bố cấm</span>
-                  <span className="font-bold text-destructive">-50 💎</span>
+                  <span className="font-bold text-destructive">bị trừ 50 💎</span>
                 </div>
               </div>
             </div>
