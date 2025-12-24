@@ -11,11 +11,15 @@ import { useToast } from "@/hooks/use-toast";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface ExerciseScreenProps {
   player: Player;
@@ -36,7 +40,6 @@ interface ExtendedExercise extends Exercise {
 }
 
 const TIME_LIMIT = 60;
-const MAX_TRANSLATIONS = 2;
 
 export const ExerciseScreen = ({ 
   player, 
@@ -72,9 +75,11 @@ export const ExerciseScreen = ({
   // Track if exercise has been answered
   const [hasAnswered, setHasAnswered] = useState(false);
   
-  // Translation help for English exercises (max 2 per exercise)
-  const [translationsUsed, setTranslationsUsed] = useState(0);
+  // Translation help for English exercises (1 time, costs 1 diamond)
+  const [translationUsed, setTranslationUsed] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
+  const [showTranslationDialog, setShowTranslationDialog] = useState(false);
+  const [showExitDialog, setShowExitDialog] = useState(false);
 
   const handleExitPenalty = useCallback(async () => {
     if (!showResult && exercise && !hasAnswered && player.diamonds > 0) {
@@ -91,9 +96,38 @@ export const ExerciseScreen = ({
   }, [showResult, exercise, hasAnswered, player.diamonds, player.id, onDiamondChange, playWrongSound]);
 
   const handleBack = useCallback(() => {
+    // Show exit confirmation if exercise is in progress
+    if (!showResult && exercise && !hasAnswered) {
+      setShowExitDialog(true);
+      return;
+    }
+    onBack();
+  }, [showResult, exercise, hasAnswered, onBack]);
+
+  const confirmExit = useCallback(() => {
     handleExitPenalty();
+    setShowExitDialog(false);
     onBack();
   }, [handleExitPenalty, onBack]);
+
+  const handleTranslationRequest = () => {
+    if (translationUsed || player.diamonds < 1) return;
+    setShowTranslationDialog(true);
+  };
+
+  const confirmTranslation = async () => {
+    setShowTranslationDialog(false);
+    setTranslationUsed(true);
+    setShowTranslation(true);
+    onDiamondChange(-1);
+    
+    // Log translation usage
+    await supabase.from('admin_logs').insert({
+      player_id: player.id,
+      diamond_change: -1,
+      reason: 'Sử dụng hỗ trợ dịch tiếng Anh'
+    });
+  };
 
   const handleTimeUp = useCallback(() => {
     if (!showResult && exercise) {
@@ -124,8 +158,10 @@ export const ExerciseScreen = ({
     setLeftSelected(null);
     setOrderedItems([]);
     setHasAnswered(false);
-    setTranslationsUsed(0);
+    setTranslationUsed(false);
     setShowTranslation(false);
+    setShowTranslationDialog(false);
+    setShowExitDialog(false);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-exercise', {
@@ -488,38 +524,17 @@ export const ExerciseScreen = ({
               </h2>
               
               {/* Translation button for English exercises */}
-              {!isMath && !showResult && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          if (translationsUsed < MAX_TRANSLATIONS) {
-                            setShowTranslation(!showTranslation);
-                            if (!showTranslation) {
-                              setTranslationsUsed(prev => prev + 1);
-                            }
-                          }
-                        }}
-                        disabled={translationsUsed >= MAX_TRANSLATIONS && !showTranslation}
-                        className={cn(
-                          "absolute top-3 right-3 gap-1 text-xs",
-                          showTranslation && "bg-secondary/20"
-                        )}
-                      >
-                        <Languages className="w-4 h-4" />
-                        Hỗ trợ dịch ({MAX_TRANSLATIONS - translationsUsed}/{MAX_TRANSLATIONS})
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {translationsUsed >= MAX_TRANSLATIONS 
-                        ? "Đã hết lượt hỗ trợ dịch" 
-                        : "Nhấn để xem bản dịch tiếng Việt"}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+              {!isMath && !showResult && !translationUsed && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleTranslationRequest}
+                  disabled={player.diamonds < 1}
+                  className="absolute top-3 right-3 gap-1 text-xs"
+                >
+                  <Languages className="w-4 h-4" />
+                  Hỗ trợ dịch (1💎)
+                </Button>
               )}
               
               {/* Show Vietnamese translation */}
@@ -678,6 +693,54 @@ export const ExerciseScreen = ({
           </div>
         )}
       </div>
+
+      {/* Exit confirmation dialog */}
+      <AlertDialog open={showExitDialog} onOpenChange={setShowExitDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              ⚠️ Thoát bài tập?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Nếu thoát khi chưa làm bài xong, con sẽ bị trừ <span className="font-bold text-destructive">2 kim cương</span>! 
+              Con có chắc muốn thoát không?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Tiếp tục làm bài</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmExit}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Thoát (-2💎)
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Translation confirmation dialog */}
+      <AlertDialog open={showTranslationDialog} onOpenChange={setShowTranslationDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Languages className="w-5 h-5" />
+              Hỗ trợ dịch
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base">
+              Con muốn xem bản dịch tiếng Việt không? Mỗi bài tập chỉ được hỗ trợ <span className="font-bold">1 lần</span> và sẽ tốn <span className="font-bold text-warning">1 kim cương</span>.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Không, để con tự làm</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={confirmTranslation}
+              className="bg-secondary hover:bg-secondary/90"
+            >
+              Đổi 1💎 để xem dịch
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
