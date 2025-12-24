@@ -20,23 +20,25 @@ serve(async (req) => {
 
     const isMath = subject === "math";
     
+    // PHÚC KHANG: Toán chỉ trong phạm vi 100, chưa học số lớn hơn
     const mathGrade3Topics = [
-      "Bảng nhân chia 6, 7, 8, 9, 10 (VD: 7 x 8 = ?, 63 : 9 = ?)",
-      "Phép nhân số có 2-3 chữ số với số có 1 chữ số trong phạm vi 1000 (VD: 125 x 4 = ?)",
-      "Phép chia số có 2-3 chữ số cho số có 1 chữ số (VD: 248 : 4 = ?)",
-      "Tìm X trong biểu thức đơn giản (VD: X + 15 = 50, X x 3 = 27)",
-      "Tính giá trị biểu thức có dấu ngoặc (VD: (12 + 8) x 3 = ?)",
-      "Đổi đơn vị đo độ dài: mm, cm, dm, m, km (VD: 5m = ? cm)",
-      "Đổi đơn vị đo khối lượng: gam, kg (VD: 2kg = ? gam)",
-      "Bài toán về thời gian: giờ, phút, tháng, năm (VD: 2 giờ = ? phút)",
-      "Tính chu vi hình vuông, hình chữ nhật (VD: Hình vuông cạnh 5cm, tính chu vi)",
-      "Tính diện tích hình vuông, hình chữ nhật (VD: Hình chữ nhật dài 6cm rộng 4cm)",
-      "Giải toán có lời văn: hơn kém (VD: Lan có 25 viên bi, Hoa có ít hơn 8 viên. Hỏi Hoa có mấy viên?)",
-      "Giải toán có lời văn: gấp lần (VD: Số A là 12, số B gấp 3 lần số A. Tính số B?)",
-      "Giải toán có lời văn: mua sắm với tiền Việt Nam (VD: Mẹ mua 3 quyển vở, mỗi quyển 5000 đồng)",
-      "So sánh số trong phạm vi 1000 (VD: 456 ... 465, điền dấu >, <, =)"
+      "Bảng nhân 2, 3, 4, 5 (VD: 3 x 7 = ?, 4 x 8 = ?, 5 x 9 = ?)",
+      "Bảng nhân 6, 7, 8, 9, 10 (VD: 6 x 5 = ?, 7 x 8 = ?, 9 x 6 = ?)",
+      "Bảng chia tương ứng với bảng nhân (VD: 36 : 6 = ?, 45 : 9 = ?, 56 : 7 = ?)",
+      "Phép cộng trong phạm vi 100 (VD: 45 + 38 = ?, 67 + 29 = ?)",
+      "Phép trừ trong phạm vi 100 (VD: 83 - 47 = ?, 92 - 56 = ?)",
+      "Tìm X trong phép cộng trừ (VD: X + 25 = 67, 84 - X = 39)",
+      "Tìm X trong phép nhân chia (VD: X x 5 = 35, X : 4 = 8)",
+      "Tính giá trị biểu thức 2 phép tính (VD: 25 + 15 - 18 = ?, 6 x 7 + 8 = ?)",
+      "So sánh số trong phạm vi 100 (VD: 47 ... 74, điền dấu >, <, =)",
+      "Đếm thêm, đếm bớt (VD: 23, 26, 29, ?, ? - Tìm 2 số tiếp theo)",
+      "Bài toán có lời văn: hơn kém (VD: Lan có 45 viên bi, Hoa ít hơn 12 viên. Hỏi Hoa có mấy viên?)",
+      "Bài toán có lời văn: gấp lần (VD: Số A là 8, số B gấp 6 lần số A. Tính số B?)",
+      "Đọc giờ đúng và giờ rưỡi (VD: Kim ngắn chỉ 3, kim dài chỉ 6. Hỏi mấy giờ?)",
+      "Đổi đơn vị đo độ dài đơn giản (VD: 1m = ? cm, 50cm = ? dm)"
     ];
     
+    // PHÚC KHANG: Tiếng Anh lớp 3 - tăng 30% độ khó và đa dạng
     const englishGrade2Topics = [
       "Từ vựng về động vật: dog, cat, bird, fish, elephant, lion, monkey (hỏi nghĩa hoặc dịch)",
       "Từ vựng về màu sắc: red, blue, green, yellow, orange, pink, purple (hỏi nghĩa hoặc dịch)",
@@ -50,46 +52,59 @@ serve(async (req) => {
     ];
     
     const englishGrade3Topics = [
-      // Từ vựng cơ bản
-      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer, firefighter, chef, pilot",
-      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy, stormy",
-      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E., History, Geography",
-      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat, helicopter, motorbike, subway",
-      "Từ vựng về hoạt động: run, jump, swim, read, write, sing, dance, draw, cook, play, study",
-      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, arms, legs, fingers, toes",
-      "Từ vựng về đồ vật trong lớp học: desk, board, eraser, ruler, scissors, glue, notebook, backpack",
-      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, jacket, socks, skirt, sweater",
-      "Từ vựng về thức ăn và đồ uống: pizza, hamburger, noodles, soup, juice, tea, coffee, sandwich",
+      // === TỪ VỰNG CƠ BẢN ===
+      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer, firefighter, chef, pilot, dentist, engineer, artist",
+      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy, stormy, foggy, warm, cool",
+      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E., History, Geography, Vietnamese",
+      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat, helicopter, motorbike, subway, taxi, truck",
+      "Từ vựng về hoạt động hàng ngày: wake up, get up, brush teeth, wash face, have breakfast, go to school, study, play, sleep",
+      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, arms, legs, fingers, toes, neck, shoulder",
+      "Từ vựng về đồ vật trong lớp học: desk, board, eraser, ruler, scissors, glue, notebook, backpack, pencil case, chalk",
+      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, jacket, socks, skirt, sweater, coat, shorts, uniform",
+      "Từ vựng về thức ăn và đồ uống: pizza, hamburger, noodles, soup, juice, tea, coffee, sandwich, salad, chicken, fish, vegetables",
+      "Từ vựng về địa điểm: school, hospital, supermarket, park, library, zoo, museum, cinema, restaurant, bank, post office",
+      "Từ vựng về gia đình mở rộng: uncle, aunt, cousin, nephew, niece, parents, grandparents, relatives",
       
-      // Ngữ pháp cơ bản
-      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students. I ___ tired.",
-      "Điền từ sở hữu: This is ___ book. (my/your/his/her/our/their)",
-      "Chia động từ đơn giản: She ___ (like/likes) apples. He ___ (play/plays) soccer.",
-      "Câu hỏi What/Where/Who/When/How: ___ is your name? ___ do you live? ___ old are you?",
-      "Điền giới từ: The cat is ___ the table. (on/in/under/next to/behind/between)",
-      "Câu phủ định: I ___ like fish. She ___ play tennis. (do not / does not)",
-      "So sánh hơn đơn giản: big -> bigger, small -> smaller, tall -> taller, fast -> faster",
+      // === NGỮ PHÁP CƠ BẢN ===
+      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students. I ___ tired. We ___ friends.",
+      "Điền từ sở hữu: This is ___ book. (my/your/his/her/our/their) - That is ___ pencil.",
+      "Chia động từ đơn giản thì hiện tại: She ___ (like/likes) apples. He ___ (play/plays) soccer. It ___ (rain/rains) today.",
+      "Câu hỏi What/Where/Who/When/How: ___ is your name? ___ do you live? ___ old are you? ___ is your birthday?",
+      "Điền giới từ: The cat is ___ the table. The ball is ___ the box. (on/in/under/next to/behind/between/in front of)",
+      "Câu phủ định: I ___ like fish. She ___ play tennis. They ___ have homework. (do not / does not)",
+      "So sánh hơn đơn giản: big -> bigger, small -> smaller, tall -> taller, fast -> faster, slow -> slower",
       
-      // Dạng bài nâng cao (mới thêm ~30%)
-      "Đặt câu với từ cho sẵn: (is / This / my / friend) -> ? (school / go / I / to / every day)",
-      "Sắp xếp câu hoàn chỉnh: (likes / She / to / books / read) -> ?",
-      "Chọn từ đúng điền vào câu: I ___ breakfast at 7 o'clock. (have/has/having)",
-      "Chia động từ thì hiện tại đơn: My mother ___ (cook) dinner every evening.",
-      "Câu hỏi Yes/No: ___ you like pizza? ___ she go to school? (Do/Does)",
-      "Trả lời câu hỏi ngắn: Do you have a pet? - Yes, I ___. / No, I ___.",
-      "Từ vựng về thời gian: morning, afternoon, evening, night, today, tomorrow, yesterday",
-      "Từ vựng về số thứ tự: first, second, third, fourth, fifth (1st, 2nd, 3rd...)",
-      "Đọc hiểu câu đơn giản: 'Tom has a cat. The cat is black.' -> What color is Tom's cat?",
-      "Điền từ trái nghĩa: hot - ___ (cold), big - ___ (small), happy - ___ (sad)",
-      "Hoàn thành đoạn hội thoại ngắn: A: How are you? B: I ___ fine, thank you.",
-      "Câu mệnh lệnh: ___ the door, please. (Open/Close/Don't open)",
-      "Từ vựng về địa điểm: school, hospital, supermarket, park, library, zoo, museum, cinema",
-      "Câu có 'there is/there are': ___ a book on the table. ___ two cats in the garden.",
-      "Đại từ nhân xưng: ___ is my friend. (He/She/It/They) - chọn đúng cho ngữ cảnh",
-      "Từ vựng về ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
-      "Từ vựng về tháng trong năm: January, February... December (viết hoặc nhận biết)",
-      "Câu hỏi với 'How many': ___ apples are there? - There are five apples.",
-      "Từ vựng về cảm xúc nâng cao: excited, scared, angry, surprised, worried, bored"
+      // === NÂNG CAO 30% - DẠNG BÀI MỚI ===
+      "Sắp xếp từ thành câu hoàn chỉnh: (is / This / my / friend / best) -> ? | (school / go / I / to / every day) -> ?",
+      "Sắp xếp câu phức tạp hơn: (likes / She / to / books / read / at night) -> ? | (playing / We / enjoy / in the park / football) -> ?",
+      "Chọn từ đúng điền vào câu: I ___ breakfast at 7 o'clock. (have/has/having) | She ___ to music every day. (listen/listens/listening)",
+      "Chia động từ thì hiện tại đơn: My mother ___ (cook) dinner every evening. My father ___ (work) in an office.",
+      "Câu hỏi Yes/No: ___ you like pizza? ___ she go to school? ___ they have a pet? (Do/Does)",
+      "Trả lời câu hỏi ngắn: Do you have a pet? - Yes, I ___. / No, I ___. Does he like sports? - Yes, he ___ / No, he ___.",
+      "Từ vựng về thời gian: morning, afternoon, evening, night, today, tomorrow, yesterday, this week, next week, last week",
+      "Từ vựng về số thứ tự: first (1st), second (2nd), third (3rd), fourth (4th), fifth (5th) - Hỏi viết hoặc nhận biết",
+      "Đọc hiểu câu đơn giản: 'Tom has a cat. The cat is black and white.' -> What color is Tom's cat? | 'Mary goes to school at 7. She studies English.' -> What does Mary do?",
+      "Điền từ trái nghĩa: hot - ___ (cold), big - ___ (small), happy - ___ (sad), fast - ___ (slow), old - ___ (young/new)",
+      "Hoàn thành đoạn hội thoại: A: How are you? B: I ___ fine, thank you. A: What ___ your name? B: ___ name is Lan.",
+      "Câu mệnh lệnh: ___ the door, please. (Open/Close/Don't open) | ___ quiet in the library! (Be/Don't be)",
+      "Câu có 'there is/there are': ___ a book on the table. ___ two cats in the garden. ___ some water in the glass.",
+      "Đại từ nhân xưng: ___ is my friend. (He/She/It/They) - chọn đúng cho ngữ cảnh | ___ are playing football. (We/They/He)",
+      "Từ vựng về ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday - Hỏi viết hoặc thứ tự",
+      "Từ vựng về tháng trong năm: January, February, March... December - Hỏi viết hoặc tháng thứ mấy",
+      "Câu hỏi với 'How many/How much': ___ apples are there? ___ water do you need? - Trả lời phù hợp",
+      "Từ vựng về cảm xúc: excited, scared, angry, surprised, worried, bored, tired, hungry, thirsty, sleepy",
+      
+      // === NÂNG CAO THÊM - ĐỌC HIỂU & VIẾT ===
+      "Đọc đoạn văn ngắn và trả lời: 'This is my room. It has a bed, a desk and a window. I like my room.' -> What does the room have?",
+      "Chọn câu đúng ngữ pháp: A) He go to school. B) He goes to school. C) He going to school.",
+      "Điền từ nối: I like apples ___ oranges. (and/but/or) | She is tired ___ she is happy. (and/but/because)",
+      "Hỏi về thói quen: What ___ you do every morning? What ___ she eat for breakfast? (do/does)",
+      "Từ vựng về tính từ: beautiful, handsome, ugly, clean, dirty, new, old, expensive, cheap, heavy, light",
+      "Hoàn thành email đơn giản: Dear ___. How ___ you? I am ___. See you soon!",
+      "Từ vựng về thể thao: soccer, basketball, volleyball, swimming, running, badminton, tennis, cycling, skating",
+      "Câu với 'can/can't': She ___ swim very well. He ___ speak English. I ___ play the piano. (can/can't)",
+      "Từ vựng về thiên nhiên: tree, flower, river, mountain, sea, beach, forest, garden, sun, moon, star, cloud",
+      "Chọn đáp án đúng cho câu hỏi: 'What time do you wake up?' - A) At 6 o'clock B) In my room C) With my brother"
     ];
     
     const randomMathTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
@@ -101,8 +116,10 @@ serve(async (req) => {
       ? `Bạn là giáo viên Toán vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài toán phù hợp với trình độ:
          - Lớp 2: Cộng trừ trong 100, bảng nhân 2-5
          - Lớp 3: ${randomMathTopic}
-         QUAN TRỌNG với lớp 3:
-         - CHỈ dùng số trong phạm vi từ 0 đến 1000
+         
+         QUAN TRỌNG với lớp 3 (Phúc Khang):
+         - CHỈ dùng số trong phạm vi từ 0 đến 100 (BÉ CHƯA HỌC SỐ LỚN HƠN 100!)
+         - Kết quả của phép tính PHẢI nằm trong phạm vi 0-100
          - Câu hỏi phải rõ ràng, dễ hiểu với trẻ em
          - Đáp án phải chính xác về mặt toán học
          - Các đáp án sai phải hợp lý (không quá khác biệt)`
