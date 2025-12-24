@@ -127,8 +127,8 @@ const Index = () => {
     }
   };
 
-  // Block mobile devices immediately
-  if (isMobile) {
+  // Block mobile devices immediately (but allow admin access)
+  if (isMobile && screen !== 'admin') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-6">
         <div className="bg-card rounded-3xl shadow-2xl p-8 max-w-md text-center border-2 border-primary/20">
@@ -140,7 +140,13 @@ const Index = () => {
           <p className="text-lg text-muted-foreground mb-6">
             Hãy mượn <span className="font-bold text-primary">Surface của Bố</span> để kiếm Kim Cương nhé!
           </p>
-          <div className="text-4xl">💎✨</div>
+          <div className="text-4xl mb-6">💎✨</div>
+          <button
+            onClick={handleOpenAdmin}
+            className="text-xs text-muted-foreground/50 hover:text-muted-foreground underline"
+          >
+            Bố/Mẹ truy cập Admin
+          </button>
         </div>
       </div>
     );
