@@ -410,6 +410,42 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
         {/* Reason */}
         <div className="bg-card rounded-3xl p-6 shadow-kid border-2 border-border">
           <h3 className="font-display text-lg mb-4 text-foreground">4. Lý do</h3>
+          
+          {/* Punishment Rules Table */}
+          {!isReward && (
+            <div className="mb-4 bg-destructive/10 rounded-xl p-4 border border-destructive/30">
+              <h4 className="font-bold text-destructive mb-3 flex items-center gap-2">
+                📋 Bảng lỗi phạt tham khảo
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between items-center py-1 border-b border-destructive/20">
+                  <span className="text-foreground">Luộm thuộm</span>
+                  <span className="font-bold text-destructive">-3 💎</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-destructive/20">
+                  <span className="text-foreground">Dậy muộn để bố mẹ gọi nhiều, không đánh răng buổi tối</span>
+                  <span className="font-bold text-destructive">-3 💎</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-destructive/20">
+                  <span className="text-foreground">Không tự giác học bài để bố mẹ phải nhắc nhở nhiều (trước 19h tối)</span>
+                  <span className="font-bold text-destructive">-5 💎</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-destructive/20">
+                  <span className="text-foreground">Tranh cãi nhau</span>
+                  <span className="font-bold text-destructive">-10 💎/bạn</span>
+                </div>
+                <div className="flex justify-between items-center py-1 border-b border-destructive/20">
+                  <span className="text-foreground">La hét trong nhà</span>
+                  <span className="font-bold text-destructive">-10 💎/bạn</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-foreground font-medium">Nói các từ bố cấm</span>
+                  <span className="font-bold text-destructive">-50 💎</span>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <Textarea
             placeholder={isReward 
               ? "Ví dụ: Giúp mẹ nấu ăn, Ngoan ngoãn..." 

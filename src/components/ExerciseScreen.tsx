@@ -61,9 +61,32 @@ export const ExerciseScreen = ({
   const isMath = subject === 'math';
   const diamondReward = isMath ? 1 : 2;
 
+  // Track if exercise has been answered
+  const [hasAnswered, setHasAnswered] = useState(false);
+
+  const handleExitPenalty = useCallback(async () => {
+    if (!showResult && exercise && !hasAnswered && player.diamonds > 0) {
+      playWrongSound();
+      onDiamondChange(-1);
+      
+      // Log the exit penalty
+      await supabase.from('admin_logs').insert({
+        player_id: player.id,
+        diamond_change: -1,
+        reason: 'Thoát bài tập khi chưa trả lời'
+      });
+    }
+  }, [showResult, exercise, hasAnswered, player.diamonds, player.id, onDiamondChange, playWrongSound]);
+
+  const handleBack = useCallback(() => {
+    handleExitPenalty();
+    onBack();
+  }, [handleExitPenalty, onBack]);
+
   const handleTimeUp = useCallback(() => {
     if (!showResult && exercise) {
       setShowResult(true);
+      setHasAnswered(true);
       setDiamondChange(-1);
       playTimeoutSound();
       if (player.diamonds > 0) {
@@ -88,6 +111,7 @@ export const ExerciseScreen = ({
     setSelectedPairs({});
     setLeftSelected(null);
     setOrderedItems([]);
+    setHasAnswered(false);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-exercise', {
@@ -155,6 +179,7 @@ export const ExerciseScreen = ({
     setSelectedAnswer(index);
     setShowResult(true);
     setIsTimerRunning(false);
+    setHasAnswered(true);
     
     const isCorrect = index === exercise?.correctAnswer;
     
@@ -177,6 +202,7 @@ export const ExerciseScreen = ({
     
     setShowResult(true);
     setIsTimerRunning(false);
+    setHasAnswered(true);
     
     // Check if answer matches any of the correct answers
     const correctAnswers = exercise.blanks || [exercise.options?.[exercise.correctAnswer || 0]];
@@ -218,6 +244,7 @@ export const ExerciseScreen = ({
   const checkMatchingResult = (pairs: Record<number, number>) => {
     setShowResult(true);
     setIsTimerRunning(false);
+    setHasAnswered(true);
     
     // All correct if left index matches right index
     const isCorrect = Object.entries(pairs).every(([left, right]) => parseInt(left) === right);
@@ -250,6 +277,7 @@ export const ExerciseScreen = ({
   const checkOrderingResult = () => {
     setShowResult(true);
     setIsTimerRunning(false);
+    setHasAnswered(true);
     
     const correctOrder = exercise?.correctOrder || orderedItems.map((_, i) => i);
     const isCorrect = orderedItems.every((item, index) => item === correctOrder[index]);
@@ -493,7 +521,7 @@ export const ExerciseScreen = ({
       <div className="flex items-center justify-between mb-6">
         <Button
           variant="ghost"
-          onClick={onBack}
+          onClick={handleBack}
           className="gap-2"
         >
           <ArrowLeft className="w-5 h-5" />
