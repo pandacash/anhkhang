@@ -50,20 +50,46 @@ serve(async (req) => {
     ];
     
     const englishGrade3Topics = [
-      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer",
-      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold",
-      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E.",
-      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students.",
-      "Điền từ sở hữu: This is ___ book. (my/your/his/her)",
-      "Chia động từ đơn giản: She ___ (like/likes) apples.",
-      "Câu hỏi What/Where/Who: ___ is your name? ___ do you live?",
-      "Điền giới từ: The cat is ___ the table. (on/in/under)",
-      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat",
-      "Đặt câu với từ cho sẵn: (is / This / my / friend) -> ?",
-      "Từ vựng về hoạt động: run, jump, swim, read, write, sing, dance",
-      "Câu phủ định: I ___ like fish. (do not / does not)",
-      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet",
-      "So sánh hơn đơn giản: big -> bigger, small -> smaller"
+      // Từ vựng cơ bản
+      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer, firefighter, chef, pilot",
+      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy, stormy",
+      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E., History, Geography",
+      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat, helicopter, motorbike, subway",
+      "Từ vựng về hoạt động: run, jump, swim, read, write, sing, dance, draw, cook, play, study",
+      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, arms, legs, fingers, toes",
+      "Từ vựng về đồ vật trong lớp học: desk, board, eraser, ruler, scissors, glue, notebook, backpack",
+      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, jacket, socks, skirt, sweater",
+      "Từ vựng về thức ăn và đồ uống: pizza, hamburger, noodles, soup, juice, tea, coffee, sandwich",
+      
+      // Ngữ pháp cơ bản
+      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students. I ___ tired.",
+      "Điền từ sở hữu: This is ___ book. (my/your/his/her/our/their)",
+      "Chia động từ đơn giản: She ___ (like/likes) apples. He ___ (play/plays) soccer.",
+      "Câu hỏi What/Where/Who/When/How: ___ is your name? ___ do you live? ___ old are you?",
+      "Điền giới từ: The cat is ___ the table. (on/in/under/next to/behind/between)",
+      "Câu phủ định: I ___ like fish. She ___ play tennis. (do not / does not)",
+      "So sánh hơn đơn giản: big -> bigger, small -> smaller, tall -> taller, fast -> faster",
+      
+      // Dạng bài nâng cao (mới thêm ~30%)
+      "Đặt câu với từ cho sẵn: (is / This / my / friend) -> ? (school / go / I / to / every day)",
+      "Sắp xếp câu hoàn chỉnh: (likes / She / to / books / read) -> ?",
+      "Chọn từ đúng điền vào câu: I ___ breakfast at 7 o'clock. (have/has/having)",
+      "Chia động từ thì hiện tại đơn: My mother ___ (cook) dinner every evening.",
+      "Câu hỏi Yes/No: ___ you like pizza? ___ she go to school? (Do/Does)",
+      "Trả lời câu hỏi ngắn: Do you have a pet? - Yes, I ___. / No, I ___.",
+      "Từ vựng về thời gian: morning, afternoon, evening, night, today, tomorrow, yesterday",
+      "Từ vựng về số thứ tự: first, second, third, fourth, fifth (1st, 2nd, 3rd...)",
+      "Đọc hiểu câu đơn giản: 'Tom has a cat. The cat is black.' -> What color is Tom's cat?",
+      "Điền từ trái nghĩa: hot - ___ (cold), big - ___ (small), happy - ___ (sad)",
+      "Hoàn thành đoạn hội thoại ngắn: A: How are you? B: I ___ fine, thank you.",
+      "Câu mệnh lệnh: ___ the door, please. (Open/Close/Don't open)",
+      "Từ vựng về địa điểm: school, hospital, supermarket, park, library, zoo, museum, cinema",
+      "Câu có 'there is/there are': ___ a book on the table. ___ two cats in the garden.",
+      "Đại từ nhân xưng: ___ is my friend. (He/She/It/They) - chọn đúng cho ngữ cảnh",
+      "Từ vựng về ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+      "Từ vựng về tháng trong năm: January, February... December (viết hoặc nhận biết)",
+      "Câu hỏi với 'How many': ___ apples are there? - There are five apples.",
+      "Từ vựng về cảm xúc nâng cao: excited, scared, angry, surprised, worried, bored"
     ];
     
     const randomMathTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
