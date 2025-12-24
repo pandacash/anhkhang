@@ -5,11 +5,13 @@ import { DiamondCounter } from "./DiamondCounter";
 import { Confetti } from "./Confetti";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { ArrowLeft, Loader2, CheckCircle, XCircle, Timer, ArrowUpDown, Link2, Languages } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, XCircle, Timer, ArrowUpDown, Link2, Languages, Smartphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { useDailyTranslationLimit } from "@/hooks/useDailyTranslationLimit";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -68,6 +70,8 @@ export const ExerciseScreen = ({
   
   const { toast } = useToast();
   const { playCorrectSound, playWrongSound, playTimeoutSound, playTickSound } = useSoundEffects();
+  const { canUseTranslation, remainingCount, useTranslation, maxPerDay } = useDailyTranslationLimit(player.id);
+  const isMobileDevice = useMobileDetection();
   
   const isMath = subject === 'math';
   const diamondReward = isMath ? 1 : 2;
@@ -75,8 +79,8 @@ export const ExerciseScreen = ({
   // Track if exercise has been answered
   const [hasAnswered, setHasAnswered] = useState(false);
   
-  // Translation help for English exercises (1 time, costs 1 diamond)
-  const [translationUsed, setTranslationUsed] = useState(false);
+  // Translation help for English exercises
+  const [translationUsedThisExercise, setTranslationUsedThisExercise] = useState(false);
   const [showTranslation, setShowTranslation] = useState(false);
   const [showTranslationDialog, setShowTranslationDialog] = useState(false);
   const [showExitDialog, setShowExitDialog] = useState(false);
@@ -111,21 +115,38 @@ export const ExerciseScreen = ({
   }, [handleExitPenalty, onBack]);
 
   const handleTranslationRequest = () => {
-    if (translationUsed || player.diamonds < 1) return;
+    if (translationUsedThisExercise || player.diamonds < 1) return;
+    
+    // Check daily limit
+    if (!canUseTranslation) {
+      toast({
+        title: "⚠️ Đã hết lượt dịch hôm nay!",
+        description: `Bạn chỉ được dùng ${maxPerDay} lần dịch mỗi ngày. Hãy cố gắng tự đọc hiểu nhé!`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setShowTranslationDialog(true);
   };
 
   const confirmTranslation = async () => {
     setShowTranslationDialog(false);
-    setTranslationUsed(true);
+    setTranslationUsedThisExercise(true);
     setShowTranslation(true);
+    useTranslation(); // Increment daily count
     onDiamondChange(-1);
     
     // Log translation usage
     await supabase.from('admin_logs').insert({
       player_id: player.id,
       diamond_change: -1,
-      reason: 'Sử dụng hỗ trợ dịch tiếng Anh'
+      reason: `Sử dụng hỗ trợ dịch tiếng Anh (còn ${remainingCount - 1}/${maxPerDay} lượt)`
+    });
+    
+    toast({
+      title: "📖 Đã dịch!",
+      description: `Còn ${remainingCount - 1} lượt dịch hôm nay`,
     });
   };
 
@@ -158,7 +179,7 @@ export const ExerciseScreen = ({
     setLeftSelected(null);
     setOrderedItems([]);
     setHasAnswered(false);
-    setTranslationUsed(false);
+    setTranslationUsedThisExercise(false);
     setShowTranslation(false);
     setShowTranslationDialog(false);
     setShowExitDialog(false);
@@ -524,16 +545,17 @@ export const ExerciseScreen = ({
               </h2>
               
               {/* Translation button for English exercises */}
-              {!isMath && !showResult && !translationUsed && (
+              {!isMath && !showResult && !translationUsedThisExercise && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleTranslationRequest}
-                  disabled={player.diamonds < 1}
+                  disabled={player.diamonds < 1 || !canUseTranslation}
                   className="absolute top-3 right-3 gap-1 text-xs"
+                  title={!canUseTranslation ? `Đã hết ${maxPerDay} lượt dịch hôm nay` : undefined}
                 >
                   <Languages className="w-4 h-4" />
-                  Hỗ trợ dịch (1💎)
+                  Dịch ({remainingCount}/{maxPerDay}) 1💎
                 </Button>
               )}
               
@@ -586,6 +608,27 @@ export const ExerciseScreen = ({
         );
     }
   };
+  
+  // Block mobile devices
+  if (isMobileDevice) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center">
+        <div className="bg-card rounded-3xl p-8 shadow-kid border-2 border-warning max-w-md">
+          <Smartphone className="w-20 h-20 text-warning mx-auto mb-6" />
+          <h1 className="text-2xl font-display text-foreground mb-4">
+            📱 Không thể chơi trên điện thoại
+          </h1>
+          <p className="text-muted-foreground mb-6 text-lg">
+            Hãy mượn <strong className="text-primary">Surface của Bố</strong> để kiếm Kim Cương nhé! 💎
+          </p>
+          <Button onClick={onBack} className="w-full py-6 text-lg rounded-xl">
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Quay lại
+          </Button>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
