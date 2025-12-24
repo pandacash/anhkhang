@@ -37,10 +37,14 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
       .select('*')
       .eq('player_id', player.id)
       .order('created_at', { ascending: false })
-      .limit(30);
+      .limit(50);
     
     if (data) {
-      setLogs(data as AdminLog[]);
+      // Filter out translation help logs - these are not punishments
+      const filteredLogs = (data as AdminLog[]).filter(
+        log => !log.reason.includes('Sử dụng hỗ trợ dịch tiếng Anh')
+      );
+      setLogs(filteredLogs);
     }
     setLoading(false);
   };
