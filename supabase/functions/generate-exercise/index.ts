@@ -87,14 +87,25 @@ serve(async (req) => {
          - Câu hỏi phải phù hợp với trình độ lớp ${grade}
          - Sử dụng từ vựng đơn giản, dễ hiểu
          - Có thể hỏi bằng Tiếng Việt hoặc Tiếng Anh
-         - Đáp án sai phải hợp lý, không quá dễ đoán`;
+         - Đáp án sai phải hợp lý, không quá dễ đoán
+         - Trong phần explanation, LUÔN dịch đầy đủ câu hỏi và đáp án đúng sang tiếng Việt để bé dễ hiểu`;
 
-    const userPrompt = `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
+    const userPrompt = isMath 
+      ? `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
 {
   "question": "Câu hỏi",
   "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
   "correctAnswer": 0,
   "explanation": "Giải thích ngắn gọn"
+}
+Chỉ trả về JSON, không có text khác.`
+      : `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
+{
+  "question": "Câu hỏi bằng tiếng Anh",
+  "questionVi": "Dịch câu hỏi sang tiếng Việt",
+  "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+  "correctAnswer": 0,
+  "explanation": "Giải thích bằng tiếng Việt, dịch đầy đủ câu hỏi và các từ vựng quan trọng"
 }
 Chỉ trả về JSON, không có text khác.`;
 
