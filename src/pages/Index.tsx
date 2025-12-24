@@ -119,6 +119,10 @@ const Index = () => {
 
   const handleAdminAction = async () => {
     await fetchPlayers();
+    // Also refresh stats if current player exists
+    if (currentPlayer) {
+      fetchStats(currentPlayer.id);
+    }
   };
 
   const handleViewHistory = () => {
