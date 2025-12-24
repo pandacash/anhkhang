@@ -102,6 +102,44 @@ export type Database = {
         }
         Relationships: []
       }
+      voucher_redemptions: {
+        Row: {
+          diamonds_spent: number
+          id: string
+          player_id: string
+          redeemed_at: string
+          used: boolean
+          used_at: string | null
+          voucher_value: number
+        }
+        Insert: {
+          diamonds_spent: number
+          id?: string
+          player_id: string
+          redeemed_at?: string
+          used?: boolean
+          used_at?: string | null
+          voucher_value: number
+        }
+        Update: {
+          diamonds_spent?: number
+          id?: string
+          player_id?: string
+          redeemed_at?: string
+          used?: boolean
+          used_at?: string | null
+          voucher_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "voucher_redemptions_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "players"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

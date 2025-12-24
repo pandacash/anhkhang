@@ -20,7 +20,7 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchPlayers = async () => {
+  const fetchPlayers = useCallback(async () => {
     const { data, error } = await supabase.from('players').select('*');
     if (error) {
       console.error('Error fetching players:', error);
@@ -42,15 +42,16 @@ const Index = () => {
         setCurrentPlayer(updated);
       }
     }
-  };
+    
+    return updatedPlayers;
+  }, [currentPlayer]);
 
   const fetchStats = async (playerId: string) => {
     const { data, error } = await supabase
       .from('daily_stats')
       .select('*')
       .eq('player_id', playerId)
-      .order('date', { ascending: true })
-      .limit(7);
+      .order('date', { ascending: true });
     
     if (!error && data) {
       setStats(data.map(s => ({ date: s.date, diamonds: s.diamonds })));
@@ -65,7 +66,7 @@ const Index = () => {
     if (currentPlayer) {
       fetchStats(currentPlayer.id);
     }
-  }, [currentPlayer]);
+  }, [currentPlayer?.id]);
 
   const handleSelectPlayer = (player: Player) => {
     setCurrentPlayer(player);
@@ -110,7 +111,7 @@ const Index = () => {
     setCurrentPlayer(prev => prev ? { ...prev, diamonds: newDiamonds } : null);
     fetchPlayers();
     fetchStats(currentPlayer.id);
-  }, [currentPlayer]);
+  }, [currentPlayer, fetchPlayers]);
 
   const handleOpenAdmin = () => {
     setScreen('admin');
@@ -122,6 +123,14 @@ const Index = () => {
 
   const handleViewHistory = () => {
     setScreen('history');
+  };
+
+  const handlePlayerUpdate = async () => {
+    const updated = await fetchPlayers();
+    if (updated && currentPlayer) {
+      const p = updated.find(p => p.id === currentPlayer.id);
+      if (p) setCurrentPlayer(p);
+    }
   };
 
   if (loading) {
@@ -174,6 +183,7 @@ const Index = () => {
           setScreen('select');
         }}
         onViewHistory={handleViewHistory}
+        onPlayerUpdate={handlePlayerUpdate}
       />
     );
   }

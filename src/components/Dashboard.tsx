@@ -5,10 +5,13 @@ import { SubjectButton } from "./SubjectButton";
 import { DiamondCounter } from "./DiamondCounter";
 import { Leaderboard } from "./Leaderboard";
 import { StatsChart } from "./StatsChart";
+import { RewardRedemption } from "./RewardRedemption";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { Button } from "./ui/button";
-import { ArrowLeft, History } from "lucide-react";
+import { ArrowLeft, History, Gift } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardProps {
   player: Player;
@@ -17,6 +20,7 @@ interface DashboardProps {
   onSelectSubject: (subject: Subject) => void;
   onBack: () => void;
   onViewHistory: () => void;
+  onPlayerUpdate: () => void;
 }
 
 export const Dashboard = ({ 
@@ -25,14 +29,48 @@ export const Dashboard = ({
   stats,
   onSelectSubject, 
   onBack,
-  onViewHistory
+  onViewHistory,
+  onPlayerUpdate
 }: DashboardProps) => {
+  const [showRedemption, setShowRedemption] = useState(false);
+  const { toast } = useToast();
   const isElephant = player.animal === 'elephant';
+
+  const handleRedeem = async (diamonds: number, voucherValue: number) => {
+    const newDiamonds = player.diamonds - diamonds;
+    
+    // Update player diamonds
+    await supabase.from('players')
+      .update({ diamonds: newDiamonds })
+      .eq('id', player.id);
+
+    // Log redemption
+    await supabase.from('voucher_redemptions').insert({
+      player_id: player.id,
+      diamonds_spent: diamonds,
+      voucher_value: voucherValue
+    });
+
+    toast({
+      title: "🎉 Đổi thưởng thành công!",
+      description: `Đã đổi ${diamonds} kim cương lấy phiếu ${voucherValue.toLocaleString('vi-VN')}đ`,
+    });
+
+    onPlayerUpdate();
+  };
   
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
+      {showRedemption && (
+        <RewardRedemption
+          player={player}
+          onClose={() => setShowRedemption(false)}
+          onRedeem={handleRedeem}
+        />
+      )}
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-8 flex-wrap gap-3">
         <Button
           variant="ghost"
           onClick={onBack}
@@ -42,7 +80,7 @@ export const Dashboard = ({
           Đổi người chơi
         </Button>
         
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <Button
             variant="outline"
             size="sm"
@@ -51,6 +89,18 @@ export const Dashboard = ({
           >
             <History className="w-4 h-4" />
             Lịch sử
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowRedemption(true)}
+            className={cn(
+              "gap-2",
+              player.diamonds >= 30 && "border-warning text-warning hover:bg-warning/10"
+            )}
+          >
+            <Gift className="w-4 h-4" />
+            Đổi quà
           </Button>
           <DiamondCounter count={player.diamonds} size="lg" />
         </div>
