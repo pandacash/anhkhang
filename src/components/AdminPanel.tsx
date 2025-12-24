@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Player } from "@/types/app";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { ArrowLeft, Lock, Plus, Minus, History, Shield } from "lucide-react";
+import { ArrowLeft, Lock, Plus, Minus, History, Shield, Gift, Trash2, Calendar } from "lucide-react";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { DiamondIcon } from "./icons/DiamondIcon";
@@ -27,6 +27,14 @@ type AdminLog = {
   created_at: string;
 };
 
+type VoucherRedemption = {
+  id: string;
+  player_id: string;
+  voucher_value: number;
+  redeemed_at: string;
+  used: boolean;
+};
+
 export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
@@ -36,7 +44,9 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
   const [reason, setReason] = useState("");
   const [isReward, setIsReward] = useState(true);
   const [logs, setLogs] = useState<AdminLog[]>([]);
+  const [vouchers, setVouchers] = useState<VoucherRedemption[]>([]);
   const [showLogs, setShowLogs] = useState(false);
+  const [showVouchers, setShowVouchers] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -61,6 +71,35 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
       setLogs(data as AdminLog[]);
     }
   };
+
+  const fetchVouchers = async () => {
+    const { data } = await supabase
+      .from('voucher_redemptions')
+      .select('*')
+      .eq('used', false)
+      .order('redeemed_at', { ascending: false });
+    
+    if (data) {
+      setVouchers(data as VoucherRedemption[]);
+    }
+  };
+
+  const handleMarkUsed = async (voucherId: string) => {
+    await supabase
+      .from('voucher_redemptions')
+      .update({ used: true, used_at: new Date().toISOString() })
+      .eq('id', voucherId);
+    
+    toast({ title: "Đã đánh dấu phiếu đã sử dụng!" });
+    fetchVouchers();
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchLogs();
+      fetchVouchers();
+    }
+  }, [isAuthenticated]);
 
   const handleSubmit = async () => {
     if (!selectedPlayer || !reason.trim()) {
@@ -190,7 +229,15 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
         
         <Button 
           variant="outline" 
-          onClick={() => setShowLogs(!showLogs)}
+          onClick={() => { setShowVouchers(!showVouchers); setShowLogs(false); }}
+          className="gap-2"
+        >
+          <Gift className="w-5 h-5" />
+          Phiếu ({vouchers.length})
+        </Button>
+        <Button 
+          variant="outline" 
+          onClick={() => { setShowLogs(!showLogs); setShowVouchers(false); }}
           className="gap-2"
         >
           <History className="w-5 h-5" />
@@ -329,6 +376,43 @@ export const AdminPanel = ({ players, onBack, onActionComplete }: AdminPanelProp
         >
           {loading ? "Đang xử lý..." : (isReward ? "✓ Thưởng" : "✗ Phạt")}
         </Button>
+
+        {/* Vouchers */}
+        {showVouchers && (
+          <div className="bg-card rounded-3xl p-6 shadow-kid border-2 border-border">
+            <h3 className="font-display text-lg mb-4 text-foreground flex items-center gap-2">
+              <Gift className="w-5 h-5 text-warning" />
+              Phiếu chưa sử dụng
+            </h3>
+            {vouchers.length === 0 ? (
+              <p className="text-muted-foreground text-center py-4">Không có phiếu nào</p>
+            ) : (
+              <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                {vouchers.map((v) => (
+                  <div key={v.id} className="p-4 rounded-xl border-2 border-warning/30 bg-warning/10 flex items-center justify-between">
+                    <div>
+                      <p className="font-bold text-foreground">{getPlayerName(v.player_id)}</p>
+                      <p className="text-lg text-warning font-display">{v.voucher_value.toLocaleString('vi-VN')}đ</p>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {formatDate(v.redeemed_at)}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleMarkUsed(v.id)}
+                      className="gap-1 border-success text-success hover:bg-success/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Đã dùng
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Logs */}
         {showLogs && logs.length > 0 && (

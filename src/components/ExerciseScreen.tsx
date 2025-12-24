@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Exercise, Subject, Player } from "@/types/app";
 import { DiamondCounter } from "./DiamondCounter";
 import { Confetti } from "./Confetti";
 import { Button } from "./ui/button";
-import { ArrowLeft, Loader2, CheckCircle, XCircle, Minus } from "lucide-react";
+import { ArrowLeft, Loader2, CheckCircle, XCircle, Minus, Timer } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { DiamondIcon } from "./icons/DiamondIcon";
@@ -15,6 +15,8 @@ interface ExerciseScreenProps {
   onBack: () => void;
   onDiamondChange: (change: number) => void;
 }
+
+const TIME_LIMIT = 60; // 60 seconds
 
 export const ExerciseScreen = ({ 
   player, 
@@ -28,16 +30,35 @@ export const ExerciseScreen = ({
   const [showResult, setShowResult] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
   const [diamondChange, setDiamondChange] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState(TIME_LIMIT);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
   const { toast } = useToast();
   
   const isMath = subject === 'math';
   const diamondReward = isMath ? 1 : 2; // Math = 1, English = 2
+
+  const handleTimeUp = useCallback(() => {
+    if (!showResult && selectedAnswer === null && exercise) {
+      setShowResult(true);
+      setDiamondChange(-1);
+      if (player.diamonds > 0) {
+        onDiamondChange(-1);
+      }
+      toast({
+        title: "⏰ Hết giờ!",
+        description: "Bạn đã hết thời gian làm bài!",
+        variant: "destructive"
+      });
+    }
+  }, [showResult, selectedAnswer, exercise, player.diamonds, onDiamondChange, toast]);
   
   const fetchExercise = async () => {
     setLoading(true);
     setSelectedAnswer(null);
     setShowResult(false);
     setDiamondChange(0);
+    setTimeLeft(TIME_LIMIT);
+    setIsTimerRunning(false);
     
     try {
       const { data, error } = await supabase.functions.invoke('generate-exercise', {
@@ -51,6 +72,7 @@ export const ExerciseScreen = ({
       if (error) throw error;
       
       setExercise(data);
+      setIsTimerRunning(true);
     } catch (error) {
       console.error('Error fetching exercise:', error);
       toast({
@@ -62,6 +84,26 @@ export const ExerciseScreen = ({
       setLoading(false);
     }
   };
+
+  // Timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (isTimerRunning && timeLeft > 0 && !showResult) {
+      interval = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            setIsTimerRunning(false);
+            handleTimeUp();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => clearInterval(interval);
+  }, [isTimerRunning, timeLeft, showResult, handleTimeUp]);
   
   useEffect(() => {
     fetchExercise();
@@ -72,6 +114,7 @@ export const ExerciseScreen = ({
     
     setSelectedAnswer(index);
     setShowResult(true);
+    setIsTimerRunning(false);
     
     const isCorrect = index === exercise?.correctAnswer;
     
@@ -108,6 +151,20 @@ export const ExerciseScreen = ({
         </Button>
         
         <div className="flex items-center gap-4">
+          {/* Timer */}
+          {!loading && exercise && !showResult && (
+            <div className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-full font-bold text-lg",
+              timeLeft <= 10 
+                ? "bg-destructive/20 text-destructive animate-pulse" 
+                : timeLeft <= 30 
+                  ? "bg-warning/20 text-warning"
+                  : "bg-success/20 text-success"
+            )}>
+              <Timer className="w-5 h-5" />
+              <span>{timeLeft}s</span>
+            </div>
+          )}
           <div className={cn(
             "px-4 py-2 rounded-full font-display text-lg",
             isMath 
@@ -193,7 +250,7 @@ export const ExerciseScreen = ({
                 ) : (
                   <div className="space-y-3">
                     <p className="text-2xl font-display text-destructive">
-                      😅 Chưa đúng rồi!
+                      {selectedAnswer === null ? "⏰ Hết giờ!" : "😅 Chưa đúng rồi!"}
                     </p>
                     {diamondChange < 0 && (
                       <div className="flex items-center justify-center gap-2">
