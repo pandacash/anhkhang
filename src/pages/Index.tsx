@@ -7,7 +7,8 @@ import { AdminPanel } from "@/components/AdminPanel";
 import { RewardHistory } from "@/components/RewardHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, Smartphone } from "lucide-react";
+import { useMobileDetection } from "@/hooks/useMobileDetection";
 
 type Screen = 'select' | 'dashboard' | 'exercise' | 'admin' | 'history';
 
@@ -18,6 +19,7 @@ const Index = () => {
   const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   const [stats, setStats] = useState<DailyStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMobileDetection();
   const { toast } = useToast();
 
   const fetchPlayers = useCallback(async () => {
@@ -124,6 +126,25 @@ const Index = () => {
       if (p) setCurrentPlayer(p);
     }
   };
+
+  // Block mobile devices immediately
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/20 via-background to-secondary/20 flex items-center justify-center p-6">
+        <div className="bg-card rounded-3xl shadow-2xl p-8 max-w-md text-center border-2 border-primary/20">
+          <div className="text-6xl mb-6">📱</div>
+          <Smartphone className="w-16 h-16 mx-auto text-muted-foreground mb-4" />
+          <h2 className="text-2xl font-bold text-foreground mb-4">
+            Không thể chơi trên điện thoại
+          </h2>
+          <p className="text-lg text-muted-foreground mb-6">
+            Hãy mượn <span className="font-bold text-primary">Surface của Bố</span> để kiếm Kim Cương nhé!
+          </p>
+          <div className="text-4xl">💎✨</div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
