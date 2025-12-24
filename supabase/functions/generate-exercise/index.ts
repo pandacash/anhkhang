@@ -20,12 +20,34 @@ serve(async (req) => {
 
     const isMath = subject === "math";
     
+    const mathGrade3Topics = [
+      "Bảng nhân chia 6, 7, 8, 9, 10 (VD: 7 x 8 = ?, 63 : 9 = ?)",
+      "Phép nhân số có 2-3 chữ số với số có 1 chữ số trong phạm vi 1000 (VD: 125 x 4 = ?)",
+      "Phép chia số có 2-3 chữ số cho số có 1 chữ số (VD: 248 : 4 = ?)",
+      "Tìm X trong biểu thức đơn giản (VD: X + 15 = 50, X x 3 = 27)",
+      "Tính giá trị biểu thức có dấu ngoặc (VD: (12 + 8) x 3 = ?)",
+      "Đổi đơn vị đo độ dài: mm, cm, dm, m, km (VD: 5m = ? cm)",
+      "Đổi đơn vị đo khối lượng: gam, kg (VD: 2kg = ? gam)",
+      "Bài toán về thời gian: giờ, phút, tháng, năm (VD: 2 giờ = ? phút)",
+      "Tính chu vi hình vuông, hình chữ nhật (VD: Hình vuông cạnh 5cm, tính chu vi)",
+      "Tính diện tích hình vuông, hình chữ nhật (VD: Hình chữ nhật dài 6cm rộng 4cm)",
+      "Giải toán có lời văn: hơn kém (VD: Lan có 25 viên bi, Hoa có ít hơn 8 viên. Hỏi Hoa có mấy viên?)",
+      "Giải toán có lời văn: gấp lần (VD: Số A là 12, số B gấp 3 lần số A. Tính số B?)",
+      "Giải toán có lời văn: mua sắm với tiền Việt Nam (VD: Mẹ mua 3 quyển vở, mỗi quyển 5000 đồng)",
+      "So sánh số trong phạm vi 1000 (VD: 456 ... 465, điền dấu >, <, =)"
+    ];
+    
+    const randomTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
+    
     const systemPrompt = isMath
       ? `Bạn là giáo viên Toán vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài toán phù hợp với trình độ:
          - Lớp 2: Cộng trừ trong 100, bảng nhân 2-5
-         - Lớp 3: Cộng trừ nhân chia trong phạm vi 1000, bảng nhân chia 6-10, phép tính hỗn hợp đơn giản (không dùng số lớn hơn 1000)
-         QUAN TRỌNG: Với lớp 3, CHỈ dùng số trong phạm vi từ 0 đến 1000. KHÔNG dùng số 10000 hay 100000.
-         Câu hỏi phải rõ ràng, dễ hiểu với trẻ em.`
+         - Lớp 3: ${randomTopic}
+         QUAN TRỌNG với lớp 3:
+         - CHỈ dùng số trong phạm vi từ 0 đến 1000
+         - Câu hỏi phải rõ ràng, dễ hiểu với trẻ em
+         - Đáp án phải chính xác về mặt toán học
+         - Các đáp án sai phải hợp lý (không quá khác biệt)`
       : `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập từ vựng đơn giản:
          - Hỏi nghĩa của từ tiếng Anh cơ bản
          - Hoặc hỏi từ tiếng Anh của một từ tiếng Việt
