@@ -37,21 +37,57 @@ serve(async (req) => {
       "So sánh số trong phạm vi 1000 (VD: 456 ... 465, điền dấu >, <, =)"
     ];
     
-    const randomTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
+    const englishGrade2Topics = [
+      "Từ vựng về động vật: dog, cat, bird, fish, elephant, lion, monkey (hỏi nghĩa hoặc dịch)",
+      "Từ vựng về màu sắc: red, blue, green, yellow, orange, pink, purple (hỏi nghĩa hoặc dịch)",
+      "Từ vựng về đồ vật trong nhà: table, chair, bed, door, window, book, pen (hỏi nghĩa hoặc dịch)",
+      "Từ vựng về gia đình: mother, father, sister, brother, grandmother, grandfather",
+      "Số đếm 1-20: one, two, three... twenty (hỏi số hoặc viết bằng chữ)",
+      "Điền từ còn thiếu: I ___ a student. (am/is/are)",
+      "Chọn đáp án đúng: This is ___ apple. (a/an)",
+      "Hỏi về đồ vật: What is this? - It is a ___.",
+      "Từ vựng về thức ăn: apple, banana, rice, bread, milk, water, egg"
+    ];
+    
+    const englishGrade3Topics = [
+      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer",
+      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold",
+      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E.",
+      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students.",
+      "Điền từ sở hữu: This is ___ book. (my/your/his/her)",
+      "Chia động từ đơn giản: She ___ (like/likes) apples.",
+      "Câu hỏi What/Where/Who: ___ is your name? ___ do you live?",
+      "Điền giới từ: The cat is ___ the table. (on/in/under)",
+      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat",
+      "Đặt câu với từ cho sẵn: (is / This / my / friend) -> ?",
+      "Từ vựng về hoạt động: run, jump, swim, read, write, sing, dance",
+      "Câu phủ định: I ___ like fish. (do not / does not)",
+      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet",
+      "So sánh hơn đơn giản: big -> bigger, small -> smaller"
+    ];
+    
+    const randomMathTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
+    const randomEnglishTopic = grade === 2 
+      ? englishGrade2Topics[Math.floor(Math.random() * englishGrade2Topics.length)]
+      : englishGrade3Topics[Math.floor(Math.random() * englishGrade3Topics.length)];
     
     const systemPrompt = isMath
       ? `Bạn là giáo viên Toán vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài toán phù hợp với trình độ:
          - Lớp 2: Cộng trừ trong 100, bảng nhân 2-5
-         - Lớp 3: ${randomTopic}
+         - Lớp 3: ${randomMathTopic}
          QUAN TRỌNG với lớp 3:
          - CHỈ dùng số trong phạm vi từ 0 đến 1000
          - Câu hỏi phải rõ ràng, dễ hiểu với trẻ em
          - Đáp án phải chính xác về mặt toán học
          - Các đáp án sai phải hợp lý (không quá khác biệt)`
-      : `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập từ vựng đơn giản:
-         - Hỏi nghĩa của từ tiếng Anh cơ bản
-         - Hoặc hỏi từ tiếng Anh của một từ tiếng Việt
-         Chủ đề: động vật, màu sắc, đồ vật, gia đình, số đếm.`;
+      : `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
+         Dạng bài: ${randomEnglishTopic}
+         
+         QUAN TRỌNG:
+         - Câu hỏi phải phù hợp với trình độ lớp ${grade}
+         - Sử dụng từ vựng đơn giản, dễ hiểu
+         - Có thể hỏi bằng Tiếng Việt hoặc Tiếng Anh
+         - Đáp án sai phải hợp lý, không quá dễ đoán`;
 
     const userPrompt = `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
 {
