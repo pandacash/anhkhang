@@ -1,0 +1,39 @@
+CREATE OR REPLACE FUNCTION public.apply_player_diamond_delta(p_player_id uuid, p_change integer)
+RETURNS TABLE(player_id uuid, old_diamonds integer, new_diamonds integer)
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO 'public'
+AS $function$
+#variable_conflict use_column
+DECLARE
+  v_old integer;
+  v_new integer;
+BEGIN
+  -- Get current diamonds with row lock
+  SELECT p.diamonds
+  INTO v_old
+  FROM public.players AS p
+  WHERE p.id = p_player_id
+  FOR UPDATE;
+
+  IF v_old IS NULL THEN
+    RAISE EXCEPTION 'Player not found';
+  END IF;
+
+  v_new := GREATEST(0, v_old + p_change);
+
+  -- Update player diamonds
+  UPDATE public.players AS p
+  SET diamonds = v_new
+  WHERE p.id = p_player_id;
+
+  -- Upsert daily stats
+  INSERT INTO public.daily_stats AS ds (player_id, date, diamonds)
+  VALUES (p_player_id, CURRENT_DATE, p_change)
+  ON CONFLICT (player_id, date)
+  DO UPDATE SET diamonds = ds.diamonds + EXCLUDED.diamonds;
+
+  RETURN QUERY
+  SELECT p_player_id AS player_id, v_old AS old_diamonds, v_new AS new_diamonds;
+END;
+$function$;
