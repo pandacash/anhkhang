@@ -357,6 +357,242 @@ export const ItemIcon = ({ imageKey, size = 48, className }: ItemIconProps) => {
           </svg>
         );
       
+      // New Panda items
+      case 'panda_bomber_jacket':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M16 16 L48 16 L52 48 L12 48 Z" fill="#2F4F4F"/>
+            <path d="M16 16 L8 32 L8 48 L12 48 L16 32 Z" fill="#2F4F4F"/>
+            <path d="M48 16 L56 32 L56 48 L52 48 L48 32 Z" fill="#2F4F4F"/>
+            <rect x="28" y="16" width="8" height="32" fill="#FFD700"/>
+            <circle cx="24" cy="28" r="3" fill="#FF6B6B"/>
+            <circle cx="40" cy="28" r="3" fill="#FF6B6B"/>
+          </svg>
+        );
+      
+      case 'panda_cap':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="24" ry="12" fill="#FF0000"/>
+            <ellipse cx="32" cy="36" rx="20" ry="16" fill="#FF0000"/>
+            <path d="M8 40 L4 48 L28 48 L28 40" fill="#1A1A1A"/>
+            <rect x="24" y="28" width="16" height="8" fill="#FFFFFF"/>
+          </svg>
+        );
+      
+      case 'panda_aviator_glasses':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="18" cy="32" rx="12" ry="10" fill="#8B4513" stroke="#FFD700" strokeWidth="2"/>
+            <ellipse cx="46" cy="32" rx="12" ry="10" fill="#8B4513" stroke="#FFD700" strokeWidth="2"/>
+            <rect x="30" y="30" width="4" height="4" fill="#FFD700"/>
+            <ellipse cx="18" cy="32" rx="8" ry="6" fill="#87CEEB" opacity="0.5"/>
+            <ellipse cx="46" cy="32" rx="8" ry="6" fill="#87CEEB" opacity="0.5"/>
+          </svg>
+        );
+      
+      case 'panda_basketball_shoes':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M8 32 L24 32 L24 48 L4 48 L4 40 Z" fill="#FF6B6B"/>
+            <path d="M40 32 L56 32 L60 40 L60 48 L40 48 Z" fill="#FF6B6B"/>
+            <rect x="8" y="32" width="16" height="8" fill="#FFFFFF"/>
+            <rect x="40" y="32" width="16" height="8" fill="#FFFFFF"/>
+            <circle cx="16" cy="44" r="3" fill="#1A1A1A"/>
+            <circle cx="48" cy="44" r="3" fill="#1A1A1A"/>
+          </svg>
+        );
+      
+      case 'panda_katana':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <rect x="30" y="4" width="4" height="40" fill="#C0C0C0"/>
+            <polygon points="32,0 28,8 36,8" fill="#E8E8E8"/>
+            <rect x="26" y="44" width="12" height="4" fill="#8B0000"/>
+            <rect x="28" y="48" width="8" height="12" fill="#2F2F2F"/>
+            <path d="M28 8 L32 4 L36 8" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'panda_golden_armor':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M16 12 L48 12 L52 48 L12 48 Z" fill="#FFD700"/>
+            <path d="M20 16 L44 16 L46 44 L18 44 Z" fill="#FFA500"/>
+            <circle cx="32" cy="28" r="8" fill="#FF0000" stroke="#8B0000" strokeWidth="2"/>
+            <path d="M28 28 L36 28 M32 24 L32 32" stroke="#FFD700" strokeWidth="2"/>
+          </svg>
+        );
+      
+      case 'panda_emperor_crown':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <polygon points="8,48 12,16 24,28 32,8 40,28 52,16 56,48" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
+            <circle cx="32" cy="16" r="6" fill="#FF0000"/>
+            <circle cx="18" cy="24" r="4" fill="#00CED1"/>
+            <circle cx="46" cy="24" r="4" fill="#00CED1"/>
+            <rect x="8" y="48" width="48" height="8" fill="#8B0000"/>
+            <rect x="16" y="48" width="32" height="8" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'panda_ninja_gloves':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="18" cy="36" rx="12" ry="14" fill="#2F2F2F"/>
+            <ellipse cx="46" cy="36" rx="12" ry="14" fill="#2F2F2F"/>
+            <rect x="8" y="44" width="20" height="8" fill="#1A1A1A"/>
+            <rect x="36" y="44" width="20" height="8" fill="#1A1A1A"/>
+            <path d="M14 28 L18 20 L22 28" fill="#C0C0C0"/>
+            <path d="M42 28 L46 20 L50 28" fill="#C0C0C0"/>
+          </svg>
+        );
+      
+      case 'panda_rocket_boots':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M12 16 L24 16 L24 44 L8 44 L8 24 Z" fill="#C0C0C0"/>
+            <path d="M40 16 L52 16 L56 24 L56 44 L40 44 Z" fill="#C0C0C0"/>
+            <ellipse cx="16" cy="52" rx="8" ry="4" fill="#FF6B6B"/>
+            <ellipse cx="48" cy="52" rx="8" ry="4" fill="#FF6B6B"/>
+            <rect x="12" y="44" width="8" height="8" fill="#FF0000"/>
+            <rect x="44" y="44" width="8" height="8" fill="#FF0000"/>
+            <path d="M14 56 L18 64 L14 64 Z" fill="#FFA500"/>
+            <path d="M46 56 L50 64 L46 64 Z" fill="#FFA500"/>
+          </svg>
+        );
+      
+      case 'panda_laser_gun':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <rect x="8" y="28" width="32" height="14" rx="4" fill="#4169E1"/>
+            <rect x="36" y="24" width="20" height="22" rx="4" fill="#1E3A8A"/>
+            <circle cx="16" cy="35" r="6" fill="#00FF00"/>
+            <rect x="4" y="32" width="8" height="6" fill="#00CED1"/>
+            <path d="M0 32 L4 35 L0 38" fill="#00FF00"/>
+          </svg>
+        );
+      
+      // New Elephant items
+      case 'elephant_gown':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M24 8 L40 8 L52 56 L12 56 Z" fill="#9370DB"/>
+            <path d="M20 8 Q32 16 44 8" fill="#8A2BE2"/>
+            <ellipse cx="32" cy="56" rx="24" ry="6" fill="#8A2BE2"/>
+            <circle cx="32" cy="16" r="4" fill="#FFD700"/>
+            <path d="M20 24 L44 24" stroke="#FFD700" strokeWidth="2"/>
+            <circle cx="24" cy="36" r="2" fill="#FFD700"/>
+            <circle cx="32" cy="40" r="2" fill="#FFD700"/>
+            <circle cx="40" cy="36" r="2" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'elephant_beret':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="24" ry="10" fill="#FF69B4"/>
+            <ellipse cx="28" cy="32" rx="20" ry="14" fill="#FF69B4"/>
+            <circle cx="32" cy="20" r="4" fill="#FF1493"/>
+            <path d="M12 38 Q28 28 48 38" fill="#FF1493"/>
+          </svg>
+        );
+      
+      case 'elephant_jade_bracelet':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="32" rx="20" ry="20" fill="none" stroke="#228B22" strokeWidth="8"/>
+            <ellipse cx="32" cy="32" rx="16" ry="16" fill="none" stroke="#32CD32" strokeWidth="4"/>
+            <circle cx="32" cy="12" r="4" fill="#FFD700"/>
+            <circle cx="32" cy="52" r="4" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'elephant_heels':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M8 32 L28 32 L28 40 L8 40 L4 56 L8 56 L12 44 L28 44 L28 32" fill="#FF69B4"/>
+            <path d="M36 32 L56 32 L60 56 L56 56 L52 44 L36 44 L36 40 L56 40 L56 32" fill="#FF69B4"/>
+            <rect x="4" y="52" width="8" height="8" fill="#8B4513"/>
+            <rect x="52" y="52" width="8" height="8" fill="#8B4513"/>
+            <circle cx="18" cy="36" r="3" fill="#FFD700"/>
+            <circle cx="46" cy="36" r="3" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'elephant_scepter':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <rect x="28" y="20" width="8" height="40" fill="#FFD700"/>
+            <circle cx="32" cy="12" r="10" fill="#9370DB" stroke="#FFD700" strokeWidth="2"/>
+            <circle cx="32" cy="12" r="5" fill="#FF69B4"/>
+            <polygon points="32,0 28,8 36,8" fill="#FFD700"/>
+            <rect x="26" y="56" width="12" height="4" fill="#8B4513"/>
+          </svg>
+        );
+      
+      case 'elephant_royal_robe':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M16 8 L48 8 L56 56 L8 56 Z" fill="#8B0000"/>
+            <path d="M8 8 L16 8 L12 56 L4 56 Z" fill="#FFFAFA"/>
+            <path d="M48 8 L56 8 L60 56 L52 56 Z" fill="#FFFAFA"/>
+            <circle cx="32" cy="16" r="6" fill="#FFD700"/>
+            <path d="M24 24 L40 24" stroke="#FFD700" strokeWidth="3"/>
+            <ellipse cx="10" cy="20" rx="4" ry="6" fill="#D3D3D3"/>
+            <ellipse cx="54" cy="20" rx="4" ry="6" fill="#D3D3D3"/>
+          </svg>
+        );
+      
+      case 'elephant_diamond_crown':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <polygon points="8,48 14,16 24,28 32,8 40,28 50,16 56,48" fill="#E8E8E8" stroke="#C0C0C0" strokeWidth="2"/>
+            <polygon points="32,12 28,24 36,24" fill="#87CEEB"/>
+            <polygon points="18,24 14,32 22,32" fill="#87CEEB"/>
+            <polygon points="46,24 42,32 50,32" fill="#87CEEB"/>
+            <rect x="8" y="48" width="48" height="8" fill="#E8E8E8"/>
+            <circle cx="32" cy="52" r="4" fill="#00CED1"/>
+          </svg>
+        );
+      
+      case 'elephant_earrings':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <circle cx="16" cy="20" r="4" fill="#FFD700"/>
+            <circle cx="48" cy="20" r="4" fill="#FFD700"/>
+            <path d="M16 24 L16 36" stroke="#FFD700" strokeWidth="2"/>
+            <path d="M48 24 L48 36" stroke="#FFD700" strokeWidth="2"/>
+            <circle cx="16" cy="40" r="6" fill="#FFFAFA" stroke="#DDD" strokeWidth="1"/>
+            <circle cx="48" cy="40" r="6" fill="#FFFAFA" stroke="#DDD" strokeWidth="1"/>
+            <circle cx="16" cy="50" r="4" fill="#FF69B4"/>
+            <circle cx="48" cy="50" r="4" fill="#FF69B4"/>
+          </svg>
+        );
+      
+      case 'elephant_crystal_shoes':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <path d="M8 32 L28 32 L28 44 L4 44 L4 40 Z" fill="#87CEEB" opacity="0.7"/>
+            <path d="M36 32 L56 32 L60 40 L60 44 L36 44 Z" fill="#87CEEB" opacity="0.7"/>
+            <path d="M8 32 L28 32 L28 44 L4 44 L4 40 Z" stroke="#E8E8E8" strokeWidth="2" fill="none"/>
+            <path d="M36 32 L56 32 L60 40 L60 44 L36 44 Z" stroke="#E8E8E8" strokeWidth="2" fill="none"/>
+            <circle cx="18" cy="38" r="3" fill="#FFD700"/>
+            <circle cx="48" cy="38" r="3" fill="#FFD700"/>
+          </svg>
+        );
+      
+      case 'elephant_magic_mirror':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="28" rx="20" ry="24" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
+            <ellipse cx="32" cy="28" rx="16" ry="20" fill="#87CEEB"/>
+            <ellipse cx="28" cy="24" rx="4" ry="6" fill="#FFFFFF" opacity="0.5"/>
+            <rect x="28" y="52" width="8" height="12" fill="#8B4513"/>
+            <circle cx="32" cy="8" r="4" fill="#FF69B4"/>
+          </svg>
+        );
+      
       default:
         return (
           <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
