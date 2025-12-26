@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ShopItem } from "@/types/shop";
+import { ItemIcon } from "@/components/shop/ItemIcon";
 
 interface PandaAvatarProps {
   className?: string;
@@ -8,6 +9,15 @@ interface PandaAvatarProps {
   equippedItems?: ShopItem[];
   showDecorations?: boolean;
 }
+
+// Known item keys that have custom SVG rendering in the avatar
+const CUSTOM_RENDERED_ITEMS = [
+  'panda_ninja_hat', 'panda_cowboy_hat', 'panda_helmet',
+  'panda_armor',
+  'panda_shoes',
+  'panda_sword', 'panda_watergun', 'panda_shield',
+  'panda_sunglasses', 'panda_bow', 'panda_boxing_gloves', 'panda_belt'
+];
 
 export const PandaAvatar = ({ 
   className, 
@@ -267,6 +277,42 @@ export const PandaAvatar = ({
           </>
         )}
       </svg>
+      
+      {/* Generic item rendering for items without custom SVG */}
+      {/* Hat - generic */}
+      {hat && !CUSTOM_RENDERED_ITEMS.includes(hat.image_key) && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2" style={{ width: size * 0.45, height: size * 0.45 }}>
+          <ItemIcon imageKey={hat.image_key} size={size * 0.45} />
+        </div>
+      )}
+      
+      {/* Armor - generic */}
+      {armor && !CUSTOM_RENDERED_ITEMS.includes(armor.image_key) && (
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2" style={{ width: size * 0.5, height: size * 0.5 }}>
+          <ItemIcon imageKey={armor.image_key} size={size * 0.5} />
+        </div>
+      )}
+      
+      {/* Weapon - generic */}
+      {weapon && !CUSTOM_RENDERED_ITEMS.includes(weapon.image_key) && (
+        <div className="absolute top-1/4 -right-2" style={{ width: size * 0.35, height: size * 0.35 }}>
+          <ItemIcon imageKey={weapon.image_key} size={size * 0.35} />
+        </div>
+      )}
+      
+      {/* Shoes - generic */}
+      {shoes && !CUSTOM_RENDERED_ITEMS.includes(shoes.image_key) && (
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2" style={{ width: size * 0.4, height: size * 0.4 }}>
+          <ItemIcon imageKey={shoes.image_key} size={size * 0.4} />
+        </div>
+      )}
+      
+      {/* Accessory - generic */}
+      {accessory && !CUSTOM_RENDERED_ITEMS.includes(accessory.image_key) && (
+        <div className="absolute top-1/2 -left-2" style={{ width: size * 0.3, height: size * 0.3 }}>
+          <ItemIcon imageKey={accessory.image_key} size={size * 0.3} />
+        </div>
+      )}
       
       {/* Pet display */}
       {pet && (

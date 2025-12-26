@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ShopItem } from "@/types/shop";
+import { ItemIcon } from "@/components/shop/ItemIcon";
 
 interface ElephantAvatarProps {
   className?: string;
@@ -8,6 +9,15 @@ interface ElephantAvatarProps {
   equippedItems?: ShopItem[];
   showDecorations?: boolean;
 }
+
+// Known item keys that have custom SVG rendering in the avatar
+const CUSTOM_RENDERED_ITEMS = [
+  'elephant_crown', 'elephant_flower_hat', 'elephant_witch_hat', 'elephant_flower_crown',
+  'elephant_cape', 'elephant_dress',
+  'elephant_boots',
+  'elephant_magic_wand',
+  'elephant_bells', 'elephant_scarf', 'elephant_pearl_necklace', 'elephant_headband'
+];
 
 export const ElephantAvatar = ({ 
   className, 
@@ -322,6 +332,42 @@ export const ElephantAvatar = ({
           <path d="M10 60 C10 58 12 56 14 58 C16 56 18 58 18 60 C18 63 14 66 14 66 C14 66 10 63 10 60 Z" fill="hsl(340, 80%, 70%)"/>
         )}
       </svg>
+      
+      {/* Generic item rendering for items without custom SVG */}
+      {/* Hat - generic */}
+      {hat && !CUSTOM_RENDERED_ITEMS.includes(hat.image_key) && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2" style={{ width: size * 0.45, height: size * 0.45 }}>
+          <ItemIcon imageKey={hat.image_key} size={size * 0.45} />
+        </div>
+      )}
+      
+      {/* Armor - generic */}
+      {armor && !CUSTOM_RENDERED_ITEMS.includes(armor.image_key) && (
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2" style={{ width: size * 0.5, height: size * 0.5 }}>
+          <ItemIcon imageKey={armor.image_key} size={size * 0.5} />
+        </div>
+      )}
+      
+      {/* Weapon - generic */}
+      {weapon && !CUSTOM_RENDERED_ITEMS.includes(weapon.image_key) && (
+        <div className="absolute top-1/4 -right-2" style={{ width: size * 0.35, height: size * 0.35 }}>
+          <ItemIcon imageKey={weapon.image_key} size={size * 0.35} />
+        </div>
+      )}
+      
+      {/* Shoes - generic */}
+      {shoes && !CUSTOM_RENDERED_ITEMS.includes(shoes.image_key) && (
+        <div className="absolute bottom-1 left-1/2 -translate-x-1/2" style={{ width: size * 0.4, height: size * 0.4 }}>
+          <ItemIcon imageKey={shoes.image_key} size={size * 0.4} />
+        </div>
+      )}
+      
+      {/* Accessory - generic */}
+      {accessory && !CUSTOM_RENDERED_ITEMS.includes(accessory.image_key) && (
+        <div className="absolute top-1/2 -left-2" style={{ width: size * 0.3, height: size * 0.3 }}>
+          <ItemIcon imageKey={accessory.image_key} size={size * 0.3} />
+        </div>
+      )}
       
       {/* Pet display */}
       {pet && (

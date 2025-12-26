@@ -40,9 +40,10 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
       .limit(50);
     
     if (data) {
-      // Filter out translation help logs - these are not punishments
+      // Filter out translation help logs and shop purchases - these are not punishments
       const filteredLogs = (data as AdminLog[]).filter(
-        log => !log.reason.includes('Sử dụng hỗ trợ dịch tiếng Anh')
+        log => !log.reason.includes('Sử dụng hỗ trợ dịch tiếng Anh') && 
+               !log.reason.startsWith('Mua ')
       );
       setLogs(filteredLogs);
     }
