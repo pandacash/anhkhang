@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { Player } from "@/types/app";
 import { Button } from "./ui/button";
-import { ArrowLeft, History, Gift, AlertTriangle } from "lucide-react";
+import { ArrowLeft, History, Gift, AlertTriangle, ShoppingBag } from "lucide-react";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { DiamondIcon } from "./icons/DiamondIcon";
@@ -38,22 +38,23 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
       .eq('player_id', player.id)
       .order('created_at', { ascending: false })
       .limit(50);
-    
+
     if (data) {
-      // Filter out translation help logs and shop purchases - these are not punishments
+      // Filter out translation help logs - these are not rewards/punishments/purchases
       const filteredLogs = (data as AdminLog[]).filter(
-        log => !log.reason.includes('Sử dụng hỗ trợ dịch tiếng Anh') && 
-               !log.reason.startsWith('Mua ')
+        (log) => !log.reason?.includes('Sử dụng hỗ trợ dịch tiếng Anh')
       );
       setLogs(filteredLogs);
     }
     setLoading(false);
   };
 
+  const isPurchase = (log: AdminLog) => (log.reason ?? '').trim().toLowerCase().startsWith('mua ');
+
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString('vi-VN', { 
-      day: '2-digit', 
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
@@ -62,7 +63,7 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
   };
 
   const rewards = logs.filter(l => l.diamond_change > 0);
-  const punishments = logs.filter(l => l.diamond_change < 0);
+  const punishments = logs.filter(l => l.diamond_change < 0 && !isPurchase(l));
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-6">
@@ -126,46 +127,65 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
                 Chi tiết
               </h3>
               <div className="space-y-3 max-h-[500px] overflow-y-auto">
-                {logs.map((log) => (
-                  <div 
-                    key={log.id}
-                    className={cn(
-                      "p-4 rounded-xl border-2",
-                      log.diamond_change > 0 
-                        ? "border-success/30 bg-success/5" 
-                        : "border-destructive/30 bg-destructive/5"
-                    )}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          {log.diamond_change > 0 ? (
-                            <Gift className="w-4 h-4 text-success" />
-                          ) : (
-                            <AlertTriangle className="w-4 h-4 text-destructive" />
-                          )}
-                          <span className={cn(
-                            "font-bold",
-                            log.diamond_change > 0 ? "text-success" : "text-destructive"
-                          )}>
-                            {log.diamond_change > 0 ? "Được thưởng" : "Bị phạt"}
-                          </span>
+                {logs.map((log) => {
+                  const type: 'reward' | 'punishment' | 'purchase' =
+                    log.diamond_change > 0 ? 'reward' : (isPurchase(log) ? 'purchase' : 'punishment');
+
+                  return (
+                    <div
+                      key={log.id}
+                      className={cn(
+                        "p-4 rounded-xl border-2",
+                        type === 'reward'
+                          ? "border-success/30 bg-success/5"
+                          : type === 'purchase'
+                            ? "border-primary/30 bg-primary/5"
+                            : "border-destructive/30 bg-destructive/5"
+                      )}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            {type === 'reward' ? (
+                              <Gift className="w-4 h-4 text-success" />
+                            ) : type === 'purchase' ? (
+                              <ShoppingBag className="w-4 h-4 text-primary" />
+                            ) : (
+                              <AlertTriangle className="w-4 h-4 text-destructive" />
+                            )}
+                            <span
+                              className={cn(
+                                "font-bold",
+                                type === 'reward'
+                                  ? "text-success"
+                                  : type === 'purchase'
+                                    ? "text-primary"
+                                    : "text-destructive"
+                              )}
+                            >
+                              {type === 'reward' ? "Được thưởng" : type === 'purchase' ? "Đã mua" : "Bị phạt"}
+                            </span>
+                          </div>
+                          <p className="text-foreground">{log.reason}</p>
+                          <p className="text-xs text-muted-foreground mt-2">{formatDate(log.created_at)}</p>
                         </div>
-                        <p className="text-foreground">{log.reason}</p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {formatDate(log.created_at)}
-                        </p>
-                      </div>
-                      <div className={cn(
-                        "flex items-center gap-1 font-bold text-lg",
-                        log.diamond_change > 0 ? "text-success" : "text-destructive"
-                      )}>
-                        {log.diamond_change > 0 ? "+" : ""}{log.diamond_change}
-                        <DiamondIcon size={20} />
+                        <div
+                          className={cn(
+                            "flex items-center gap-1 font-bold text-lg",
+                            type === 'reward'
+                              ? "text-success"
+                              : type === 'purchase'
+                                ? "text-primary"
+                                : "text-destructive"
+                          )}
+                        >
+                          {log.diamond_change > 0 ? "+" : ""}{log.diamond_change}
+                          <DiamondIcon size={20} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>
