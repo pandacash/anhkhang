@@ -593,6 +593,238 @@ export const ItemIcon = ({ imageKey, size = 48, className }: ItemIconProps) => {
           </svg>
         );
       
+      // === PETS ===
+      case 'pet_corgi':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="38" rx="20" ry="16" fill="#F4A460"/>
+            <ellipse cx="32" cy="42" rx="14" ry="10" fill="#FFDAB9"/>
+            <ellipse cx="32" cy="24" rx="14" ry="12" fill="#F4A460"/>
+            <ellipse cx="20" cy="14" rx="6" ry="10" fill="#F4A460" transform="rotate(-20 20 14)"/>
+            <ellipse cx="44" cy="14" rx="6" ry="10" fill="#F4A460" transform="rotate(20 44 14)"/>
+            <ellipse cx="20" cy="15" rx="4" ry="7" fill="#FFE4C4" transform="rotate(-20 20 15)"/>
+            <ellipse cx="44" cy="15" rx="4" ry="7" fill="#FFE4C4" transform="rotate(20 44 15)"/>
+            <circle cx="26" cy="22" r="3" fill="#1a1a1a"/>
+            <circle cx="38" cy="22" r="3" fill="#1a1a1a"/>
+            <circle cx="27" cy="21" r="1" fill="white"/>
+            <circle cx="39" cy="21" r="1" fill="white"/>
+            <ellipse cx="32" cy="28" rx="4" ry="3" fill="#1a1a1a"/>
+            <path d="M28 32 Q32 36 36 32" stroke="#1a1a1a" strokeWidth="2" fill="none"/>
+            <ellipse cx="18" cy="50" rx="5" ry="4" fill="#F4A460"/>
+            <ellipse cx="46" cy="50" rx="5" ry="4" fill="#F4A460"/>
+            <ellipse cx="26" cy="52" rx="4" ry="3" fill="#F4A460"/>
+            <ellipse cx="38" cy="52" rx="4" ry="3" fill="#F4A460"/>
+          </svg>
+        );
+      
+      case 'pet_munchkin':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="16" ry="14" fill="#808080"/>
+            <ellipse cx="32" cy="44" rx="10" ry="8" fill="#D3D3D3"/>
+            <ellipse cx="32" cy="24" rx="14" ry="12" fill="#808080"/>
+            <polygon points="18,12 22,24 14,24" fill="#808080"/>
+            <polygon points="46,12 50,24 42,24" fill="#808080"/>
+            <polygon points="19,14 21,22 17,22" fill="#FFB6C1"/>
+            <polygon points="45,14 47,22 43,22" fill="#FFB6C1"/>
+            <ellipse cx="26" cy="22" rx="5" ry="6" fill="#90EE90"/>
+            <ellipse cx="38" cy="22" rx="5" ry="6" fill="#90EE90"/>
+            <ellipse cx="27" cy="23" rx="2" ry="3" fill="#1a1a1a"/>
+            <ellipse cx="37" cy="23" rx="2" ry="3" fill="#1a1a1a"/>
+            <ellipse cx="32" cy="28" rx="3" ry="2" fill="#FFB6C1"/>
+            <path d="M29 31 L32 33 L35 31" stroke="#1a1a1a" strokeWidth="1" fill="none"/>
+            <path d="M24 28 L18 26" stroke="#808080" strokeWidth="1"/>
+            <path d="M24 30 L18 30" stroke="#808080" strokeWidth="1"/>
+            <path d="M40 28 L46 26" stroke="#808080" strokeWidth="1"/>
+            <path d="M40 30 L46 30" stroke="#808080" strokeWidth="1"/>
+            <ellipse cx="22" cy="52" rx="4" ry="3" fill="#808080"/>
+            <ellipse cx="42" cy="52" rx="4" ry="3" fill="#808080"/>
+            <path d="M48 36 Q56 32 54 40 Q52 48 48 44" fill="#808080"/>
+          </svg>
+        );
+      
+      case 'pet_trex':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="38" rx="14" ry="16" fill="#228B22"/>
+            <ellipse cx="32" cy="42" rx="8" ry="10" fill="#90EE90"/>
+            <ellipse cx="38" cy="28" rx="12" ry="10" fill="#228B22"/>
+            <ellipse cx="42" cy="26" rx="8" ry="6" fill="#228B22"/>
+            <circle cx="46" cy="24" r="3" fill="white"/>
+            <circle cx="47" cy="24" r="2" fill="#1a1a1a"/>
+            <path d="M50 28 L56 30 L50 32 L56 34 L50 36" fill="#228B22"/>
+            <polygon points="36,18 38,14 40,18 42,14 44,18" fill="#228B22"/>
+            <ellipse cx="18" cy="34" rx="4" ry="6" fill="#228B22"/>
+            <ellipse cx="26" cy="52" rx="5" ry="4" fill="#228B22"/>
+            <ellipse cx="38" cy="52" rx="5" ry="4" fill="#228B22"/>
+            <path d="M44 44 Q52 42 50 50 Q48 56 44 52" fill="#228B22"/>
+          </svg>
+        );
+      
+      case 'pet_hamster':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="38" rx="18" ry="16" fill="#D2691E"/>
+            <ellipse cx="32" cy="42" rx="12" ry="10" fill="#FFDAB9"/>
+            <ellipse cx="32" cy="28" rx="16" ry="14" fill="#D2691E"/>
+            <ellipse cx="32" cy="32" rx="10" ry="8" fill="#FFDAB9"/>
+            <circle cx="18" cy="18" r="6" fill="#D2691E"/>
+            <circle cx="46" cy="18" r="6" fill="#D2691E"/>
+            <circle cx="18" cy="18" r="3" fill="#FFB6C1"/>
+            <circle cx="46" cy="18" r="3" fill="#FFB6C1"/>
+            <circle cx="26" cy="26" r="3" fill="#1a1a1a"/>
+            <circle cx="38" cy="26" r="3" fill="#1a1a1a"/>
+            <circle cx="27" cy="25" r="1" fill="white"/>
+            <circle cx="39" cy="25" r="1" fill="white"/>
+            <ellipse cx="32" cy="32" rx="3" ry="2" fill="#FFB6C1"/>
+            <circle cx="22" cy="32" r="5" fill="#FFB6C1" opacity="0.5"/>
+            <circle cx="42" cy="32" r="5" fill="#FFB6C1" opacity="0.5"/>
+            <ellipse cx="24" cy="52" rx="4" ry="3" fill="#D2691E"/>
+            <ellipse cx="40" cy="52" rx="4" ry="3" fill="#D2691E"/>
+          </svg>
+        );
+      
+      case 'pet_rabbit':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="42" rx="14" ry="12" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="32" cy="46" rx="8" ry="6" fill="#FFF5EE"/>
+            <ellipse cx="32" cy="28" rx="12" ry="10" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="24" cy="10" rx="5" ry="14" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="40" cy="10" rx="5" ry="14" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="24" cy="10" rx="3" ry="10" fill="#FFB6C1"/>
+            <ellipse cx="40" cy="10" rx="3" ry="10" fill="#FFB6C1"/>
+            <circle cx="26" cy="26" r="3" fill="#FF69B4"/>
+            <circle cx="38" cy="26" r="3" fill="#FF69B4"/>
+            <circle cx="27" cy="25" r="1.5" fill="white"/>
+            <circle cx="39" cy="25" r="1.5" fill="white"/>
+            <ellipse cx="32" cy="32" rx="3" ry="2" fill="#FFB6C1"/>
+            <path d="M28 35 Q32 38 36 35" stroke="#1a1a1a" strokeWidth="1" fill="none"/>
+            <ellipse cx="24" cy="52" rx="5" ry="4" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="40" cy="52" rx="5" ry="4" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <circle cx="46" cy="44" r="4" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+          </svg>
+        );
+      
+      case 'pet_fox':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="14" ry="12" fill="#FF6600"/>
+            <ellipse cx="32" cy="44" rx="8" ry="6" fill="#FFFFFF"/>
+            <ellipse cx="32" cy="26" rx="12" ry="10" fill="#FF6600"/>
+            <polygon points="18,20 24,28 12,28" fill="#FF6600"/>
+            <polygon points="46,20 52,28 40,28" fill="#FF6600"/>
+            <polygon points="19,22 23,27 15,27" fill="#1a1a1a"/>
+            <polygon points="45,22 49,27 41,27" fill="#1a1a1a"/>
+            <ellipse cx="26" cy="24" rx="3" ry="4" fill="#FFD700"/>
+            <ellipse cx="38" cy="24" rx="3" ry="4" fill="#FFD700"/>
+            <ellipse cx="27" cy="25" rx="1.5" ry="2" fill="#1a1a1a"/>
+            <ellipse cx="37" cy="25" rx="1.5" ry="2" fill="#1a1a1a"/>
+            <ellipse cx="32" cy="30" rx="3" ry="2" fill="#1a1a1a"/>
+            <ellipse cx="32" cy="34" rx="4" ry="2" fill="#FFFFFF"/>
+            <ellipse cx="24" cy="52" rx="4" ry="3" fill="#1a1a1a"/>
+            <ellipse cx="40" cy="52" rx="4" ry="3" fill="#1a1a1a"/>
+            <path d="M46 38 Q58 34 56 46 Q54 54 48 50" fill="#FF6600"/>
+            <path d="M52 48 Q54 52 50 52" fill="#FFFFFF"/>
+          </svg>
+        );
+      
+      case 'pet_owl':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="38" rx="16" ry="18" fill="#8B4513"/>
+            <ellipse cx="32" cy="44" rx="10" ry="10" fill="#DEB887"/>
+            <path d="M32 44 L28 52 L32 50 L36 52 Z" fill="#DEB887"/>
+            <ellipse cx="32" cy="28" rx="14" ry="12" fill="#8B4513"/>
+            <polygon points="20,18 26,26 14,26" fill="#8B4513"/>
+            <polygon points="44,18 50,26 38,26" fill="#8B4513"/>
+            <circle cx="24" cy="26" r="8" fill="#DEB887"/>
+            <circle cx="40" cy="26" r="8" fill="#DEB887"/>
+            <circle cx="24" cy="26" r="5" fill="#FFD700"/>
+            <circle cx="40" cy="26" r="5" fill="#FFD700"/>
+            <circle cx="24" cy="26" r="3" fill="#1a1a1a"/>
+            <circle cx="40" cy="26" r="3" fill="#1a1a1a"/>
+            <polygon points="32,32 28,36 36,36" fill="#FF6600"/>
+            <path d="M18 38 Q12 44 16 52 Q18 56 22 54" fill="#8B4513"/>
+            <path d="M46 38 Q52 44 48 52 Q46 56 42 54" fill="#8B4513"/>
+          </svg>
+        );
+      
+      case 'pet_dragon':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="14" ry="14" fill="#9400D3"/>
+            <ellipse cx="32" cy="44" rx="8" ry="8" fill="#DDA0DD"/>
+            <ellipse cx="32" cy="26" rx="12" ry="10" fill="#9400D3"/>
+            <polygon points="26,16 28,10 30,16" fill="#9400D3"/>
+            <polygon points="34,16 36,10 38,16" fill="#9400D3"/>
+            <polygon points="30,14 32,6 34,14" fill="#FF69B4"/>
+            <circle cx="26" cy="24" r="4" fill="#FFD700"/>
+            <circle cx="38" cy="24" r="4" fill="#FFD700"/>
+            <ellipse cx="27" cy="25" rx="1.5" ry="2" fill="#1a1a1a"/>
+            <ellipse cx="37" cy="25" rx="1.5" ry="2" fill="#1a1a1a"/>
+            <ellipse cx="32" cy="30" rx="2" ry="1.5" fill="#1a1a1a"/>
+            <path d="M30 34 L28 38 M32 34 L32 38 M34 34 L36 38" stroke="#FF6600" strokeWidth="2"/>
+            <path d="M18 32 Q8 28 12 40 Q14 48 20 44" fill="#9400D3"/>
+            <path d="M46 32 Q56 28 52 40 Q50 48 44 44" fill="#9400D3"/>
+            <path d="M44 38 Q58 34 54 50 Q50 60 44 54" fill="#9400D3"/>
+            <polygon points="54,48 58,52 54,56 52,52" fill="#9400D3"/>
+          </svg>
+        );
+      
+      case 'pet_unicorn':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="40" rx="14" ry="14" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="32" cy="26" rx="12" ry="10" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <polygon points="32,2 28,18 36,18" fill="url(#unicornHorn)"/>
+            <defs>
+              <linearGradient id="unicornHorn" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFD700"/>
+                <stop offset="50%" stopColor="#FF69B4"/>
+                <stop offset="100%" stopColor="#87CEEB"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="20" cy="16" rx="4" ry="8" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="44" cy="16" rx="4" ry="8" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="20" cy="16" rx="2" ry="5" fill="#FFB6C1"/>
+            <ellipse cx="44" cy="16" rx="2" ry="5" fill="#FFB6C1"/>
+            <circle cx="26" cy="24" r="3" fill="#FF69B4"/>
+            <circle cx="38" cy="24" r="3" fill="#FF69B4"/>
+            <circle cx="27" cy="23" r="1.5" fill="white"/>
+            <circle cx="39" cy="23" r="1.5" fill="white"/>
+            <ellipse cx="32" cy="30" rx="2" ry="1.5" fill="#FFB6C1"/>
+            <path d="M44 24 Q56 20 58 32 Q60 44 52 48 Q48 50 46 46" fill="#FFB6C1"/>
+            <path d="M50 30 Q54 28 56 34" stroke="#FF69B4" strokeWidth="2" fill="none"/>
+            <path d="M48 36 Q52 36 54 40" stroke="#87CEEB" strokeWidth="2" fill="none"/>
+            <ellipse cx="24" cy="54" rx="4" ry="3" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+            <ellipse cx="40" cy="54" rx="4" ry="3" fill="#FFFFFF" stroke="#E8E8E8" strokeWidth="1"/>
+          </svg>
+        );
+      
+      case 'pet_phoenix':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            <ellipse cx="32" cy="38" rx="12" ry="14" fill="#FF4500"/>
+            <ellipse cx="32" cy="42" rx="8" ry="8" fill="#FFD700"/>
+            <ellipse cx="32" cy="24" rx="10" ry="10" fill="#FF4500"/>
+            <polygon points="24,12 26,4 28,14" fill="#FF0000"/>
+            <polygon points="30,10 32,0 34,10" fill="#FFD700"/>
+            <polygon points="36,12 38,4 40,14" fill="#FF0000"/>
+            <circle cx="26" cy="22" r="3" fill="#FFD700"/>
+            <circle cx="38" cy="22" r="3" fill="#FFD700"/>
+            <circle cx="27" cy="21" r="1.5" fill="#1a1a1a"/>
+            <circle cx="37" cy="21" r="1.5" fill="#1a1a1a"/>
+            <polygon points="32,28 28,32 36,32" fill="#FF6600"/>
+            <path d="M18 34 Q6 30 10 44 Q12 56 22 50" fill="#FF4500"/>
+            <path d="M46 34 Q58 30 54 44 Q52 56 42 50" fill="#FF4500"/>
+            <path d="M12 42 L6 48 M10 46 L4 50" stroke="#FFD700" strokeWidth="2"/>
+            <path d="M52 42 L58 48 M54 46 L60 50" stroke="#FFD700" strokeWidth="2"/>
+            <path d="M38 46 Q48 44 52 54 Q54 62 46 58 Q40 56 42 50" fill="#FF4500"/>
+            <path d="M48 54 L54 58 M50 56 L54 62" stroke="#FFD700" strokeWidth="2"/>
+          </svg>
+        );
+      
       default:
         return (
           <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
