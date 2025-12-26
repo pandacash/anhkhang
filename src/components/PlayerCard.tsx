@@ -3,6 +3,9 @@ import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
 import { DiamondIcon } from "./icons/DiamondIcon";
 import { Player } from "@/types/app";
+import { ShopItem } from "@/types/shop";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PlayerCardProps {
   player: Player;
@@ -13,6 +16,26 @@ interface PlayerCardProps {
 
 export const PlayerCard = ({ player, onClick, selected = false, showDiamonds = false }: PlayerCardProps) => {
   const isElephant = player.animal === 'elephant';
+  const [equippedItems, setEquippedItems] = useState<ShopItem[]>([]);
+  
+  useEffect(() => {
+    const fetchEquippedItems = async () => {
+      const { data } = await supabase
+        .from('player_items')
+        .select('*, item:items(*)')
+        .eq('player_id', player.id)
+        .eq('equipped', true);
+      
+      if (data) {
+        const items = data
+          .map(pi => pi.item as ShopItem)
+          .filter(Boolean);
+        setEquippedItems(items);
+      }
+    };
+    
+    fetchEquippedItems();
+  }, [player.id, player.diamonds]); // Re-fetch when diamonds change (might have bought something)
   
   return (
     <button
@@ -33,9 +56,9 @@ export const PlayerCard = ({ player, onClick, selected = false, showDiamonds = f
         selected && "animate-bounce-gentle"
       )}>
         {isElephant ? (
-          <ElephantAvatar size={140} selected={selected} />
+          <ElephantAvatar size={140} selected={selected} equippedItems={equippedItems} />
         ) : (
-          <PandaAvatar size={140} selected={selected} />
+          <PandaAvatar size={140} selected={selected} equippedItems={equippedItems} />
         )}
       </div>
       

@@ -8,7 +8,7 @@ import { DiamondIcon } from "@/components/icons/DiamondIcon";
 import { ItemIcon } from "./ItemIcon";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { ShoppingBag, Package, Check, Sparkles } from "lucide-react";
+import { ShoppingBag, Package, Check, Sparkles, PawPrint } from "lucide-react";
 
 interface ShopProps {
   player: Player;
@@ -160,7 +160,19 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
     return playerItems.find(pi => pi.item_id === itemId);
   };
 
-  const [activeTab, setActiveTab] = useState<'shop' | 'inventory'>('shop');
+  const [activeTab, setActiveTab] = useState<'shop' | 'pets' | 'inventory'>('shop');
+
+  // Filter items by category
+  const regularItems = items.filter(item => item.category !== 'pet');
+  const petItems = items.filter(item => item.category === 'pet');
+  const inventoryPets = playerItems.filter(pi => {
+    const item = items.find(i => i.id === pi.item_id);
+    return item?.category === 'pet';
+  });
+  const inventoryRegular = playerItems.filter(pi => {
+    const item = items.find(i => i.id === pi.item_id);
+    return item?.category !== 'pet';
+  });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -174,7 +186,7 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
             isElephant ? "text-accent" : "text-secondary"
           )}>
             <Sparkles className="w-6 h-6 animate-sparkle" />
-            Cửa hàng thú cưng
+            {activeTab === 'pets' ? 'Thú cưng' : 'Cửa hàng'}
           </DialogTitle>
         </DialogHeader>
 
@@ -189,14 +201,22 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 justify-center">
+        <div className="flex gap-2 justify-center flex-wrap">
           <Button
             variant={activeTab === 'shop' ? 'default' : 'outline'}
             onClick={() => setActiveTab('shop')}
             className="gap-2"
           >
             <ShoppingBag className="w-4 h-4" />
-            Cửa hàng
+            Trang phục
+          </Button>
+          <Button
+            variant={activeTab === 'pets' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('pets')}
+            className="gap-2"
+          >
+            <PawPrint className="w-4 h-4" />
+            Thú cưng
           </Button>
           <Button
             variant={activeTab === 'inventory' ? 'default' : 'outline'}
@@ -216,7 +236,7 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
             </div>
           ) : activeTab === 'shop' ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {items.map(item => {
+              {regularItems.map(item => {
                 const purchased = isPurchased(item.id);
                 return (
                   <div
@@ -276,57 +296,171 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
                 );
               })}
             </div>
-          ) : (
+          ) : activeTab === 'pets' ? (
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {playerItems.length === 0 ? (
+              {petItems.map(item => {
+                const purchased = isPurchased(item.id);
+                return (
+                  <div
+                    key={item.id}
+                    className={cn(
+                      "relative p-4 rounded-2xl border-2 transition-all",
+                      "bg-card hover:shadow-lg",
+                      purchased 
+                        ? "border-success/50 bg-success/5" 
+                        : "border-primary/30 hover:border-primary"
+                    )}
+                  >
+                    {purchased && (
+                      <div className="absolute top-2 right-2 bg-success text-success-foreground rounded-full p-1">
+                        <Check className="w-4 h-4" />
+                      </div>
+                    )}
+                    
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100">
+                        <ItemIcon imageKey={item.image_key} size={64} />
+                      </div>
+                      
+                      <h3 className="font-bold text-sm text-center">{item.name}</h3>
+                      <p className="text-xs text-muted-foreground text-center line-clamp-2">
+                        {item.description}
+                      </p>
+                      
+                      {!purchased ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handlePurchase(item)}
+                          disabled={purchasing === item.id || player.diamonds < item.price}
+                          className={cn(
+                            "gap-1 mt-2",
+                            player.diamonds < item.price && "opacity-50"
+                          )}
+                        >
+                          <DiamondIcon size={14} />
+                          {item.price}
+                          {purchasing === item.id && (
+                            <span className="ml-1 animate-spin">⏳</span>
+                          )}
+                        </Button>
+                      ) : (
+                        <span className="text-xs text-success font-medium mt-2">
+                          ✓ Đã mua
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {/* Regular items inventory */}
+              {inventoryRegular.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-sm mb-2 text-muted-foreground">Trang phục</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {inventoryRegular.map(playerItem => {
+                      const item = items.find(i => i.id === playerItem.item_id);
+                      if (!item) return null;
+                      
+                      return (
+                        <div
+                          key={playerItem.id}
+                          className={cn(
+                            "relative p-4 rounded-2xl border-2 transition-all cursor-pointer",
+                            "bg-card hover:shadow-lg",
+                            playerItem.equipped 
+                              ? "border-success ring-2 ring-success/30" 
+                              : "border-muted hover:border-primary"
+                          )}
+                          onClick={() => handleEquip(playerItem)}
+                        >
+                          {playerItem.equipped && (
+                            <div className="absolute top-2 right-2 bg-success text-success-foreground rounded-full px-2 py-0.5 text-xs font-bold">
+                              Đang mặc
+                            </div>
+                          )}
+                          
+                          <div className="flex flex-col items-center gap-2">
+                            <div className={cn(
+                              "p-3 rounded-xl",
+                              isElephant ? "bg-elephant-pink-light" : "bg-panda-mint-light"
+                            )}>
+                              <ItemIcon imageKey={item.image_key} size={56} />
+                            </div>
+                            
+                            <h3 className="font-bold text-sm text-center">{item.name}</h3>
+                            
+                            <Button
+                              size="sm"
+                              variant={playerItem.equipped ? "outline" : "default"}
+                              className="mt-2"
+                            >
+                              {playerItem.equipped ? "Tháo ra" : "Mặc vào"}
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              {/* Pets inventory */}
+              {inventoryPets.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-sm mb-2 text-muted-foreground">Thú cưng</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {inventoryPets.map(playerItem => {
+                      const item = items.find(i => i.id === playerItem.item_id);
+                      if (!item) return null;
+                      
+                      return (
+                        <div
+                          key={playerItem.id}
+                          className={cn(
+                            "relative p-4 rounded-2xl border-2 transition-all cursor-pointer",
+                            "bg-card hover:shadow-lg",
+                            playerItem.equipped 
+                              ? "border-success ring-2 ring-success/30" 
+                              : "border-muted hover:border-primary"
+                          )}
+                          onClick={() => handleEquip(playerItem)}
+                        >
+                          {playerItem.equipped && (
+                            <div className="absolute top-2 right-2 bg-success text-success-foreground rounded-full px-2 py-0.5 text-xs font-bold">
+                              Đang nuôi
+                            </div>
+                          )}
+                          
+                          <div className="flex flex-col items-center gap-2">
+                            <div className="p-3 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100">
+                              <ItemIcon imageKey={item.image_key} size={64} />
+                            </div>
+                            
+                            <h3 className="font-bold text-sm text-center">{item.name}</h3>
+                            
+                            <Button
+                              size="sm"
+                              variant={playerItem.equipped ? "outline" : "default"}
+                              className="mt-2"
+                            >
+                              {playerItem.equipped ? "Cất đi" : "Mang theo"}
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+              
+              {playerItems.length === 0 && (
                 <div className="col-span-full text-center py-8 text-muted-foreground">
                   <Package className="w-12 h-12 mx-auto mb-2 opacity-50" />
                   <p>Kho đồ trống. Hãy mua đồ ở cửa hàng!</p>
                 </div>
-              ) : (
-                playerItems.map(playerItem => {
-                  const item = items.find(i => i.id === playerItem.item_id);
-                  if (!item) return null;
-                  
-                  return (
-                    <div
-                      key={playerItem.id}
-                      className={cn(
-                        "relative p-4 rounded-2xl border-2 transition-all cursor-pointer",
-                        "bg-card hover:shadow-lg",
-                        playerItem.equipped 
-                          ? "border-success ring-2 ring-success/30" 
-                          : "border-muted hover:border-primary"
-                      )}
-                      onClick={() => handleEquip(playerItem)}
-                    >
-                      {playerItem.equipped && (
-                        <div className="absolute top-2 right-2 bg-success text-success-foreground rounded-full px-2 py-0.5 text-xs font-bold">
-                          Đang mặc
-                        </div>
-                      )}
-                      
-                      <div className="flex flex-col items-center gap-2">
-                        <div className={cn(
-                          "p-3 rounded-xl",
-                          isElephant ? "bg-elephant-pink-light" : "bg-panda-mint-light"
-                        )}>
-                          <ItemIcon imageKey={item.image_key} size={56} />
-                        </div>
-                        
-                        <h3 className="font-bold text-sm text-center">{item.name}</h3>
-                        
-                        <Button
-                          size="sm"
-                          variant={playerItem.equipped ? "outline" : "default"}
-                          className="mt-2"
-                        >
-                          {playerItem.equipped ? "Tháo ra" : "Mặc vào"}
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })
               )}
             </div>
           )}
