@@ -334,38 +334,38 @@ export const ElephantAvatar = ({
       </svg>
       
       {/* Generic item rendering for items without custom SVG */}
-      {/* Hat - generic */}
+      {/* Hat - generic - positioned above the head */}
       {hat && !CUSTOM_RENDERED_ITEMS.includes(hat.image_key) && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2" style={{ width: size * 0.45, height: size * 0.45 }}>
-          <ItemIcon imageKey={hat.image_key} size={size * 0.45} />
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ top: -size * 0.15, width: size * 0.35, height: size * 0.35 }}>
+          <ItemIcon imageKey={hat.image_key} size={size * 0.35} />
         </div>
       )}
       
-      {/* Armor - generic */}
+      {/* Armor - generic - positioned at bottom body */}
       {armor && !CUSTOM_RENDERED_ITEMS.includes(armor.image_key) && (
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2" style={{ width: size * 0.5, height: size * 0.5 }}>
-          <ItemIcon imageKey={armor.image_key} size={size * 0.5} />
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: size * 0.15, width: size * 0.4, height: size * 0.4 }}>
+          <ItemIcon imageKey={armor.image_key} size={size * 0.4} />
         </div>
       )}
       
-      {/* Weapon - generic */}
+      {/* Weapon - generic - positioned to the right side */}
       {weapon && !CUSTOM_RENDERED_ITEMS.includes(weapon.image_key) && (
-        <div className="absolute top-1/4 -right-2" style={{ width: size * 0.35, height: size * 0.35 }}>
-          <ItemIcon imageKey={weapon.image_key} size={size * 0.35} />
+        <div className="absolute" style={{ top: size * 0.35, right: -size * 0.1, width: size * 0.3, height: size * 0.3 }}>
+          <ItemIcon imageKey={weapon.image_key} size={size * 0.3} />
         </div>
       )}
       
-      {/* Shoes - generic */}
+      {/* Shoes - generic - positioned at very bottom */}
       {shoes && !CUSTOM_RENDERED_ITEMS.includes(shoes.image_key) && (
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2" style={{ width: size * 0.4, height: size * 0.4 }}>
-          <ItemIcon imageKey={shoes.image_key} size={size * 0.4} />
+        <div className="absolute left-1/2 -translate-x-1/2" style={{ bottom: -size * 0.05, width: size * 0.35, height: size * 0.35 }}>
+          <ItemIcon imageKey={shoes.image_key} size={size * 0.35} />
         </div>
       )}
       
-      {/* Accessory - generic */}
+      {/* Accessory - generic - positioned to the left side */}
       {accessory && !CUSTOM_RENDERED_ITEMS.includes(accessory.image_key) && (
-        <div className="absolute top-1/2 -left-2" style={{ width: size * 0.3, height: size * 0.3 }}>
-          <ItemIcon imageKey={accessory.image_key} size={size * 0.3} />
+        <div className="absolute" style={{ top: size * 0.35, left: -size * 0.1, width: size * 0.25, height: size * 0.25 }}>
+          <ItemIcon imageKey={accessory.image_key} size={size * 0.25} />
         </div>
       )}
       
