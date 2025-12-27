@@ -150,7 +150,7 @@ export const Dashboard = ({
       
       {/* Welcome section */}
       <div className="text-center mb-8">
-        <div className="inline-block animate-bounce-gentle relative pt-24">
+        <div className="inline-block animate-bounce-gentle relative">
           <AvatarChat 
             playerName={player.name} 
             animalType={isElephant ? 'elephant' : 'panda'} 
