@@ -1902,6 +1902,45 @@ export const ItemIcon = ({ imageKey, size = 48, className }: ItemIconProps) => {
           </svg>
         );
       
+      case 'pet_superhero_panda':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            {/* Cape */}
+            <path d="M20 28 Q10 40 14 56 L32 50 L50 56 Q54 40 44 28" fill="#FF0000"/>
+            <path d="M22 30 Q14 42 18 54 L32 48 L46 54 Q50 42 42 30" fill="#CC0000"/>
+            {/* Body */}
+            <ellipse cx="32" cy="42" rx="14" ry="12" fill="#FFFFFF"/>
+            <ellipse cx="32" cy="44" rx="10" ry="8" fill="#1a1a1a"/>
+            {/* Head */}
+            <circle cx="32" cy="24" r="14" fill="#FFFFFF"/>
+            {/* Ears */}
+            <circle cx="18" cy="14" r="6" fill="#1a1a1a"/>
+            <circle cx="46" cy="14" r="6" fill="#1a1a1a"/>
+            {/* Eye patches */}
+            <ellipse cx="25" cy="24" rx="6" ry="5" fill="#1a1a1a"/>
+            <ellipse cx="39" cy="24" rx="6" ry="5" fill="#1a1a1a"/>
+            {/* Eyes */}
+            <circle cx="25" cy="24" r="3" fill="#FFFFFF"/>
+            <circle cx="39" cy="24" r="3" fill="#FFFFFF"/>
+            <circle cx="25" cy="24" r="1.5" fill="#1a1a1a"/>
+            <circle cx="39" cy="24" r="1.5" fill="#1a1a1a"/>
+            {/* Hero mask */}
+            <path d="M18 22 Q20 18 25 20 L32 18 L39 20 Q44 18 46 22 L44 24 Q40 20 32 20 Q24 20 20 24 Z" fill="#FFD700"/>
+            {/* Nose */}
+            <ellipse cx="32" cy="30" rx="3" ry="2" fill="#1a1a1a"/>
+            {/* Hero emblem on chest */}
+            <circle cx="32" cy="44" r="5" fill="#FFD700"/>
+            <text x="32" y="47" textAnchor="middle" fill="#FF0000" fontSize="8" fontWeight="bold">S</text>
+            {/* Arms/paws */}
+            <ellipse cx="18" cy="44" rx="4" ry="5" fill="#1a1a1a"/>
+            <ellipse cx="46" cy="44" rx="4" ry="5" fill="#1a1a1a"/>
+            {/* Power sparkles */}
+            <path d="M8 20 L10 22 L8 24 L6 22 Z" fill="#FFD700"/>
+            <path d="M56 20 L58 22 L56 24 L54 22 Z" fill="#FFD700"/>
+            <path d="M32 4 L33 7 L36 8 L33 9 L32 12 L31 9 L28 8 L31 7 Z" fill="#FFD700"/>
+          </svg>
+        );
+      
       default:
         return (
           <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
