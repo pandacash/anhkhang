@@ -1,22 +1,52 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { MessageCircle, X, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { RefreshCw, X } from 'lucide-react';
 
 interface AvatarChatProps {
   playerName: string;
   animalType: 'elephant' | 'panda';
 }
 
+const STORAGE_KEY = 'avatar_chat_daily';
+
+const getDailyData = (playerName: string) => {
+  const today = new Date().toDateString();
+  const stored = localStorage.getItem(`${STORAGE_KEY}_${playerName}`);
+  if (stored) {
+    const data = JSON.parse(stored);
+    if (data.date === today) {
+      return data;
+    }
+  }
+  // New day - reset with random limit 1-3
+  const newData = { date: today, count: 0, limit: Math.floor(Math.random() * 3) + 1 };
+  localStorage.setItem(`${STORAGE_KEY}_${playerName}`, JSON.stringify(newData));
+  return newData;
+};
+
+const incrementDailyCount = (playerName: string) => {
+  const data = getDailyData(playerName);
+  data.count += 1;
+  localStorage.setItem(`${STORAGE_KEY}_${playerName}`, JSON.stringify(data));
+  return data;
+};
+
 export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
   const [message, setMessage] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [hasReachedLimit, setHasReachedLimit] = useState(false);
 
-  const fetchMessage = async () => {
+  const checkAndFetchMessage = async () => {
+    const dailyData = getDailyData(playerName);
+    
+    // Check if already reached daily limit
+    if (dailyData.count >= dailyData.limit) {
+      setHasReachedLimit(true);
+      return;
+    }
+
     setIsLoading(true);
-    setHasError(false);
     
     try {
       const { data, error } = await supabase.functions.invoke('avatar-chat', {
@@ -27,51 +57,49 @@ export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
       
       setMessage(data.message);
       setIsVisible(true);
+      incrementDailyCount(playerName);
     } catch (error) {
       console.error('Error fetching avatar message:', error);
-      setHasError(true);
       // Fallback messages
       const fallbacks = animalType === 'elephant' 
         ? [`Chào ${playerName === 'Tuệ Anh' ? 'chị Tuệ Anh' : 'anh Phúc Khang'}! Em Voi chúc anh/chị học giỏi nha!`]
         : [`Chào ${playerName === 'Tuệ Anh' ? 'chị Tuệ Anh' : 'anh Phúc Khang'}! Em Gấu Trúc yêu anh/chị nhiều lắm!`];
       setMessage(fallbacks[0]);
       setIsVisible(true);
+      incrementDailyCount(playerName);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
+    const dailyData = getDailyData(playerName);
+    if (dailyData.count >= dailyData.limit) {
+      setHasReachedLimit(true);
+      return;
+    }
+
     // Auto fetch on mount with a small delay
     const timer = setTimeout(() => {
-      fetchMessage();
+      checkAndFetchMessage();
     }, 1500);
     
     return () => clearTimeout(timer);
   }, [playerName, animalType]);
 
-  // Auto hide after 10 seconds
+  // Auto hide after 8 seconds
   useEffect(() => {
     if (isVisible && message) {
       const timer = setTimeout(() => {
         setIsVisible(false);
-      }, 10000);
+      }, 8000);
       return () => clearTimeout(timer);
     }
   }, [isVisible, message]);
 
-  if (!isVisible && !isLoading) {
-    return (
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={fetchMessage}
-        className="h-8 w-8 rounded-full bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg animate-bounce self-center"
-        disabled={isLoading}
-      >
-        <MessageCircle className="h-4 w-4" />
-      </Button>
-    );
+  // Don't render anything if reached limit or not visible
+  if (hasReachedLimit || (!isVisible && !isLoading)) {
+    return null;
   }
 
   return (
@@ -98,13 +126,6 @@ export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
               <X className="h-3 w-3" />
             </button>
             <p className="text-sm text-foreground leading-relaxed">{message}</p>
-            <button
-              onClick={fetchMessage}
-              className="mt-2 text-xs text-primary hover:text-primary/80 flex items-center gap-1"
-            >
-              <RefreshCw className="h-3 w-3" />
-              Nói tiếp
-            </button>
           </>
         )}
       </div>
