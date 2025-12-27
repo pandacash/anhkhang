@@ -1869,6 +1869,39 @@ export const ItemIcon = ({ imageKey, size = 48, className }: ItemIconProps) => {
           </svg>
         );
       
+      case 'pet_baby_elephant':
+        return (
+          <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
+            {/* Body */}
+            <ellipse cx="32" cy="42" rx="18" ry="14" fill="#A8D8EA"/>
+            {/* Head */}
+            <circle cx="32" cy="24" r="14" fill="#A8D8EA"/>
+            {/* Ears */}
+            <ellipse cx="16" cy="22" rx="8" ry="10" fill="#A8D8EA"/>
+            <ellipse cx="48" cy="22" rx="8" ry="10" fill="#A8D8EA"/>
+            <ellipse cx="16" cy="22" rx="5" ry="7" fill="#FFB6C1"/>
+            <ellipse cx="48" cy="22" rx="5" ry="7" fill="#FFB6C1"/>
+            {/* Eyes */}
+            <circle cx="26" cy="22" r="4" fill="#1a1a1a"/>
+            <circle cx="38" cy="22" r="4" fill="#1a1a1a"/>
+            <circle cx="27" cy="21" r="1.5" fill="#FFFFFF"/>
+            <circle cx="39" cy="21" r="1.5" fill="#FFFFFF"/>
+            {/* Trunk */}
+            <path d="M32 28 Q32 38 28 44 Q26 46 28 48 Q30 50 32 48" fill="none" stroke="#A8D8EA" strokeWidth="5" strokeLinecap="round"/>
+            <path d="M32 28 Q32 38 28 44 Q26 46 28 48 Q30 50 32 48" fill="none" stroke="#8BC4D8" strokeWidth="2" strokeLinecap="round"/>
+            {/* Blush */}
+            <ellipse cx="20" cy="28" rx="3" ry="2" fill="#FFB6C1" opacity="0.6"/>
+            <ellipse cx="44" cy="28" rx="3" ry="2" fill="#FFB6C1" opacity="0.6"/>
+            {/* Legs */}
+            <ellipse cx="22" cy="54" rx="5" ry="4" fill="#A8D8EA"/>
+            <ellipse cx="42" cy="54" rx="5" ry="4" fill="#A8D8EA"/>
+            {/* Tail */}
+            <path d="M50 42 Q56 44 54 50" fill="none" stroke="#A8D8EA" strokeWidth="3" strokeLinecap="round"/>
+            {/* Heart on forehead */}
+            <path d="M32 14 L30 16 Q28 14 30 12 Q32 10 32 12 Q32 10 34 12 Q36 14 34 16 Z" fill="#FF6B9D"/>
+          </svg>
+        );
+      
       default:
         return (
           <svg width={iconSize} height={iconSize} viewBox="0 0 64 64" className={className}>
