@@ -150,16 +150,16 @@ export const Dashboard = ({
       
       {/* Welcome section */}
       <div className="text-center mb-8">
-        <div className="inline-block animate-bounce-gentle relative">
+        <div className="inline-block animate-bounce-gentle relative pt-24">
+          <AvatarChat 
+            playerName={player.name} 
+            animalType={isElephant ? 'elephant' : 'panda'} 
+          />
           {isElephant ? (
             <ElephantAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
           ) : (
             <PandaAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
           )}
-          <AvatarChat 
-            playerName={player.name} 
-            animalType={isElephant ? 'elephant' : 'panda'} 
-          />
         </div>
         <h1 className={cn(
           "text-3xl md:text-4xl font-display mt-4",

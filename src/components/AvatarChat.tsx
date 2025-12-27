@@ -75,8 +75,8 @@ export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
   }
 
   return (
-    <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full z-10 animate-fade-in">
-      <div className="relative bg-card border border-border rounded-2xl px-4 py-3 shadow-xl max-w-[200px] min-w-[150px]">
+    <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-50 animate-fade-in">
+      <div className="relative bg-card border border-border rounded-2xl px-4 py-3 shadow-xl max-w-[220px] min-w-[160px]">
         {/* Speech bubble tail */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
           <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-border" />
