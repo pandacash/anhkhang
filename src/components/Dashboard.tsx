@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Shop } from "./shop/Shop";
 import { usePlayerItems } from "@/hooks/usePlayerItems";
+import { AvatarChat } from "./AvatarChat";
 
 interface DashboardProps {
   player: Player;
@@ -149,12 +150,16 @@ export const Dashboard = ({
       
       {/* Welcome section */}
       <div className="text-center mb-8">
-        <div className="inline-block animate-bounce-gentle">
+        <div className="inline-block animate-bounce-gentle relative">
           {isElephant ? (
             <ElephantAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
           ) : (
             <PandaAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
           )}
+          <AvatarChat 
+            playerName={player.name} 
+            animalType={isElephant ? 'elephant' : 'panda'} 
+          />
         </div>
         <h1 className={cn(
           "text-3xl md:text-4xl font-display mt-4",
