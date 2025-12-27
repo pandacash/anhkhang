@@ -66,7 +66,7 @@ export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
         variant="ghost"
         size="icon"
         onClick={fetchMessage}
-        className="absolute -top-2 -right-2 h-8 w-8 rounded-full bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg animate-bounce"
+        className="h-8 w-8 rounded-full bg-primary/90 hover:bg-primary text-primary-foreground shadow-lg animate-bounce self-center"
         disabled={isLoading}
       >
         <MessageCircle className="h-4 w-4" />
@@ -75,13 +75,13 @@ export const AvatarChat = ({ playerName, animalType }: AvatarChatProps) => {
   }
 
   return (
-    <div className="absolute left-1/2 bottom-full -translate-x-1/2 mb-3 z-50 animate-fade-in">
+    <div className="z-50 animate-fade-in self-start mt-4">
       <div className="relative bg-card border border-border rounded-2xl px-4 py-3 shadow-xl max-w-[220px] min-w-[160px]">
-        {/* Speech bubble tail */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
-          <div className="w-0 h-0 border-l-8 border-r-8 border-t-8 border-l-transparent border-r-transparent border-t-border" />
-          <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-7 border-r-7 border-t-7 border-l-transparent border-r-transparent border-t-card" 
-               style={{ borderLeftWidth: '7px', borderRightWidth: '7px', borderTopWidth: '7px' }} />
+        {/* Speech bubble tail pointing left */}
+        <div className="absolute top-4 left-0 -translate-x-full">
+          <div className="w-0 h-0 border-t-8 border-b-8 border-r-8 border-t-transparent border-b-transparent border-r-border" />
+          <div className="absolute top-0 left-[1px] w-0 h-0 border-t-7 border-b-7 border-r-7 border-t-transparent border-b-transparent border-r-card" 
+               style={{ borderTopWidth: '7px', borderBottomWidth: '7px', borderRightWidth: '7px' }} />
         </div>
         
         {isLoading ? (
