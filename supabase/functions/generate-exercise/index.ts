@@ -160,31 +160,173 @@ const mathGrade3Topics: MathTopic[] = [
   }
 ];
 
-// Các chủ đề Toán lớp 2 (cho Phúc Khang)
+// Các chủ đề Toán lớp 2 (cho Phúc Khang) - theo sách giáo khoa
 const mathGrade2Topics: MathTopic[] = [
+  // === CHỦ ĐỀ 5: LÀM QUEN VỚI HÌNH PHẲNG ===
+  {
+    id: "diem_doan_thang",
+    name: "Điểm, đoạn thẳng",
+    examples: ["Điểm A, B, C", "Đoạn thẳng AB, CD", "Nối điểm A với điểm B tạo thành đoạn thẳng"],
+    context: "Nhận biết điểm và đoạn thẳng trong hình vẽ",
+    needsImage: true,
+    imagePrompt: "Educational math illustration showing points labeled A, B, C and line segments connecting them, with a ruler measuring the segments, clean simple style for grade 2 students"
+  },
+  {
+    id: "duong_thang_duong_cong",
+    name: "Đường thẳng, đường cong, ba điểm thẳng hàng",
+    examples: ["Vạch kẻ đường có dạng đường thẳng", "Cầu vồng có dạng đường cong", "Ba điểm M, N, P thẳng hàng"],
+    context: "Phân biệt đường thẳng và đường cong, nhận biết ba điểm thẳng hàng",
+    needsImage: true,
+    imagePrompt: "Educational illustration showing straight lines with rulers and curved rainbow arcs, three aligned points labeled M N P on a straight line, kid-friendly colorful style"
+  },
+  {
+    id: "duong_gap_khuc",
+    name: "Đường gấp khúc",
+    examples: ["Đường gấp khúc ABC gồm 2 đoạn thẳng AB và BC", "Tính độ dài đường gấp khúc MNPQ = MN + NP + PQ"],
+    context: "Đường gấp khúc gồm nhiều đoạn thẳng nối với nhau",
+    needsImage: true,
+    imagePrompt: "Educational math illustration showing a zigzag path with points labeled A B C D, measuring the lengths of each segment, cute staircase example, clean background for grade 2"
+  },
+  {
+    id: "hinh_tu_giac",
+    name: "Hình tứ giác",
+    examples: ["Hình tứ giác có 4 cạnh và 4 đỉnh", "Đếm số hình tứ giác trong hình vẽ"],
+    context: "Nhận biết và đếm hình tứ giác",
+    needsImage: true,
+    imagePrompt: "Colorful educational illustration showing various quadrilaterals shapes, some overlapping to count, kid-friendly geometric shapes for grade 2 students"
+  },
+  {
+    id: "ve_doan_thang",
+    name: "Vẽ đoạn thẳng có độ dài cho trước",
+    examples: ["Vẽ đoạn thẳng AB dài 5 cm", "Vẽ đoạn thẳng CD dài 12 cm"],
+    context: "Dùng thước kẻ vẽ đoạn thẳng có độ dài cho trước",
+    needsImage: true,
+    imagePrompt: "Educational illustration showing a ruler with centimeter markings (0-15cm), a pencil drawing a line segment from 0 to 7cm, points labeled A and B, clean simple style"
+  },
+  {
+    id: "do_do_dai_doan_thang",
+    name: "Đo độ dài đoạn thẳng",
+    examples: ["Đoạn thẳng AB dài 5 cm", "Đoạn thẳng MN dài 8 cm"],
+    context: "Dùng thước đo độ dài đoạn thẳng theo cm",
+    needsImage: true,
+    imagePrompt: "Educational illustration showing a ruler measuring different line segments, with measurements clearly marked in centimeters, clean style for grade 2 students"
+  },
+  {
+    id: "gap_cat_ghep_hinh",
+    name: "Gấp, cắt, ghép, xếp hình",
+    examples: ["Gấp hình chữ nhật từ giấy", "Ghép 2 hình tam giác thành hình vuông"],
+    context: "Thực hành gấp giấy và ghép hình",
+    needsImage: true,
+    imagePrompt: "Cute cartoon showing paper folding steps, scissors cutting shapes, and geometric shapes being assembled together, colorful origami style for children"
+  },
+  // === CHỦ ĐỀ 6: NGÀY GIỜ, NGÀY THÁNG ===
+  {
+    id: "ngay_gio_phut",
+    name: "Ngày - Giờ, Giờ - Phút",
+    examples: ["1 ngày = 24 giờ", "1 giờ = 60 phút", "7 giờ sáng = 07:00", "2 giờ chiều = 14:00"],
+    context: "Một ngày có 24 giờ. Một giờ có 60 phút. Đọc giờ trên đồng hồ.",
+    needsImage: true,
+    imagePrompt: "Educational clock face showing different times, day and night cycle illustration, cute cartoon showing morning 7:00, afternoon 14:00, evening activities, kid-friendly style"
+  },
+  {
+    id: "xem_dong_ho",
+    name: "Xem đồng hồ (giờ đúng và giờ phút)",
+    examples: ["2 giờ", "9 giờ 30 phút", "7 giờ 15 phút", "5 giờ 45 phút"],
+    context: "Xem kim đồng hồ để biết mấy giờ, mấy phút",
+    needsImage: true,
+    imagePrompt: "Four analog clocks showing different times: 2:00, 9:30, 7:15, and 5:45, clear hour and minute hands, colorful kid-friendly design, each clock labeled A B C D"
+  },
+  {
+    id: "hoat_dong_trong_ngay",
+    name: "Hoạt động trong ngày theo giờ",
+    context: "Nam làm gì lúc mấy giờ? Em đi học lúc 7 giờ sáng, ăn trưa lúc 11 giờ 30 phút, học bài lúc 2 giờ chiều.",
+    needsImage: true,
+    imagePrompt: "Cute cartoon daily schedule: child waking up at 6:00, going to school at 7:00, eating lunch at 11:30, doing homework at 14:00, sleeping at 21:00, Vietnamese school uniform"
+  },
+  {
+    id: "ngay_thang",
+    name: "Ngày - Tháng",
+    examples: ["Tháng 1 có 31 ngày", "Tháng 2 có 28 hoặc 29 ngày", "Tháng 4 có 30 ngày"],
+    context: "Đọc lịch, biết số ngày trong tháng. Tháng 1, 3, 5, 7, 8, 10, 12 có 31 ngày. Tháng 4, 6, 9, 11 có 30 ngày.",
+    needsImage: true,
+    imagePrompt: "Vietnamese calendar page showing a month with dates, weekdays labeled Hai Ba Tu Nam Sau Bay CN, some important dates circled, cherry blossoms decoration"
+  },
+  {
+    id: "xem_lich",
+    name: "Xem lịch và trả lời câu hỏi",
+    examples: ["Tháng 5 có bao nhiêu ngày?", "Ngày 19 tháng 5 là thứ mấy?", "Ngày Quốc tế Thiếu nhi 1 tháng 6 là thứ mấy?"],
+    context: "Xem tờ lịch rồi trả lời câu hỏi về ngày, thứ",
+    needsImage: true,
+    imagePrompt: "Vietnamese calendar showing May with 31 days, important date May 19 circled (Ho Chi Minh birthday), weekdays in Vietnamese, colorful kid-friendly design"
+  },
+  {
+    id: "ngay_le_viet_nam",
+    name: "Các ngày lễ quan trọng",
+    examples: ["Ngày 2/9 là Quốc khánh", "Ngày 20/11 là Nhà giáo Việt Nam", "Ngày 1/6 là Quốc tế Thiếu nhi", "Ngày 8/3 là Quốc tế Phụ nữ"],
+    context: "Nhận biết các ngày lễ quan trọng trong năm",
+    needsImage: true,
+    imagePrompt: "Collage of Vietnamese holidays: National Day Sep 2 with flag, Teachers Day Nov 20 with flowers, Childrens Day Jun 1 with balloons, Women Day Mar 8 with roses, cute cartoon style"
+  },
+  // === TÍNH TOÁN TRONG PHẠM VI 100 ===
   {
     id: "cong_tru_100",
     name: "Cộng trừ trong phạm vi 100",
-    examples: ["45+38", "67+29", "83-47", "92-56"],
+    examples: ["25+65-30=60", "90-40-26=24", "5+61+8=74", "32+48-16"],
     needsImage: false
   },
   {
-    id: "bang_nhan_2_5",
-    name: "Bảng nhân 2, 3, 4, 5",
-    examples: ["2×7", "3×8", "4×6", "5×9"],
+    id: "cong_tru_nhieu_so",
+    name: "Cộng trừ nhiều số liên tiếp",
+    examples: ["25+65-30", "90-40-26", "32+48+16", "34-7-8"],
     needsImage: false
   },
   {
-    id: "bang_chia_2_5", 
-    name: "Bảng chia 2, 3, 4, 5",
-    examples: ["18:2", "24:3", "36:4", "45:5"],
+    id: "tim_so_thich_hop",
+    name: "Tìm số thích hợp điền vào chỗ trống",
+    examples: ["60-?=51 (đáp án: 9)", "42-?<38 (đáp án: >4)", "?+16=53"],
     needsImage: false
+  },
+  {
+    id: "so_sanh_bieu_thuc",
+    name: "So sánh biểu thức điền >, <, =",
+    examples: ["32+4 ? 18 (>)", "60-9 > 5?", "42-4 < 38+?"],
+    needsImage: false
+  },
+  // === BÀI TOÁN CÓ LỜI VĂN ===
+  {
+    id: "bai_toan_bac_thang",
+    name: "Bài toán bậc thang",
+    context: "Cầu thang lên nhà sóc có 32 bậc thang. Sóc đã leo được 9 bậc thang. Hỏi sóc cần leo thêm bao nhiêu bậc thang nữa để vào nhà?",
+    needsImage: true,
+    imagePrompt: "Cute cartoon squirrel climbing stairs to a treehouse, 32 steps total, squirrel at step 9, forest background, kid-friendly illustration"
+  },
+  {
+    id: "bai_toan_nhan_vo",
+    name: "Bài toán nhãn vở",
+    context: "Tổ có 20 cái nhãn vở, Mai có 15 cái nhãn vở. Số nhãn vở của Nam nhiều hơn của Mai nhưng ít hơn của Tổ. Tìm số nhãn vở của Robot.",
+    needsImage: true,
+    imagePrompt: "Cute cartoon Vietnamese students comparing notebook stickers, one student has 20, one has 15, another counting between 15-20, colorful classroom scene"
+  },
+  {
+    id: "bai_toan_duong_gap_khuc",
+    name: "Bài toán độ dài đường gấp khúc",
+    context: "Đường gấp khúc ABC có AB = 4 cm và BC = 6 cm. Tính độ dài đường gấp khúc ABC.",
+    needsImage: true,
+    imagePrompt: "Educational diagram showing a zigzag path ABC with segment AB = 4cm and BC = 6cm, ruler markings, clean geometric illustration for grade 2"
+  },
+  {
+    id: "bai_toan_so_sanh",
+    name: "Bài toán so sánh bút chì",
+    context: "Bút chì dài 10 cm, bút sáp dài 5 cm, cái ghim dài 2 cm. Bút chì dài gấp mấy lần bút sáp? Bút chì dài gấp mấy lần cái ghim?",
+    needsImage: true,
+    imagePrompt: "Educational illustration showing a pencil 10cm, crayon 5cm, and paper clip 2cm with measurements marked, comparing lengths, clean simple style"
   }
 ];
 
 // Hàm tạo hình ảnh bằng AI
-async function generateImage(prompt: string, apiKey: string): Promise<string | null> {
+async function generateImage(prompt: string, apiKey: string, grade: number): Promise<string | null> {
   try {
+    const gradeText = grade === 2 ? "grade 2" : "grade 3";
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -196,7 +338,7 @@ async function generateImage(prompt: string, apiKey: string): Promise<string | n
         messages: [
           { 
             role: "user", 
-            content: `Generate an educational illustration for a Vietnamese grade 3 math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept.`
+            content: `Generate an educational illustration for a Vietnamese ${gradeText} math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept. Simple and clear style for young students.`
           }
         ],
       }),
@@ -284,7 +426,7 @@ serve(async (req) => {
       // Tạo hình ảnh nếu bài toán cần
       if (randomTopic.needsImage && randomTopic.imagePrompt) {
         console.log("Generating image for topic:", randomTopic.name);
-        generatedImage = await generateImage(randomTopic.imagePrompt, LOVABLE_API_KEY);
+        generatedImage = await generateImage(randomTopic.imagePrompt, LOVABLE_API_KEY, grade);
       }
 
       systemPrompt = `Bạn là giáo viên Toán lớp ${grade} theo chương trình sách giáo khoa Việt Nam.
@@ -302,7 +444,11 @@ QUAN TRỌNG cho lớp 3 (Tuệ Anh):
 
 QUAN TRỌNG cho lớp 2 (Phúc Khang):
 - Phạm vi tính toán: 0 đến 100
-- Bài tập đơn giản, rõ ràng`;
+- Bài tập đơn giản, rõ ràng
+- Chủ đề hình học: điểm, đoạn thẳng, đường gấp khúc, hình tứ giác
+- Chủ đề thời gian: xem đồng hồ (giờ đúng, giờ phút), đọc lịch, các ngày lễ
+- Đơn vị đo độ dài: cm
+- Sử dụng bối cảnh gần gũi: trường học, nhà, vườn, đồ dùng học tập`;
 
       userPrompt = `Tạo 1 câu hỏi trắc nghiệm Toán lớp ${grade} cho ${playerName} theo chủ đề: ${randomTopic.name}
 
