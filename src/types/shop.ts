@@ -1,4 +1,4 @@
-export type ItemCategory = 'hat' | 'armor' | 'weapon' | 'shoes' | 'accessory' | 'pet';
+export type ItemCategory = 'hat' | 'armor' | 'weapon' | 'shoes' | 'accessory' | 'pet' | 'food' | 'drink';
 export type AnimalType = 'elephant' | 'panda' | 'both';
 
 export type ShopItem = {

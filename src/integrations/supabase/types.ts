@@ -153,24 +153,39 @@ export type Database = {
           created_at: string
           diamonds: number
           grade: number
+          hunger_level: number
           id: string
+          is_sick: boolean
+          last_fed_at: string
+          last_watered_at: string
           name: string
+          thirst_level: number
         }
         Insert: {
           animal: string
           created_at?: string
           diamonds?: number
           grade: number
+          hunger_level?: number
           id?: string
+          is_sick?: boolean
+          last_fed_at?: string
+          last_watered_at?: string
           name: string
+          thirst_level?: number
         }
         Update: {
           animal?: string
           created_at?: string
           diamonds?: number
           grade?: number
+          hunger_level?: number
           id?: string
+          is_sick?: boolean
+          last_fed_at?: string
+          last_watered_at?: string
           name?: string
+          thirst_level?: number
         }
         Relationships: []
       }
@@ -223,6 +238,26 @@ export type Database = {
           new_diamonds: number
           old_diamonds: number
           player_id: string
+        }[]
+      }
+      feed_pet: {
+        Args: { p_food_value: number; p_player_id: string }
+        Returns: {
+          new_hunger: number
+        }[]
+      }
+      get_pet_status: {
+        Args: { p_player_id: string }
+        Returns: {
+          current_hunger: number
+          current_thirst: number
+          is_currently_sick: boolean
+        }[]
+      }
+      water_pet: {
+        Args: { p_drink_value: number; p_player_id: string }
+        Returns: {
+          new_thirst: number
         }[]
       }
     }
