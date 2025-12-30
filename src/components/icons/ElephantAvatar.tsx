@@ -8,6 +8,7 @@ interface ElephantAvatarProps {
   selected?: boolean;
   equippedItems?: ShopItem[];
   showDecorations?: boolean;
+  isSad?: boolean;
 }
 
 // Known item keys that have custom SVG rendering in the avatar
@@ -24,7 +25,8 @@ export const ElephantAvatar = ({
   size = 120, 
   selected = false,
   equippedItems = [],
-  showDecorations = true
+  showDecorations = true,
+  isSad = false
 }: ElephantAvatarProps) => {
   const hat = equippedItems.find(i => i.category === 'hat');
   const armor = equippedItems.find(i => i.category === 'armor');
@@ -158,10 +160,18 @@ export const ElephantAvatar = ({
         {/* Eyes */}
         <ellipse cx="48" cy="38" rx="9" ry="11" fill="white"/>
         <ellipse cx="72" cy="38" rx="9" ry="11" fill="white"/>
-        <circle cx="50" cy="40" r="5" fill="hsl(220, 40%, 20%)"/>
-        <circle cx="74" cy="40" r="5" fill="hsl(220, 40%, 20%)"/>
-        <circle cx="52" cy="37" r="2.5" fill="white"/>
-        <circle cx="76" cy="37" r="2.5" fill="white"/>
+        <circle cx="50" cy={isSad ? "42" : "40"} r="5" fill="hsl(220, 40%, 20%)"/>
+        <circle cx="74" cy={isSad ? "42" : "40"} r="5" fill="hsl(220, 40%, 20%)"/>
+        <circle cx="52" cy={isSad ? "39" : "37"} r="2.5" fill="white"/>
+        <circle cx="76" cy={isSad ? "39" : "37"} r="2.5" fill="white"/>
+        
+        {/* Sad eyebrows */}
+        {isSad && (
+          <>
+            <path d="M40 28 L56 34" stroke="hsl(220, 20%, 50%)" strokeWidth="3" strokeLinecap="round"/>
+            <path d="M80 28 L64 34" stroke="hsl(220, 20%, 50%)" strokeWidth="3" strokeLinecap="round"/>
+          </>
+        )}
         
         {/* Eyelashes */}
         <path d="M38 32 L41 36" stroke="hsl(220, 20%, 40%)" strokeWidth="2" strokeLinecap="round"/>
@@ -192,8 +202,17 @@ export const ElephantAvatar = ({
         <path d="M52 74 Q56 76 60 74" stroke="hsl(220, 15%, 55%)" strokeWidth="1" fill="none"/>
         <path d="M50 80 Q54 82 58 80" stroke="hsl(220, 15%, 55%)" strokeWidth="1" fill="none"/>
         
-        {/* Smile */}
-        <path d="M65 55 Q70 60 76 56" stroke="hsl(220, 15%, 50%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        {/* Smile or Sad mouth */}
+        {isSad ? (
+          <>
+            <path d="M65 60 Q70 55 76 58" stroke="hsl(220, 15%, 50%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+            {/* Tear drops */}
+            <ellipse cx="42" cy="52" rx="2" ry="4" fill="hsl(200, 80%, 70%)" className="animate-pulse"/>
+            <ellipse cx="80" cy="52" rx="2" ry="4" fill="hsl(200, 80%, 70%)" className="animate-pulse"/>
+          </>
+        ) : (
+          <path d="M65 55 Q70 60 76 56" stroke="hsl(220, 15%, 50%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        )}
 
         {/* === ACCESSORIES === */}
         {/* Bells */}
