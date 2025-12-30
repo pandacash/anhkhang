@@ -10,12 +10,14 @@ import { PunishmentRulesTable } from "./PunishmentRulesTable";
 import { RewardRulesTable } from "./RewardRulesTable";
 import { ElephantAvatar } from "./icons/ElephantAvatar";
 import { PandaAvatar } from "./icons/PandaAvatar";
+import { PetStatusBars } from "./PetStatusBars";
 import { Button } from "./ui/button";
 import { ArrowLeft, History, Gift, ShoppingBag } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Shop } from "./shop/Shop";
 import { usePlayerItems } from "@/hooks/usePlayerItems";
+import { usePetStatus } from "@/hooks/usePetStatus";
 import { AvatarChat } from "./AvatarChat";
 
 interface DashboardProps {
@@ -42,6 +44,7 @@ export const Dashboard = ({
   const { toast } = useToast();
   const isElephant = player.animal === 'elephant';
   const { equippedItems, refetch: refetchItems } = usePlayerItems(player.id);
+  const { status: petStatus, refetch: refetchPetStatus } = usePetStatus(player.id);
 
   const handleRedeem = async (diamonds: number, voucherValue: number) => {
     const { error: rpcError } = await supabase.rpc('apply_player_diamond_delta', {
@@ -81,6 +84,7 @@ export const Dashboard = ({
   const handlePlayerUpdate = () => {
     onPlayerUpdate();
     refetchItems();
+    refetchPetStatus();
   };
   
   return (
@@ -151,7 +155,10 @@ export const Dashboard = ({
       {/* Welcome section */}
       <div className="text-center mb-8">
         <div className="flex items-start justify-center gap-2">
-          <div className="inline-block animate-bounce-gentle">
+          <div className={cn(
+            "inline-block",
+            petStatus.isSick ? "animate-pulse grayscale" : "animate-bounce-gentle"
+          )}>
             {isElephant ? (
               <ElephantAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
             ) : (
@@ -163,6 +170,16 @@ export const Dashboard = ({
             animalType={isElephant ? 'elephant' : 'panda'} 
           />
         </div>
+        
+        {/* Pet status bars */}
+        <div className="max-w-md mx-auto mt-4">
+          <PetStatusBars 
+            hunger={petStatus.currentHunger} 
+            thirst={petStatus.currentThirst} 
+            isSick={petStatus.isSick}
+          />
+        </div>
+        
         <h1 className={cn(
           "text-3xl md:text-4xl font-display mt-4",
           isElephant ? "text-accent" : "text-secondary"
