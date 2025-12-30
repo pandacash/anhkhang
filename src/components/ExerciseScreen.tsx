@@ -39,6 +39,9 @@ interface ExtendedExercise extends Exercise {
   orderItems?: string[];
   correctOrder?: number[];
   questionVi?: string;
+  image?: string;
+  hasImage?: boolean;
+  topicName?: string;
 }
 
 const TIME_LIMIT = 60;
@@ -536,6 +539,26 @@ export const ExerciseScreen = ({
       default: // multiple_choice
         return (
           <div className="space-y-6">
+            {/* Topic name badge for Math */}
+            {isMath && exercise.topicName && (
+              <div className="flex justify-center">
+                <span className="px-4 py-1 bg-warning/20 text-warning rounded-full text-sm font-medium">
+                  📚 {exercise.topicName}
+                </span>
+              </div>
+            )}
+            
+            {/* Image for word problems */}
+            {exercise.hasImage && exercise.image && (
+              <div className="flex justify-center mb-4">
+                <img 
+                  src={exercise.image} 
+                  alt="Hình minh họa bài toán"
+                  className="max-w-full max-h-64 rounded-2xl border-4 border-warning/30 shadow-kid"
+                />
+              </div>
+            )}
+            
             <div className={cn(
               "bg-card rounded-3xl p-6 md:p-8 shadow-kid border-4 relative",
               isMath ? "border-warning/30" : "border-secondary/30"
