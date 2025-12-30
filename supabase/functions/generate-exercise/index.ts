@@ -5,6 +5,236 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Định nghĩa kiểu cho topic
+interface MathTopic {
+  id: string;
+  name: string;
+  examples?: string[];
+  context?: string;
+  needsImage: boolean;
+  imagePrompt?: string;
+}
+
+// Các chủ đề Toán lớp 3 theo sách giáo khoa
+const mathGrade3Topics: MathTopic[] = [
+  // === CHƯƠNG 7: ÔN TẬP HỌC KỲ 1 ===
+  {
+    id: "tinh_nham_100_1000",
+    name: "Tính nhẩm trong phạm vi 100-1000",
+    examples: ["20×3", "40×2", "50×2", "30×3", "60:2", "80:4", "90:3", "100:5"],
+    needsImage: false
+  },
+  {
+    id: "dat_tinh_roi_tinh",
+    name: "Đặt tính rồi tính",
+    examples: ["34×2", "15×6", "23×4", "69:3", "84:7", "95:8", "122×4", "327×3", "715:5", "645:3"],
+    needsImage: false
+  },
+  {
+    id: "dung_sai_phep_tinh",
+    name: "Đúng/Sai phép tính đặt dọc",
+    examples: ["114×6=684", "510:5=12", "17×5=55", "86:6=14 dư 2"],
+    needsImage: false
+  },
+  {
+    id: "tim_thanh_phan",
+    name: "Tìm thành phần chưa biết",
+    examples: ["?×6=186", "?:7=105", "72:?=8", "X+25=67", "84-X=39", "X×5=35"],
+    needsImage: false
+  },
+  // === BÀI TOÁN CÓ LỜI VĂN VỚI HÌNH ẢNH ===
+  {
+    id: "bai_toan_hai_hoa",
+    name: "Bài toán hái hoa (gấp lần)",
+    context: "Mi hái được 25 bông hoa, Mai hái được số bông hoa gấp 3 lần của Mi. Hỏi cả hai chị em hái được bao nhiêu bông hoa?",
+    needsImage: true,
+    imagePrompt: "Cute cartoon illustration of two Vietnamese girls picking colorful flowers in a beautiful garden, one girl holding a small basket of flowers, another holding more flowers, bright sunny day, kid-friendly style"
+  },
+  {
+    id: "bai_toan_can_nang",
+    name: "Bài toán cân nặng con vật",
+    context: "Con ngỗng cân nặng 6 kg. Con chó nặng gấp 2 lần con ngỗng. Con lợn nặng gấp 5 lần con chó. Hỏi con lợn cân nặng bao nhiêu ki-lô-gam?",
+    needsImage: true,
+    imagePrompt: "Cute cartoon illustration showing three animals: a white goose (6kg), a yellow dog (12kg), and a pink pig (60kg), with weight labels, kid-friendly educational style, clean background"
+  },
+  {
+    id: "bai_toan_xe_cho_khach",
+    name: "Bài toán xe chở khách",
+    context: "Hai xe ô tô chở học sinh đi thăm Lăng Bác Hồ, mỗi xe chở 45 học sinh. Hỏi có tất cả bao nhiêu học sinh đi thăm Lăng Bác Hồ?",
+    needsImage: true,
+    imagePrompt: "Two cute cartoon school buses full of happy Vietnamese students in uniforms, driving towards Ho Chi Minh Mausoleum in the background, patriotic educational illustration, kid-friendly"
+  },
+  {
+    id: "bai_toan_xep_banh",
+    name: "Bài toán xếp bánh vào hộp",
+    context: "Các bạn xếp 256 cái bánh vào các hộp, mỗi hộp 8 cái bánh. Hỏi các bạn xếp được bao nhiêu hộp bánh như vậy?",
+    needsImage: true,
+    imagePrompt: "Cute cartoon Vietnamese children putting moon cakes into gift boxes, table with many delicious cakes and colorful boxes, festive atmosphere, kid-friendly illustration"
+  },
+  {
+    id: "bai_toan_thuyen_du_lich",
+    name: "Bài toán thuyền du lịch",
+    context: "Thuyền lớn chở 24 khách du lịch, thuyền nhỏ chở 6 khách du lịch. Hỏi thuyền lớn chở nhiều hơn thuyền nhỏ bao nhiêu khách? Số khách ở thuyền lớn gấp mấy lần số khách ở thuyền nhỏ?",
+    needsImage: true,
+    imagePrompt: "Beautiful Vietnamese river scene with a large tourist boat and a small boat, tourists wearing life vests, limestone mountains in background like Ha Long Bay, colorful kid-friendly illustration"
+  },
+  // === SO SÁNH SỐ LỚN GẤP MẤY LẦN SỐ BÉ ===
+  {
+    id: "so_sanh_gap_lan",
+    name: "So sánh số lớn gấp mấy lần số bé",
+    examples: ["Số lớn: 6, số bé: 2 → gấp 3 lần", "Số lớn: 10, số bé: 5 → gấp 2 lần"],
+    needsImage: false
+  },
+  {
+    id: "do_dai_gap_lan",
+    name: "Đoạn thẳng dài gấp mấy lần",
+    context: "Đoạn thẳng AB dài 8 cm, đoạn thẳng CD dài 2 cm. Hỏi đoạn thẳng AB dài gấp mấy lần đoạn thẳng CD?",
+    needsImage: true,
+    imagePrompt: "Educational math illustration showing two line segments labeled A-B (8cm long, blue) and C-D (2cm short, red) with measurement rulers, clean white background, kid-friendly style"
+  },
+  // === BIỂU THỨC SỐ ===
+  {
+    id: "bieu_thuc_hai_phep",
+    name: "Tính giá trị biểu thức có 2 phép tính",
+    examples: ["35+8-10", "27-7+30", "60+50-20", "9×4"],
+    needsImage: false
+  },
+  {
+    id: "bieu_thuc_co_ngoac",
+    name: "Biểu thức có ngoặc",
+    examples: ["2×(3+4)", "45:(5+4)", "30:(20-15)", "8×(11-6)", "42-(42-5)"],
+    needsImage: false
+  },
+  {
+    id: "bieu_thuc_nhan_chia_truoc",
+    name: "Biểu thức nhân chia trước, cộng trừ sau",
+    examples: ["30:5×2", "24+8:2", "24+5×6", "30-18:3", "10-2×3"],
+    needsImage: false
+  },
+  // === PHÉP CHIA TRONG PHẠM VI 1000 ===
+  {
+    id: "chia_so_co_3_chu_so",
+    name: "Chia số có 3 chữ số cho số có 1 chữ số",
+    examples: ["462:3", "403:3", "518:5", "844:8", "714:7", "102:5"],
+    needsImage: false
+  },
+  {
+    id: "chia_co_du",
+    name: "Chia có dư",
+    examples: ["216:7=30 dư 6", "423:6=70 dư 3", "237:5", "428:6"],
+    needsImage: false
+  },
+  {
+    id: "tinh_nham_chia_tram",
+    name: "Tính nhẩm chia số tròn trăm",
+    examples: ["600:2=300", "600:3=200", "800:2=400", "400:4=100"],
+    needsImage: false
+  },
+  // === GIẢM/TĂNG SỐ LẦN ===
+  {
+    id: "giam_gap_lan",
+    name: "Giảm số đi một số lần",
+    examples: ["12 giảm 3 lần = 4", "15 giảm 3 lần = ?", "18 giảm 3 lần = ?", "144m giảm 3 lần", "264 phút giảm 8 lần"],
+    needsImage: false
+  },
+  {
+    id: "gap_so_lan",
+    name: "Gấp số lên một số lần",
+    examples: ["12 gấp 4 lần = 48", "15 gấp 4 lần = ?", "18 gấp 4 lần = ?"],
+    needsImage: false
+  },
+  // === TÌM CHỮ SỐ THÍCH HỢP ===
+  {
+    id: "tim_chu_so",
+    name: "Tìm chữ số thích hợp",
+    examples: ["1?2 × 4 = 60?", "3? × 7 = ??6"],
+    needsImage: false
+  },
+  // === BÀI TOÁN VỀ PHÂN SỐ ĐƠN GIẢN ===
+  {
+    id: "phan_so_ngoi_sao",
+    name: "Bài toán phân số với ngôi sao",
+    context: "Có 15 ngôi sao. 1/3 số ngôi sao là ? ngôi sao. 1/5 số ngôi sao là ? ngôi sao.",
+    needsImage: true,
+    imagePrompt: "15 golden stars arranged in 3 rows of 5, some stars highlighted to show fractions, kid-friendly educational math illustration, clean background"
+  }
+];
+
+// Các chủ đề Toán lớp 2 (cho Phúc Khang)
+const mathGrade2Topics: MathTopic[] = [
+  {
+    id: "cong_tru_100",
+    name: "Cộng trừ trong phạm vi 100",
+    examples: ["45+38", "67+29", "83-47", "92-56"],
+    needsImage: false
+  },
+  {
+    id: "bang_nhan_2_5",
+    name: "Bảng nhân 2, 3, 4, 5",
+    examples: ["2×7", "3×8", "4×6", "5×9"],
+    needsImage: false
+  },
+  {
+    id: "bang_chia_2_5", 
+    name: "Bảng chia 2, 3, 4, 5",
+    examples: ["18:2", "24:3", "36:4", "45:5"],
+    needsImage: false
+  }
+];
+
+// Hàm tạo hình ảnh bằng AI
+async function generateImage(prompt: string, apiKey: string): Promise<string | null> {
+  try {
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-3-pro-image-preview",
+        messages: [
+          { 
+            role: "user", 
+            content: `Generate an educational illustration for a Vietnamese grade 3 math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept.`
+          }
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Image generation failed:", response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content;
+    
+    // Kiểm tra xem có hình ảnh base64 trong response không
+    if (content && content.includes("data:image")) {
+      const base64Match = content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
+      if (base64Match) {
+        return base64Match[0];
+      }
+    }
+    
+    // Kiểm tra inline_data trong parts
+    const parts = data.choices?.[0]?.message?.parts;
+    if (parts) {
+      for (const part of parts) {
+        if (part.inline_data?.data) {
+          return `data:image/${part.inline_data.mime_type?.split('/')[1] || 'png'};base64,${part.inline_data.data}`;
+        }
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error("Error generating image:", error);
+    return null;
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -20,140 +250,84 @@ serve(async (req) => {
 
     const isMath = subject === "math";
     
-    // PHÚC KHANG: Toán chỉ trong phạm vi 100, chưa học số lớn hơn
-    const mathGrade3Topics = [
-      "Bảng nhân 2, 3, 4, 5 (VD: 3 x 7 = ?, 4 x 8 = ?, 5 x 9 = ?)",
-      "Bảng nhân 6, 7, 8, 9, 10 (VD: 6 x 5 = ?, 7 x 8 = ?, 9 x 6 = ?)",
-      "Bảng chia tương ứng với bảng nhân (VD: 36 : 6 = ?, 45 : 9 = ?, 56 : 7 = ?)",
-      "Phép cộng trong phạm vi 100 (VD: 45 + 38 = ?, 67 + 29 = ?)",
-      "Phép trừ trong phạm vi 100 (VD: 83 - 47 = ?, 92 - 56 = ?)",
-      "Tìm X trong phép cộng trừ (VD: X + 25 = 67, 84 - X = 39)",
-      "Tìm X trong phép nhân chia (VD: X x 5 = 35, X : 4 = 8)",
-      "Tính giá trị biểu thức 2 phép tính (VD: 25 + 15 - 18 = ?, 6 x 7 + 8 = ?)",
-      "So sánh số trong phạm vi 100 (VD: 47 ... 74, điền dấu >, <, =)",
-      "Đếm thêm, đếm bớt (VD: 23, 26, 29, ?, ? - Tìm 2 số tiếp theo)",
-      "Bài toán có lời văn: hơn kém (VD: Lan có 45 viên bi, Hoa ít hơn 12 viên. Hỏi Hoa có mấy viên?)",
-      "Bài toán có lời văn: gấp lần (VD: Số A là 8, số B gấp 6 lần số A. Tính số B?)",
-      "Đọc giờ đúng và giờ rưỡi (VD: Kim ngắn chỉ 3, kim dài chỉ 6. Hỏi mấy giờ?)",
-      "Đổi đơn vị đo độ dài đơn giản (VD: 1m = ? cm, 50cm = ? dm)"
-    ];
+    // Chọn topics theo lớp
+    const topics = grade === 2 ? mathGrade2Topics : mathGrade3Topics;
+    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
     
-    // PHÚC KHANG: Tiếng Anh lớp 3 - tăng 30% độ khó và đa dạng
+    // English topics cho Phúc Khang (lớp 2) và Tuệ Anh (lớp 3)
     const englishGrade2Topics = [
-      "Từ vựng về động vật: dog, cat, bird, fish, elephant, lion, monkey (hỏi nghĩa hoặc dịch)",
-      "Từ vựng về màu sắc: red, blue, green, yellow, orange, pink, purple (hỏi nghĩa hoặc dịch)",
-      "Từ vựng về đồ vật trong nhà: table, chair, bed, door, window, book, pen (hỏi nghĩa hoặc dịch)",
-      "Từ vựng về gia đình: mother, father, sister, brother, grandmother, grandfather",
-      "Số đếm 1-20: one, two, three... twenty (hỏi số hoặc viết bằng chữ)",
-      "Điền từ còn thiếu: I ___ a student. (am/is/are)",
-      "Chọn đáp án đúng: This is ___ apple. (a/an)",
-      "Hỏi về đồ vật: What is this? - It is a ___.",
-      "Từ vựng về thức ăn: apple, banana, rice, bread, milk, water, egg"
+      "Từ vựng về động vật: dog, cat, bird, fish, elephant, lion, monkey",
+      "Từ vựng về màu sắc: red, blue, green, yellow, orange, pink, purple",
+      "Từ vựng về đồ vật: table, chair, bed, door, window, book, pen",
+      "Số đếm 1-20: one, two, three... twenty",
+      "Điền từ còn thiếu: I ___ a student. (am/is/are)"
     ];
     
     const englishGrade3Topics = [
-      // === TỪ VỰNG CƠ BẢN ===
-      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver, police officer, firefighter, chef, pilot, dentist, engineer, artist",
-      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy, stormy, foggy, warm, cool",
-      "Từ vựng về các môn học: Math, English, Science, Music, Art, P.E., History, Geography, Vietnamese",
-      "Từ vựng về phương tiện: car, bus, bike, plane, train, boat, helicopter, motorbike, subway, taxi, truck",
-      "Từ vựng về hoạt động hàng ngày: wake up, get up, brush teeth, wash face, have breakfast, go to school, study, play, sleep",
-      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, arms, legs, fingers, toes, neck, shoulder",
-      "Từ vựng về đồ vật trong lớp học: desk, board, eraser, ruler, scissors, glue, notebook, backpack, pencil case, chalk",
-      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, jacket, socks, skirt, sweater, coat, shorts, uniform",
-      "Từ vựng về thức ăn và đồ uống: pizza, hamburger, noodles, soup, juice, tea, coffee, sandwich, salad, chicken, fish, vegetables",
-      "Từ vựng về địa điểm: school, hospital, supermarket, park, library, zoo, museum, cinema, restaurant, bank, post office",
-      "Từ vựng về gia đình mở rộng: uncle, aunt, cousin, nephew, niece, parents, grandparents, relatives",
-      
-      // === NGỮ PHÁP CƠ BẢN ===
-      "Điền động từ to be: He ___ a teacher. She ___ happy. They ___ students. I ___ tired. We ___ friends.",
-      "Điền từ sở hữu: This is ___ book. (my/your/his/her/our/their) - That is ___ pencil.",
-      "Chia động từ đơn giản thì hiện tại: She ___ (like/likes) apples. He ___ (play/plays) soccer. It ___ (rain/rains) today.",
-      "Câu hỏi What/Where/Who/When/How: ___ is your name? ___ do you live? ___ old are you? ___ is your birthday?",
-      "Điền giới từ: The cat is ___ the table. The ball is ___ the box. (on/in/under/next to/behind/between/in front of)",
-      "Câu phủ định: I ___ like fish. She ___ play tennis. They ___ have homework. (do not / does not)",
-      "So sánh hơn đơn giản: big -> bigger, small -> smaller, tall -> taller, fast -> faster, slow -> slower",
-      
-      // === NÂNG CAO 30% - DẠNG BÀI MỚI ===
-      "Sắp xếp từ thành câu hoàn chỉnh: (is / This / my / friend / best) -> ? | (school / go / I / to / every day) -> ?",
-      "Sắp xếp câu phức tạp hơn: (likes / She / to / books / read / at night) -> ? | (playing / We / enjoy / in the park / football) -> ?",
-      "Chọn từ đúng điền vào câu: I ___ breakfast at 7 o'clock. (have/has/having) | She ___ to music every day. (listen/listens/listening)",
-      "Chia động từ thì hiện tại đơn: My mother ___ (cook) dinner every evening. My father ___ (work) in an office.",
-      "Câu hỏi Yes/No: ___ you like pizza? ___ she go to school? ___ they have a pet? (Do/Does)",
-      "Trả lời câu hỏi ngắn: Do you have a pet? - Yes, I ___. / No, I ___. Does he like sports? - Yes, he ___ / No, he ___.",
-      "Từ vựng về thời gian: morning, afternoon, evening, night, today, tomorrow, yesterday, this week, next week, last week",
-      "Từ vựng về số thứ tự: first (1st), second (2nd), third (3rd), fourth (4th), fifth (5th) - Hỏi viết hoặc nhận biết",
-      "Đọc hiểu câu đơn giản: 'Tom has a cat. The cat is black and white.' -> What color is Tom's cat? | 'Mary goes to school at 7. She studies English.' -> What does Mary do?",
-      "Điền từ trái nghĩa: hot - ___ (cold), big - ___ (small), happy - ___ (sad), fast - ___ (slow), old - ___ (young/new)",
-      "Hoàn thành đoạn hội thoại: A: How are you? B: I ___ fine, thank you. A: What ___ your name? B: ___ name is Lan.",
-      "Câu mệnh lệnh: ___ the door, please. (Open/Close/Don't open) | ___ quiet in the library! (Be/Don't be)",
-      "Câu có 'there is/there are': ___ a book on the table. ___ two cats in the garden. ___ some water in the glass.",
-      "Đại từ nhân xưng: ___ is my friend. (He/She/It/They) - chọn đúng cho ngữ cảnh | ___ are playing football. (We/They/He)",
-      "Từ vựng về ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday - Hỏi viết hoặc thứ tự",
-      "Từ vựng về tháng trong năm: January, February, March... December - Hỏi viết hoặc tháng thứ mấy",
-      "Câu hỏi với 'How many/How much': ___ apples are there? ___ water do you need? - Trả lời phù hợp",
-      "Từ vựng về cảm xúc: excited, scared, angry, surprised, worried, bored, tired, hungry, thirsty, sleepy",
-      
-      // === NÂNG CAO THÊM - ĐỌC HIỂU & VIẾT ===
-      "Đọc đoạn văn ngắn và trả lời: 'This is my room. It has a bed, a desk and a window. I like my room.' -> What does the room have?",
-      "Chọn câu đúng ngữ pháp: A) He go to school. B) He goes to school. C) He going to school.",
-      "Điền từ nối: I like apples ___ oranges. (and/but/or) | She is tired ___ she is happy. (and/but/because)",
-      "Hỏi về thói quen: What ___ you do every morning? What ___ she eat for breakfast? (do/does)",
-      "Từ vựng về tính từ: beautiful, handsome, ugly, clean, dirty, new, old, expensive, cheap, heavy, light",
-      "Hoàn thành email đơn giản: Dear ___. How ___ you? I am ___. See you soon!",
-      "Từ vựng về thể thao: soccer, basketball, volleyball, swimming, running, badminton, tennis, cycling, skating",
-      "Câu với 'can/can't': She ___ swim very well. He ___ speak English. I ___ play the piano. (can/can't)",
-      "Từ vựng về thiên nhiên: tree, flower, river, mountain, sea, beach, forest, garden, sun, moon, star, cloud",
-      "Chọn đáp án đúng cho câu hỏi: 'What time do you wake up?' - A) At 6 o'clock B) In my room C) With my brother"
+      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver",
+      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold",
+      "Điền động từ to be: He ___ a teacher. She ___ happy.",
+      "Câu hỏi What/Where/Who: ___ is your name? ___ do you live?",
+      "Sắp xếp từ thành câu: (is / This / my / friend)",
+      "So sánh hơn: big -> bigger, small -> smaller"
     ];
     
-    const randomMathTopic = mathGrade3Topics[Math.floor(Math.random() * mathGrade3Topics.length)];
     const randomEnglishTopic = grade === 2 
       ? englishGrade2Topics[Math.floor(Math.random() * englishGrade2Topics.length)]
       : englishGrade3Topics[Math.floor(Math.random() * englishGrade3Topics.length)];
-    
-    const systemPrompt = isMath
-      ? `Bạn là giáo viên Toán vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài toán phù hợp với trình độ:
-         - Lớp 2: Cộng trừ trong 100, bảng nhân 2-5
-         - Lớp 3: ${randomMathTopic}
-         
-         QUAN TRỌNG với lớp 3 (Phúc Khang):
-         - CHỈ dùng số trong phạm vi từ 0 đến 100 (BÉ CHƯA HỌC SỐ LỚN HƠN 100!)
-         - Kết quả của phép tính PHẢI nằm trong phạm vi 0-100
-         - Câu hỏi phải rõ ràng, dễ hiểu với trẻ em
-         - Đáp án phải chính xác về mặt toán học
-         - Các đáp án sai phải hợp lý (không quá khác biệt)`
-      : `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
-         Dạng bài: ${randomEnglishTopic}
-         
-         QUAN TRỌNG:
-         - Câu hỏi phải phù hợp với trình độ lớp ${grade}
-         - Sử dụng từ vựng đơn giản, dễ hiểu
-         - Có thể hỏi bằng Tiếng Việt hoặc Tiếng Anh
-         - Đáp án sai phải hợp lý, không quá dễ đoán
-         - Trong phần explanation, LUÔN dịch đầy đủ câu hỏi và đáp án đúng sang tiếng Việt để bé dễ hiểu
-         - KHÔNG sử dụng dạng bài hỏi "What is this? (picture of ...)" vì hệ thống không hỗ trợ hiển thị hình ảnh
-         - Thay vào đó, hãy dùng các dạng bài như: dịch từ, điền từ, chọn nghĩa đúng, sắp xếp câu, v.v.`;
 
-    const userPrompt = isMath 
-      ? `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. Trả về JSON với format:
+    let systemPrompt: string;
+    let userPrompt: string;
+    let generatedImage: string | null = null;
+
+    if (isMath) {
+      // Tạo hình ảnh nếu bài toán cần
+      if (randomTopic.needsImage && randomTopic.imagePrompt) {
+        console.log("Generating image for topic:", randomTopic.name);
+        generatedImage = await generateImage(randomTopic.imagePrompt, LOVABLE_API_KEY);
+      }
+
+      systemPrompt = `Bạn là giáo viên Toán lớp ${grade} theo chương trình sách giáo khoa Việt Nam.
+      
+CHỦ ĐỀ BÀI TẬP: ${randomTopic.name}
+${randomTopic.examples ? `VÍ DỤ THAM KHẢO: ${randomTopic.examples.join(", ")}` : ""}
+${randomTopic.context ? `NGỮ CẢNH BÀI TOÁN: ${randomTopic.context}` : ""}
+
+QUAN TRỌNG cho lớp 3 (Tuệ Anh):
+- Phạm vi tính toán: 0 đến 1000
+- Kết quả phép tính PHẢI chính xác
+- Bài toán có lời văn phải có ngữ cảnh thực tế, gần gũi với trẻ em Việt Nam
+- Sử dụng đơn vị đo: kg, m, cm, lít, cái, con, bông, chiếc...
+- Đáp án sai phải hợp lý, có thể là kết quả của lỗi tính toán thường gặp
+
+QUAN TRỌNG cho lớp 2 (Phúc Khang):
+- Phạm vi tính toán: 0 đến 100
+- Bài tập đơn giản, rõ ràng`;
+
+      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Toán lớp ${grade} cho ${playerName} theo chủ đề: ${randomTopic.name}
+
+${randomTopic.context ? `Dựa vào ngữ cảnh: ${randomTopic.context}` : ""}
+
+Trả về JSON với format:
 {
-  "question": "Câu hỏi",
+  "question": "Câu hỏi bài toán (có thể là bài toán có lời văn hoặc phép tính)",
   "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
   "correctAnswer": 0,
-  "explanation": "Giải thích ngắn gọn"
+  "explanation": "Giải thích cách làm bài chi tiết, từng bước"
 }
-Chỉ trả về JSON, không có text khác.`
-      : `Tạo 1 câu hỏi trắc nghiệm cho ${playerName}. 
+Chỉ trả về JSON, không có text khác.`;
 
-QUAN TRỌNG: KHÔNG tạo bài tập dạng "What is this?" kèm mô tả hình ảnh như "(picture of a table)" vì hệ thống không hiển thị được hình ảnh.
+    } else {
+      systemPrompt = `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
+Dạng bài: ${randomEnglishTopic}
 
-Thay vào đó, hãy tạo các dạng bài như:
-- Dịch từ tiếng Anh sang tiếng Việt hoặc ngược lại
-- Điền từ vào chỗ trống
-- Chọn nghĩa đúng của từ
-- Hoàn thành câu
-- Chọn từ đúng để điền vào câu
+QUAN TRỌNG:
+- Câu hỏi phải phù hợp với trình độ lớp ${grade}
+- Sử dụng từ vựng đơn giản, dễ hiểu
+- KHÔNG dùng dạng bài "What is this? (picture of ...)"
+- Trong explanation, dịch đầy đủ sang tiếng Việt`;
+
+      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName}.
 
 Trả về JSON với format:
 {
@@ -161,10 +335,12 @@ Trả về JSON với format:
   "questionVi": "Dịch câu hỏi sang tiếng Việt",
   "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
   "correctAnswer": 0,
-  "explanation": "Giải thích bằng tiếng Việt, dịch đầy đủ câu hỏi và các từ vựng quan trọng"
+  "explanation": "Giải thích bằng tiếng Việt"
 }
 Chỉ trả về JSON, không có text khác.`;
+    }
 
+    // Gọi AI để tạo bài tập với model gemini-2.5-pro cho chất lượng cao
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -172,7 +348,7 @@ Chỉ trả về JSON, không có text khác.`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
+        model: "google/gemini-2.5-pro",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -181,6 +357,18 @@ Chỉ trả về JSON, không có text khác.`;
     });
 
     if (!response.ok) {
+      if (response.status === 429) {
+        return new Response(JSON.stringify({ error: "Hệ thống đang bận, vui lòng thử lại sau." }), {
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (response.status === 402) {
+        return new Response(JSON.stringify({ error: "Đã hết lượt sử dụng, vui lòng nạp thêm." }), {
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       const errorText = await response.text();
       console.error("AI gateway error:", response.status, errorText);
       throw new Error("AI gateway error");
@@ -197,21 +385,28 @@ Chỉ trả về JSON, không có text khác.`;
     
     const exercise = JSON.parse(jsonMatch[0]);
     
-    // Shuffle options to prevent first answer from always being correct
+    // Thêm hình ảnh nếu có
+    if (generatedImage) {
+      exercise.image = generatedImage;
+      exercise.hasImage = true;
+    }
+    
+    // Thêm thông tin chủ đề để hiển thị
+    if (isMath) {
+      exercise.topicName = randomTopic.name;
+    }
+    
+    // Shuffle options để đáp án không luôn ở vị trí đầu
     if (exercise.options && exercise.options.length > 0 && typeof exercise.correctAnswer === 'number') {
       const correctOption = exercise.options[exercise.correctAnswer];
       
-      // Create array of indices and shuffle
       const indices = exercise.options.map((_: any, i: number) => i);
       for (let i = indices.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [indices[i], indices[j]] = [indices[j], indices[i]];
       }
       
-      // Reorder options based on shuffled indices
       const shuffledOptions = indices.map((i: number) => exercise.options[i]);
-      
-      // Find new position of correct answer
       const newCorrectAnswer = shuffledOptions.indexOf(correctOption);
       
       exercise.options = shuffledOptions;
