@@ -66,8 +66,7 @@ export const PlayerCard = ({ player, onClick, selected = false, showDiamonds = f
         isElephant 
           ? "border-elephant hover:border-accent" 
           : "border-panda hover:border-secondary",
-        selected && (isElephant ? "border-accent shadow-elephant" : "border-secondary shadow-panda"),
-        isSad && "animate-pulse"
+        selected && (isElephant ? "border-accent shadow-elephant" : "border-secondary shadow-panda")
       )}
     >
       {/* Hunger/Thirst indicators */}
