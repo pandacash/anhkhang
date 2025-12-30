@@ -8,6 +8,7 @@ interface PandaAvatarProps {
   selected?: boolean;
   equippedItems?: ShopItem[];
   showDecorations?: boolean;
+  isSad?: boolean;
 }
 
 // Known item keys that have custom SVG rendering in the avatar
@@ -24,7 +25,8 @@ export const PandaAvatar = ({
   size = 120, 
   selected = false,
   equippedItems = [],
-  showDecorations = true
+  showDecorations = true,
+  isSad = false
 }: PandaAvatarProps) => {
   const hat = equippedItems.find(i => i.category === 'hat');
   const armor = equippedItems.find(i => i.category === 'armor');
@@ -168,10 +170,21 @@ export const PandaAvatar = ({
             {/* Eyes */}
             <ellipse cx="42" cy="44" rx="9" ry="11" fill="white"/>
             <ellipse cx="78" cy="44" rx="9" ry="11" fill="white"/>
-            <circle cx="44" cy="46" r="6" fill="hsl(0, 0%, 10%)"/>
-            <circle cx="80" cy="46" r="6" fill="hsl(0, 0%, 10%)"/>
-            <circle cx="46" cy="43" r="2.5" fill="white"/>
-            <circle cx="82" cy="43" r="2.5" fill="white"/>
+            <circle cx="44" cy={isSad ? "48" : "46"} r="6" fill="hsl(0, 0%, 10%)"/>
+            <circle cx="80" cy={isSad ? "48" : "46"} r="6" fill="hsl(0, 0%, 10%)"/>
+            <circle cx="46" cy={isSad ? "45" : "43"} r="2.5" fill="white"/>
+            <circle cx="82" cy={isSad ? "45" : "43"} r="2.5" fill="white"/>
+            
+            {/* Sad eyebrows */}
+            {isSad && (
+              <>
+                <path d="M32 32 L52 38" stroke="hsl(0, 0%, 25%)" strokeWidth="3" strokeLinecap="round"/>
+                <path d="M88 32 L68 38" stroke="hsl(0, 0%, 25%)" strokeWidth="3" strokeLinecap="round"/>
+                {/* Tear drops */}
+                <ellipse cx="36" cy="56" rx="2" ry="4" fill="hsl(200, 80%, 70%)" className="animate-pulse"/>
+                <ellipse cx="86" cy="56" rx="2" ry="4" fill="hsl(200, 80%, 70%)" className="animate-pulse"/>
+              </>
+            )}
           </>
         )}
         
@@ -179,8 +192,12 @@ export const PandaAvatar = ({
         <ellipse cx="60" cy="56" rx="7" ry="4" fill="hsl(0, 0%, 20%)"/>
         <ellipse cx="60" cy="55" rx="2.5" ry="1.5" fill="hsl(0, 0%, 40%)"/>
         
-        {/* Mouth */}
-        <path d="M53 62 Q60 68 67 62" stroke="hsl(0, 0%, 30%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        {/* Mouth - Happy or Sad */}
+        {isSad ? (
+          <path d="M53 66 Q60 60 67 66" stroke="hsl(0, 0%, 30%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        ) : (
+          <path d="M53 62 Q60 68 67 62" stroke="hsl(0, 0%, 30%)" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        )}
         
         {/* === ACCESSORIES === */}
         {/* Red bow - Nơ đỏ */}

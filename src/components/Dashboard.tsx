@@ -157,17 +157,28 @@ export const Dashboard = ({
         <div className="flex items-start justify-center gap-2">
           <div className={cn(
             "inline-block",
-            petStatus.isSick ? "animate-pulse grayscale" : "animate-bounce-gentle"
+            petStatus.isSick ? "animate-pulse" : "animate-bounce-gentle"
           )}>
             {isElephant ? (
-              <ElephantAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
+              <ElephantAvatar 
+                size={120} 
+                equippedItems={equippedItems.map(e => e.item)} 
+                isSad={petStatus.currentHunger < 30 || petStatus.currentThirst < 30 || petStatus.isSick}
+              />
             ) : (
-              <PandaAvatar size={120} equippedItems={equippedItems.map(e => e.item)} />
+              <PandaAvatar 
+                size={120} 
+                equippedItems={equippedItems.map(e => e.item)} 
+                isSad={petStatus.currentHunger < 30 || petStatus.currentThirst < 30 || petStatus.isSick}
+              />
             )}
           </div>
           <AvatarChat 
             playerName={player.name} 
-            animalType={isElephant ? 'elephant' : 'panda'} 
+            animalType={isElephant ? 'elephant' : 'panda'}
+            hunger={petStatus.currentHunger}
+            thirst={petStatus.currentThirst}
+            isSick={petStatus.isSick}
           />
         </div>
         
