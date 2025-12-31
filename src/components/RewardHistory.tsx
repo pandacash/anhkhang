@@ -49,7 +49,10 @@ export const RewardHistory = ({ player, onBack }: RewardHistoryProps) => {
     setLoading(false);
   };
 
-  const isPurchase = (log: AdminLog) => (log.reason ?? '').trim().toLowerCase().startsWith('mua ');
+  const isPurchase = (log: AdminLog) => {
+    const reason = (log.reason ?? '').trim().toLowerCase();
+    return reason.startsWith('mua ') || reason.startsWith('cho ăn/uống:');
+  };
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
