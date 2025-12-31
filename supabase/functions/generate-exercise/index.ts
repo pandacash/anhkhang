@@ -323,49 +323,40 @@ const mathGrade2Topics: MathTopic[] = [
   }
 ];
 
-// Hàm tạo hình ảnh bằng AI
+// Hàm tạo hình ảnh bằng Gemini API trực tiếp
 async function generateImage(prompt: string, apiKey: string, grade: number): Promise<string | null> {
   try {
     const gradeText = grade === 2 ? "grade 2" : "grade 3";
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-pro-image-preview",
-        messages: [
-          { 
-            role: "user", 
-            content: `Generate an educational illustration for a Vietnamese ${gradeText} math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept. Simple and clear style for young students.`
-          }
-        ],
+        contents: [{
+          parts: [{ 
+            text: `Generate an educational illustration for a Vietnamese ${gradeText} math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept. Simple and clear style for young students.`
+          }]
+        }],
+        generationConfig: {
+          responseModalities: ["TEXT", "IMAGE"]
+        }
       }),
     });
 
     if (!response.ok) {
-      console.error("Image generation failed:", response.status);
+      console.error("Image generation failed:", response.status, await response.text());
       return null;
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
     
-    // Kiểm tra xem có hình ảnh base64 trong response không
-    if (content && content.includes("data:image")) {
-      const base64Match = content.match(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/);
-      if (base64Match) {
-        return base64Match[0];
-      }
-    }
-    
-    // Kiểm tra inline_data trong parts
-    const parts = data.choices?.[0]?.message?.parts;
+    // Kiểm tra inline_data trong parts của Gemini response
+    const parts = data.candidates?.[0]?.content?.parts;
     if (parts) {
       for (const part of parts) {
-        if (part.inline_data?.data) {
-          return `data:image/${part.inline_data.mime_type?.split('/')[1] || 'png'};base64,${part.inline_data.data}`;
+        if (part.inlineData?.data) {
+          return `data:image/${part.inlineData.mimeType?.split('/')[1] || 'png'};base64,${part.inlineData.data}`;
         }
       }
     }
@@ -384,10 +375,10 @@ serve(async (req) => {
 
   try {
     const { subject, grade, playerName } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
+    if (!GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY is not configured");
     }
 
     const isMath = subject === "math";
@@ -426,7 +417,7 @@ serve(async (req) => {
       // Tạo hình ảnh nếu bài toán cần
       if (randomTopic.needsImage && randomTopic.imagePrompt) {
         console.log("Generating image for topic:", randomTopic.name);
-        generatedImage = await generateImage(randomTopic.imagePrompt, LOVABLE_API_KEY, grade);
+        generatedImage = await generateImage(randomTopic.imagePrompt, GEMINI_API_KEY, grade);
       }
 
       systemPrompt = `Bạn là giáo viên Toán lớp ${grade} theo chương trình sách giáo khoa Việt Nam.
@@ -486,19 +477,21 @@ Trả về JSON với format:
 Chỉ trả về JSON, không có text khác.`;
     }
 
-    // Gọi AI để tạo bài tập với model gemini-2.5-pro cho chất lượng cao
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    // Gọi Gemini API trực tiếp với gemini-2.0-flash
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-pro",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: userPrompt },
-        ],
+        contents: [{
+          parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        }
       }),
     });
 
@@ -509,19 +502,13 @@ Chỉ trả về JSON, không có text khác.`;
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Đã hết lượt sử dụng, vui lòng nạp thêm." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
       const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error("AI gateway error");
+      console.error("Gemini API error:", response.status, errorText);
+      throw new Error("Gemini API error: " + errorText);
     }
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
     
     // Parse JSON from response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
