@@ -33,7 +33,14 @@ export const PandaAvatar = ({
   const weapon = equippedItems.find(i => i.category === 'weapon');
   const shoes = equippedItems.find(i => i.category === 'shoes');
   const accessory = equippedItems.find(i => i.category === 'accessory');
-  const pet = equippedItems.find(i => i.category === 'pet');
+  
+  // Get all equipped pets (allow multiple)
+  const pets = equippedItems.filter(i => i.category === 'pet');
+  
+  // Flying pets that should appear above the avatar
+  const FLYING_PETS = ['pet_dragon', 'pet_phoenix', 'pet_owl', 'pet_eagle', 'pet_parrot', 'pet_flamingo'];
+  const flyingPets = pets.filter(p => FLYING_PETS.includes(p.image_key));
+  const groundPets = pets.filter(p => !FLYING_PETS.includes(p.image_key));
 
   const hasHat = !!hat;
   const hasArmor = !!armor;
@@ -331,12 +338,41 @@ export const PandaAvatar = ({
         </div>
       )}
       
-      {/* Pet display */}
-      {pet && (
-        <div className="absolute -right-4 bottom-2 animate-bounce" style={{ width: size * 0.4, height: size * 0.4 }}>
-          <PetIcon imageKey={pet.image_key} size={size * 0.4} />
+      {/* Flying pets - displayed above the avatar */}
+      {flyingPets.map((pet, index) => (
+        <div 
+          key={pet.id}
+          className="absolute animate-float" 
+          style={{ 
+            top: -size * 0.3 - (index * size * 0.15), 
+            left: `${30 + index * 20}%`,
+            width: size * 0.35, 
+            height: size * 0.35 
+          }}
+        >
+          <PetIcon imageKey={pet.image_key} size={size * 0.35} />
         </div>
-      )}
+      ))}
+      
+      {/* Ground pets - displayed on the sides */}
+      {groundPets.map((pet, index) => {
+        const isRight = index % 2 === 0;
+        const positionOffset = Math.floor(index / 2) * size * 0.15;
+        return (
+          <div 
+            key={pet.id}
+            className="absolute animate-bounce" 
+            style={{ 
+              bottom: size * 0.05 + positionOffset,
+              [isRight ? 'right' : 'left']: -size * 0.15,
+              width: size * 0.35, 
+              height: size * 0.35 
+            }}
+          >
+            <PetIcon imageKey={pet.image_key} size={size * 0.35} />
+          </div>
+        );
+      })}
       
       {selected && (
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm font-bold shadow-kid">

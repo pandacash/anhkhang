@@ -152,20 +152,23 @@ export const Shop = ({ player, open, onClose, onPlayerUpdate }: ShopProps) => {
   };
 
   const handleEquip = async (playerItem: PlayerItem) => {
-    // Unequip all items of the same category first
     const item = items.find(i => i.id === playerItem.item_id);
     if (!item) return;
 
-    const sameCategory = playerItems.filter(pi => {
-      const piItem = items.find(i => i.id === pi.item_id);
-      return piItem?.category === item.category && pi.equipped;
-    });
+    // For pets, allow multiple equipped - just toggle this item
+    // For other categories, unequip others first
+    if (item.category !== 'pet') {
+      const sameCategory = playerItems.filter(pi => {
+        const piItem = items.find(i => i.id === pi.item_id);
+        return piItem?.category === item.category && pi.equipped;
+      });
 
-    for (const pi of sameCategory) {
-      await supabase
-        .from('player_items')
-        .update({ equipped: false })
-        .eq('id', pi.id);
+      for (const pi of sameCategory) {
+        await supabase
+          .from('player_items')
+          .update({ equipped: false })
+          .eq('id', pi.id);
+      }
     }
 
     // Equip/unequip this item
