@@ -520,6 +520,31 @@ const PetIcon = ({ imageKey, size }: { imageKey: string; size: number }) => {
           <polygon points="32,28 28,32 36,32" fill="#FF6600"/>
         </svg>
       );
+    case 'pet_spider':
+      return (
+        <svg width={iconSize} height={iconSize} viewBox="0 0 64 64">
+          {/* Body */}
+          <ellipse cx="32" cy="38" rx="12" ry="10" fill="#1a1a1a"/>
+          <ellipse cx="32" cy="26" rx="10" ry="10" fill="#1a1a1a"/>
+          {/* Eyes */}
+          <circle cx="26" cy="24" r="4" fill="#FF0000"/>
+          <circle cx="38" cy="24" r="4" fill="#FF0000"/>
+          <circle cx="26" cy="24" r="2" fill="#1a1a1a"/>
+          <circle cx="38" cy="24" r="2" fill="#1a1a1a"/>
+          {/* Small eyes */}
+          <circle cx="30" cy="20" r="2" fill="#FF0000"/>
+          <circle cx="34" cy="20" r="2" fill="#FF0000"/>
+          {/* Legs */}
+          <path d="M22 30 Q10 25 6 18" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M22 34 Q8 32 2 28" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M22 38 Q8 40 2 46" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M22 42 Q10 48 6 56" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M42 30 Q54 25 58 18" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M42 34 Q56 32 62 28" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M42 38 Q56 40 62 46" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+          <path d="M42 42 Q54 48 58 56" stroke="#1a1a1a" strokeWidth="3" fill="none"/>
+        </svg>
+      );
     default:
       return null;
   }
