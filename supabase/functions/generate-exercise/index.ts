@@ -397,12 +397,36 @@ serve(async (req) => {
     ];
     
     const englishGrade3Topics = [
-      "Từ vựng về nghề nghiệp: teacher, doctor, nurse, farmer, driver",
-      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold",
-      "Điền động từ to be: He ___ a teacher. She ___ happy.",
-      "Câu hỏi What/Where/Who: ___ is your name? ___ do you live?",
-      "Sắp xếp từ thành câu: (is / This / my / friend)",
-      "So sánh hơn: big -> bigger, small -> smaller"
+      // Từ vựng nâng cao
+      "Từ vựng về nghề nghiệp chi tiết: teacher, doctor, nurse, farmer, driver, pilot, firefighter, police officer, chef, artist",
+      "Từ vựng về thời tiết và mùa: sunny, rainy, cloudy, windy, hot, cold, snowy, foggy, spring, summer, autumn, winter",
+      "Từ vựng về môn học: Math, English, Science, Art, Music, P.E., History, Geography",
+      "Từ vựng về hoạt động hàng ngày: wake up, brush teeth, have breakfast, go to school, do homework, play sports, read books, watch TV, go to bed",
+      "Từ vựng về phương tiện giao thông: car, bus, train, plane, bicycle, motorcycle, ship, helicopter, subway, taxi",
+      "Từ vựng về thức ăn và đồ uống: rice, bread, noodles, vegetables, fruits, milk, juice, water, chicken, fish, beef, pork",
+      "Từ vựng về cảm xúc: happy, sad, angry, scared, excited, tired, hungry, thirsty, surprised, worried",
+      "Từ vựng về bộ phận cơ thể: head, shoulders, knees, toes, eyes, ears, nose, mouth, hands, fingers, legs, feet",
+      // Ngữ pháp cơ bản
+      "Điền động từ to be (am/is/are): I ___ a student. He ___ my friend. They ___ happy. We ___ in class 3.",
+      "Điền động từ to have (have/has): I ___ a dog. She ___ a cat. They ___ many books. He ___ a new bike.",
+      "Câu hỏi Yes/No với to be: ___ you a student? ___ she your sister? ___ they at home?",
+      "Câu hỏi Wh-questions: What is this? Where is the cat? Who is your teacher? When is your birthday? How are you?",
+      "Sắp xếp từ thành câu đơn: (is / This / my / friend) -> This is my friend.",
+      "Sắp xếp từ thành câu hỏi: (your / What / is / name) -> What is your name?",
+      "Chọn giới từ đúng (in/on/under/next to): The ball is ___ the table. The book is ___ the bag.",
+      "Đại từ sở hữu: This is ___ book. (my/your/his/her) That is ___ house.",
+      // So sánh
+      "So sánh hơn tính từ ngắn: big -> bigger, tall -> taller, small -> smaller, old -> older, young -> younger",
+      "So sánh hơn tính từ dài: beautiful -> more beautiful, interesting -> more interesting",
+      "So sánh nhất: the tallest, the biggest, the most beautiful",
+      // Đọc hiểu ngắn
+      "Đọc đoạn văn ngắn và trả lời câu hỏi về nhân vật, địa điểm, thời gian",
+      "Ghép câu với hình ảnh: The girl is reading a book. / The boy is playing football.",
+      // Số và thời gian
+      "Số đếm 1-100: twenty-one, thirty-five, forty-eight, fifty-two, sixty-seven, seventy-nine, eighty-four, ninety-nine",
+      "Nói về thời gian: What time is it? It's seven o'clock. It's half past eight. It's quarter to ten.",
+      "Ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+      "Tháng trong năm: January, February, March, April, May, June, July, August, September, October, November, December"
     ];
     
     const randomEnglishTopic = grade === 2 
@@ -455,7 +479,46 @@ Trả về JSON với format:
 Chỉ trả về JSON, không có text khác.`;
 
     } else {
-      systemPrompt = `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
+      // English prompts riêng cho từng lớp
+      if (grade === 3) {
+        systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 3 chuyên nghiệp. Tạo 1 bài tập Tiếng Anh NÂNG CAO cho học sinh lớp 3:
+Dạng bài: ${randomEnglishTopic}
+
+QUAN TRỌNG CHO LỚP 3 (Phúc Khang):
+- Độ khó TRUNG BÌNH đến KHÓ phù hợp lớp 3
+- Câu hỏi đa dạng: điền từ, sắp xếp câu, chọn đáp án đúng, so sánh, ngữ pháp
+- Tạo các dạng bài phong phú:
+  + Điền từ vào chỗ trống (fill in the blank)
+  + Sắp xếp từ thành câu hoàn chỉnh
+  + Chọn từ đúng ngữ pháp (is/are/am, have/has, do/does)
+  + So sánh tính từ (bigger, smaller, more beautiful)
+  + Đọc câu ngắn và trả lời câu hỏi
+  + Ghép từ với nghĩa tiếng Việt
+- Đáp án sai phải là các lỗi thường gặp của học sinh
+- KHÔNG dùng câu hỏi dạng "What is this? (picture of ...)"
+- Giải thích chi tiết bằng tiếng Việt, có ví dụ thêm nếu cần
+- Có thể sử dụng ngữ cảnh thực tế: ở trường, ở nhà, đi chơi, các hoạt động hàng ngày`;
+
+        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh NÂNG CAO cho ${playerName} (lớp 3).
+
+Chủ đề: ${randomEnglishTopic}
+
+YÊU CẦU:
+- Câu hỏi phải đủ thách thức cho học sinh lớp 3
+- Đáp án sai phải hợp lý, là các lỗi thường gặp
+- Giải thích chi tiết kèm ví dụ bổ sung
+
+Trả về JSON với format:
+{
+  "question": "Câu hỏi bằng tiếng Anh (có thể kèm ngữ cảnh ngắn)",
+  "questionVi": "Dịch câu hỏi sang tiếng Việt",
+  "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
+  "correctAnswer": 0,
+  "explanation": "Giải thích chi tiết bằng tiếng Việt, có ví dụ bổ sung"
+}
+Chỉ trả về JSON, không có text khác.`;
+      } else {
+        systemPrompt = `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
 Dạng bài: ${randomEnglishTopic}
 
 QUAN TRỌNG:
@@ -464,7 +527,7 @@ QUAN TRỌNG:
 - KHÔNG dùng dạng bài "What is this? (picture of ...)"
 - Trong explanation, dịch đầy đủ sang tiếng Việt`;
 
-      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName}.
+        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName}.
 
 Trả về JSON với format:
 {
@@ -475,6 +538,7 @@ Trả về JSON với format:
   "explanation": "Giải thích bằng tiếng Việt"
 }
 Chỉ trả về JSON, không có text khác.`;
+      }
     }
 
     // Gọi Gemini API trực tiếp với gemini-2.0-flash
