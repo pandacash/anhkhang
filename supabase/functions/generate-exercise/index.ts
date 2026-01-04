@@ -694,8 +694,8 @@ Trả về JSON với format:
 Chỉ trả về JSON, không có text khác.`;
     }
 
-    // Gọi Gemini 2.5 Pro API cho chất lượng cao hơn
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-06-05:generateContent?key=${GEMINI_API_KEY}`, {
+    // Gọi Gemini 2.5 Flash API
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
