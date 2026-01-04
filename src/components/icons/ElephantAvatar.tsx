@@ -400,7 +400,7 @@ export const ElephantAvatar = ({
         <div 
           className="absolute flex items-center justify-center gap-1"
           style={{ 
-            top: -size * 0.2, 
+            top: -size * 0.35, 
             left: '50%',
             transform: 'translateX(-50%)',
           }}
@@ -410,12 +410,12 @@ export const ElephantAvatar = ({
               key={pet.id}
               className="animate-float" 
               style={{ 
-                width: size * 0.22, 
-                height: size * 0.22,
+                width: size * 0.4, 
+                height: size * 0.4,
                 animationDelay: `${index * 0.2}s`
               }}
             >
-              <PetIcon imageKey={pet.image_key} size={size * 0.22} />
+              <PetIcon imageKey={pet.image_key} size={size * 0.4} />
             </div>
           ))}
         </div>
@@ -424,9 +424,9 @@ export const ElephantAvatar = ({
       {/* Ground pets - displayed in a row below the avatar */}
       {groundPets.length > 0 && (
         <div 
-          className="absolute flex items-end justify-center gap-0.5"
+          className="absolute flex items-end justify-center gap-1"
           style={{ 
-            bottom: -size * 0.15, 
+            bottom: -size * 0.3, 
             left: '50%',
             transform: 'translateX(-50%)',
           }}
@@ -436,12 +436,12 @@ export const ElephantAvatar = ({
               key={pet.id}
               className="animate-bounce" 
               style={{ 
-                width: size * 0.2, 
-                height: size * 0.2,
+                width: size * 0.38, 
+                height: size * 0.38,
                 animationDelay: `${index * 0.15}s`
               }}
             >
-              <PetIcon imageKey={pet.image_key} size={size * 0.2} />
+              <PetIcon imageKey={pet.image_key} size={size * 0.38} />
             </div>
           ))}
         </div>
