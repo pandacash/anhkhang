@@ -15,6 +15,18 @@ interface MathTopic {
   imagePrompt?: string;
 }
 
+interface EnglishTopic {
+  id: string;
+  unit: string;
+  name: string;
+  vocabulary?: string[];
+  structures?: string[];
+  phonics?: string[];
+  context?: string;
+  needsImage: boolean;
+  imagePrompt?: string;
+}
+
 // Các chủ đề Toán lớp 3 theo sách giáo khoa
 const mathGrade3Topics: MathTopic[] = [
   // === CHƯƠNG 7: ÔN TẬP HỌC KỲ 1 ===
@@ -323,10 +335,194 @@ const mathGrade2Topics: MathTopic[] = [
   }
 ];
 
-// Hàm tạo hình ảnh bằng Gemini API trực tiếp
-async function generateImage(prompt: string, apiKey: string, grade: number): Promise<string | null> {
+// ============================================
+// CHỦ ĐỀ TIẾNG ANH LỚP 2 - THEO SÁCH I-LEARN SMART START
+// ============================================
+const englishGrade2Topics: EnglishTopic[] = [
+  // === GETTING STARTED: Numbers 1-10 & Age ===
+  {
+    id: "numbers_1_10",
+    unit: "Getting Started",
+    name: "Số đếm 1-10",
+    vocabulary: ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"],
+    structures: ["How old are you?", "I'm [number]."],
+    context: "Hỏi và trả lời về tuổi, đếm số từ 1 đến 10",
+    needsImage: true,
+    imagePrompt: "Colorful number cards 1-10 with cute cartoon characters, birthday cake with candles, children celebrating, kid-friendly educational style"
+  },
+  // === UNIT 1: Feelings ===
+  {
+    id: "feelings",
+    unit: "Unit 1",
+    name: "Cảm xúc (Feelings)",
+    vocabulary: ["scared", "bored", "hungry", "thirsty", "happy", "sad"],
+    structures: ["What's your name?", "My name's [name].", "[Name]'s [feeling]."],
+    context: "Hỏi tên và mô tả cảm xúc của mình và bạn bè",
+    needsImage: true,
+    imagePrompt: "Six cartoon children showing different emotions: scared, bored, hungry, thirsty, happy, sad, with labels, Vietnamese classroom setting, colorful kid-friendly style"
+  },
+  // === GETTING STARTED LESSON 2: Classroom Commands ===
+  {
+    id: "classroom_commands",
+    unit: "Getting Started",
+    name: "Lệnh trong lớp học",
+    vocabulary: ["open", "close", "book", "hands up", "hands down"],
+    structures: ["Open your book!", "Close your book!", "Hands up!", "Hands down!"],
+    context: "Các câu lệnh cơ bản trong lớp học, trò chơi Simon says",
+    needsImage: true,
+    imagePrompt: "Vietnamese classroom scene with teacher giving commands, students opening/closing books, raising hands, Simon Says game, colorful educational illustration"
+  },
+  // === PHONICS Unit 1-2: Letters Nn, Oo, Pp, Qq ===
+  {
+    id: "phonics_n_o",
+    unit: "Phonics 1",
+    name: "Âm N và O",
+    phonics: ["Nn - nut, nose", "Oo - octopus, orange"],
+    vocabulary: ["nut", "nose", "octopus", "orange"],
+    structures: ["This is an octopus.", "This is a nut."],
+    context: "Học âm và từ vựng bắt đầu bằng N và O",
+    needsImage: true,
+    imagePrompt: "Phonics illustration showing letter N with nut and nose images, letter O with octopus and orange, colorful alphabet learning card, kid-friendly style"
+  },
+  {
+    id: "phonics_p_q",
+    unit: "Phonics 2",
+    name: "Âm P và Q",
+    phonics: ["Pp - pen, penguin", "Qq - queen, question"],
+    vocabulary: ["pen", "penguin", "queen", "question"],
+    structures: ["This is a pen.", "I have a penguin."],
+    context: "Học âm và từ vựng bắt đầu bằng P và Q",
+    needsImage: true,
+    imagePrompt: "Phonics illustration showing letter P with pen and penguin images, letter Q with queen and question mark, colorful alphabet cards, kid-friendly educational style"
+  },
+  // === UNIT 3: Numbers 11-20 ===
+  {
+    id: "numbers_11_20",
+    unit: "Unit 3",
+    name: "Số đếm 11-20",
+    vocabulary: ["eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"],
+    structures: ["How many [objects] are there?", "There are [number] [objects].", "Eleven triangles.", "Twelve circles."],
+    context: "Đếm số lượng hình, đồ vật từ 11 đến 20",
+    needsImage: true,
+    imagePrompt: "Counting exercise with 11-20 colorful shapes: triangles, circles, squares arranged in groups, number labels, kid-friendly math educational style"
+  },
+  // === UNIT 3 LESSON 3: Where are you from? ===
+  {
+    id: "where_from",
+    unit: "Unit 3",
+    name: "Bạn đến từ đâu?",
+    vocabulary: ["Hanoi", "Da Nang", "Ho Chi Minh City", "Hue", "Hai Phong", "Nha Trang", "Da Lat", "New York"],
+    structures: ["Where are you from?", "I'm from [city]."],
+    context: "Hỏi và trả lời về nơi đến, các thành phố Việt Nam",
+    needsImage: true,
+    imagePrompt: "Map of Vietnam with major cities marked: Hanoi, Da Nang, Ho Chi Minh City, Hue, Hai Phong, cute cartoon children pointing to cities, colorful kid-friendly style"
+  },
+  // === UNIT 4: Animals ===
+  {
+    id: "animals",
+    unit: "Unit 4",
+    name: "Động vật nông trại",
+    vocabulary: ["duck", "goat", "pig", "cow", "bird", "chicken"],
+    structures: ["What's that?", "It's a [animal]."],
+    context: "Hỏi và trả lời về động vật nông trại",
+    needsImage: true,
+    imagePrompt: "Cute cartoon farm animals: duck, goat, pig, cow, chicken, bird in a colorful farm setting, Vietnamese countryside background, kid-friendly educational illustration"
+  },
+  // === PHONICS Unit 4: Letters Rr, Ss ===
+  {
+    id: "phonics_r_s",
+    unit: "Phonics 4",
+    name: "Âm R và S",
+    phonics: ["Rr - rabbit, robot", "Ss - sea, sun"],
+    vocabulary: ["rabbit", "robot", "sea", "sun"],
+    structures: ["This is a rabbit.", "I have a robot."],
+    context: "Học âm và từ vựng bắt đầu bằng R và S",
+    needsImage: true,
+    imagePrompt: "Phonics illustration showing letter R with rabbit and robot, letter S with sea and sun, bright colorful alphabet learning cards, kid-friendly educational style"
+  },
+  // === UNIT 5: Free Time Activities ===
+  {
+    id: "free_time_games",
+    unit: "Unit 5",
+    name: "Các trò chơi",
+    vocabulary: ["soccer", "tag", "hopscotch", "hide and seek"],
+    structures: ["Let's play [game].", "OK!"],
+    context: "Rủ bạn chơi các trò chơi ngoài trời",
+    needsImage: true,
+    imagePrompt: "Vietnamese children playing outdoor games: soccer, tag, hopscotch, hide and seek, colorful playground scene, happy kids, kid-friendly cartoon style"
+  },
+  {
+    id: "free_time_hobbies",
+    unit: "Unit 5",
+    name: "Sở thích cá nhân",
+    vocabulary: ["listen to music", "ride my bike", "read books", "eat snacks"],
+    structures: ["I [hobby].", "I listen to music.", "I ride my bike."],
+    context: "Nói về sở thích cá nhân và hoạt động thường làm",
+    needsImage: true,
+    imagePrompt: "Cartoon children doing hobbies: listening to music with headphones, riding bicycle, reading books, eating snacks, colorful happy scenes, kid-friendly style"
+  },
+  // === GREETINGS AND CELEBRATIONS ===
+  {
+    id: "greetings_celebrations",
+    unit: "Unit 5",
+    name: "Chào hỏi và lễ hội",
+    vocabulary: ["Happy New Year", "Merry Christmas", "Happy birthday", "Thank you"],
+    structures: ["Happy New Year!", "Merry Christmas!", "Happy birthday!", "Thank you."],
+    context: "Lời chúc mừng trong các dịp lễ",
+    needsImage: true,
+    imagePrompt: "Vietnamese celebration scenes: New Year with fireworks and red envelopes, Christmas tree, birthday cake with candles, children saying thank you, colorful festive style"
+  },
+  // === PHONICS Unit 5: Letters Tt, Uu ===
+  {
+    id: "phonics_t_u",
+    unit: "Phonics 5",
+    name: "Âm T và U",
+    phonics: ["Tt - tiger, top", "Uu - umbrella, uncle"],
+    vocabulary: ["tiger", "top", "umbrella", "uncle"],
+    structures: ["This is my umbrella.", "This is a tiger."],
+    context: "Học âm và từ vựng bắt đầu bằng T và U",
+    needsImage: true,
+    imagePrompt: "Phonics illustration showing letter T with tiger and spinning top, letter U with umbrella and uncle character, colorful alphabet learning cards, kid-friendly style"
+  },
+  // === REVIEW: Shapes ===
+  {
+    id: "shapes",
+    unit: "Review",
+    name: "Các hình dạng",
+    vocabulary: ["circle", "square", "triangle", "rectangle"],
+    structures: ["What shape is it?", "It's a [shape]."],
+    context: "Nhận biết và nói về các hình dạng cơ bản",
+    needsImage: true,
+    imagePrompt: "Colorful geometric shapes: red circle, blue square, yellow triangle, green rectangle, with labels, educational math shapes for grade 2, clean style"
+  },
+  // === MIXED TOPICS ===
+  {
+    id: "a_an_usage",
+    unit: "Grammar",
+    name: "Sử dụng a/an",
+    vocabulary: ["a cat", "an apple", "a book", "an orange", "a dog", "an elephant"],
+    structures: ["This is a [noun].", "This is an [noun]."],
+    context: "Phân biệt khi nào dùng 'a' và khi nào dùng 'an'",
+    needsImage: false
+  },
+  {
+    id: "colors",
+    unit: "Review",
+    name: "Màu sắc",
+    vocabulary: ["red", "blue", "green", "yellow", "orange", "pink", "purple", "brown", "black", "white"],
+    structures: ["What color is it?", "It's [color].", "The [object] is [color]."],
+    context: "Hỏi và trả lời về màu sắc của đồ vật",
+    needsImage: true,
+    imagePrompt: "Rainbow of colors with labeled color spots: red, blue, green, yellow, orange, pink, purple, colorful crayons and paint splashes, kid-friendly educational style"
+  }
+];
+
+// Hàm tạo hình ảnh bằng Gemini 2.5 Flash Image Generation
+async function generateImage(prompt: string, apiKey: string, grade: number, subject: string): Promise<string | null> {
   try {
     const gradeText = grade === 2 ? "grade 2" : "grade 3";
+    const subjectText = subject === "math" ? "math" : "English";
+    
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: {
@@ -335,7 +531,7 @@ async function generateImage(prompt: string, apiKey: string, grade: number): Pro
       body: JSON.stringify({
         contents: [{
           parts: [{ 
-            text: `Generate an educational illustration for a Vietnamese ${gradeText} math problem: ${prompt}. The image should be colorful, kid-friendly, and clearly show the mathematical concept. Simple and clear style for young students.`
+            text: `Generate an educational illustration for a Vietnamese ${gradeText} ${subjectText} exercise: ${prompt}. The image should be colorful, kid-friendly, cute cartoon style, and clearly show the educational concept. Simple and clear for young students.`
           }]
         }],
         generationConfig: {
@@ -384,113 +580,9 @@ serve(async (req) => {
     const isMath = subject === "math";
     
     // Chọn topics theo lớp
-    const topics = grade === 2 ? mathGrade2Topics : mathGrade3Topics;
-    const randomTopic = topics[Math.floor(Math.random() * topics.length)];
-    
-    // English topics cho Phúc Khang (lớp 2) - ĐA DẠNG VÀ NÂNG CAO
-    const englishGrade2Topics = [
-      // Từ vựng cơ bản - đa dạng chủ đề
-      "Từ vựng về động vật nuôi: dog, cat, bird, fish, rabbit, hamster, turtle, goldfish",
-      "Từ vựng về động vật hoang dã: elephant, lion, tiger, monkey, bear, giraffe, zebra, crocodile",
-      "Từ vựng về côn trùng và động vật nhỏ: butterfly, bee, ant, spider, snail, frog, ladybug",
-      "Từ vựng về màu sắc mở rộng: red, blue, green, yellow, orange, pink, purple, brown, black, white, gray",
-      "Từ vựng về đồ vật trong nhà: table, chair, bed, door, window, sofa, lamp, clock, mirror, TV",
-      "Từ vựng về đồ dùng học tập: book, pen, pencil, ruler, eraser, bag, notebook, crayon, scissors, glue",
-      "Từ vựng về đồ chơi: ball, doll, car, robot, teddy bear, kite, puzzle, blocks, bicycle",
-      "Từ vựng về thức ăn: apple, banana, rice, bread, milk, egg, chicken, fish, cake, candy, ice cream",
-      "Từ vựng về đồ uống: water, milk, juice, tea, lemonade",
-      "Từ vựng về trái cây: apple, banana, orange, grape, mango, watermelon, strawberry, pineapple",
-      "Từ vựng về rau củ: carrot, potato, tomato, corn, cucumber, cabbage",
-      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, socks, jacket, T-shirt, skirt",
-      "Từ vựng về gia đình: mother, father, sister, brother, grandmother, grandfather, baby, family",
-      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, fingers, toes, hair",
-      "Từ vựng về phòng trong nhà: bedroom, bathroom, kitchen, living room, garden",
-      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy",
-      "Từ vựng về hoạt động: run, jump, swim, read, write, draw, sing, dance, play, eat, drink, sleep",
-      
-      // Số đếm và số thứ tự
-      "Số đếm 1-20: one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve...",
-      "Số đếm 21-50: twenty-one, twenty-two, thirty, forty, fifty",
-      "Số thứ tự: first, second, third, fourth, fifth",
-      
-      // Ngữ pháp cơ bản - điền từ
-      "Điền động từ to be: I ___ a student. (am) / He ___ my friend. (is) / They ___ happy. (are)",
-      "Điền a hoặc an: ___ apple (an), ___ book (a), ___ elephant (an), ___ cat (a), ___ orange (an)",
-      "Điền this hoặc that: ___ is my book. (This - gần) / ___ is your house. (That - xa)",
-      "Điền he, she, it, they: My mother is a teacher. ___ is kind. (She)",
-      "Điền my, your, his, her: This is ___ book. I love ___ family.",
-      
-      // Câu hỏi và trả lời
-      "Câu hỏi What: What is this? It is a ___. / What color is it? It is ___.",
-      "Câu hỏi How many: How many apples? There are ___ apples.",
-      "Câu hỏi Where: Where is the cat? It is on/under/in the ___.",
-      "Câu hỏi Yes/No cơ bản: Is this a dog? Yes, it is. / No, it is not.",
-      "Câu hỏi Can: Can you swim? Yes, I can. / No, I cannot.",
-      
-      // Giới từ vị trí
-      "Giới từ in/on/under: The ball is ___ the table. (on/under/in)",
-      "Giới từ next to/behind/in front of: The dog is ___ the house.",
-      
-      // Sắp xếp từ thành câu
-      "Sắp xếp từ đơn giản: (a / This / is / cat) -> This is a cat.",
-      "Sắp xếp câu hỏi: (your / What / is / name) -> What is your name?",
-      "Sắp xếp câu với màu sắc: (red / The / is / apple) -> The apple is red.",
-      
-      // Chọn từ đúng
-      "Chọn từ đối lập: big - small, hot - cold, happy - sad, tall - short, old - young",
-      "Chọn từ cùng nhóm: apple, banana, orange thuộc nhóm gì? (fruits)",
-      "Tìm từ không cùng nhóm: dog, cat, apple, bird - từ nào khác nhóm? (apple)",
-      
-      // Ghép từ với nghĩa
-      "Ghép từ tiếng Anh với nghĩa tiếng Việt: apple = táo, cat = mèo",
-      "Ghép số với từ: 5 = five, 10 = ten, 12 = twelve",
-      
-      // Đọc câu đơn giản
-      "Đọc câu và trả lời: I have a red ball. What color is the ball?",
-      "Đọc câu và chọn đúng/sai: The cat is big. (True/False based on picture description)",
-      
-      // Chào hỏi và giao tiếp
-      "Chào hỏi: Hello! / Hi! / Good morning! / Good afternoon! / Good night!",
-      "Cảm ơn và xin lỗi: Thank you! / You're welcome! / Sorry! / Excuse me!",
-      "Hỏi tên: What is your name? My name is ___. / How are you? I am fine, thank you."
-    ];
-    
-    const englishGrade3Topics = [
-      // Từ vựng nâng cao
-      "Từ vựng về nghề nghiệp chi tiết: teacher, doctor, nurse, farmer, driver, pilot, firefighter, police officer, chef, artist",
-      "Từ vựng về thời tiết và mùa: sunny, rainy, cloudy, windy, hot, cold, snowy, foggy, spring, summer, autumn, winter",
-      "Từ vựng về môn học: Math, English, Science, Art, Music, P.E., History, Geography",
-      "Từ vựng về hoạt động hàng ngày: wake up, brush teeth, have breakfast, go to school, do homework, play sports, read books, watch TV, go to bed",
-      "Từ vựng về phương tiện giao thông: car, bus, train, plane, bicycle, motorcycle, ship, helicopter, subway, taxi",
-      "Từ vựng về thức ăn và đồ uống: rice, bread, noodles, vegetables, fruits, milk, juice, water, chicken, fish, beef, pork",
-      "Từ vựng về cảm xúc: happy, sad, angry, scared, excited, tired, hungry, thirsty, surprised, worried",
-      "Từ vựng về bộ phận cơ thể: head, shoulders, knees, toes, eyes, ears, nose, mouth, hands, fingers, legs, feet",
-      // Ngữ pháp cơ bản
-      "Điền động từ to be (am/is/are): I ___ a student. He ___ my friend. They ___ happy. We ___ in class 3.",
-      "Điền động từ to have (have/has): I ___ a dog. She ___ a cat. They ___ many books. He ___ a new bike.",
-      "Câu hỏi Yes/No với to be: ___ you a student? ___ she your sister? ___ they at home?",
-      "Câu hỏi Wh-questions: What is this? Where is the cat? Who is your teacher? When is your birthday? How are you?",
-      "Sắp xếp từ thành câu đơn: (is / This / my / friend) -> This is my friend.",
-      "Sắp xếp từ thành câu hỏi: (your / What / is / name) -> What is your name?",
-      "Chọn giới từ đúng (in/on/under/next to): The ball is ___ the table. The book is ___ the bag.",
-      "Đại từ sở hữu: This is ___ book. (my/your/his/her) That is ___ house.",
-      // So sánh
-      "So sánh hơn tính từ ngắn: big -> bigger, tall -> taller, small -> smaller, old -> older, young -> younger",
-      "So sánh hơn tính từ dài: beautiful -> more beautiful, interesting -> more interesting",
-      "So sánh nhất: the tallest, the biggest, the most beautiful",
-      // Đọc hiểu ngắn
-      "Đọc đoạn văn ngắn và trả lời câu hỏi về nhân vật, địa điểm, thời gian",
-      "Ghép câu với hình ảnh: The girl is reading a book. / The boy is playing football.",
-      // Số và thời gian
-      "Số đếm 1-100: twenty-one, thirty-five, forty-eight, fifty-two, sixty-seven, seventy-nine, eighty-four, ninety-nine",
-      "Nói về thời gian: What time is it? It's seven o'clock. It's half past eight. It's quarter to ten.",
-      "Ngày trong tuần: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
-      "Tháng trong năm: January, February, March, April, May, June, July, August, September, October, November, December"
-    ];
-    
-    const randomEnglishTopic = grade === 2 
-      ? englishGrade2Topics[Math.floor(Math.random() * englishGrade2Topics.length)]
-      : englishGrade3Topics[Math.floor(Math.random() * englishGrade3Topics.length)];
+    const mathTopics = grade === 2 ? mathGrade2Topics : mathGrade3Topics;
+    const randomMathTopic = mathTopics[Math.floor(Math.random() * mathTopics.length)];
+    const randomEnglishTopic = englishGrade2Topics[Math.floor(Math.random() * englishGrade2Topics.length)];
 
     let systemPrompt: string;
     let userPrompt: string;
@@ -498,16 +590,16 @@ serve(async (req) => {
 
     if (isMath) {
       // Tạo hình ảnh nếu bài toán cần
-      if (randomTopic.needsImage && randomTopic.imagePrompt) {
-        console.log("Generating image for topic:", randomTopic.name);
-        generatedImage = await generateImage(randomTopic.imagePrompt, GEMINI_API_KEY, grade);
+      if (randomMathTopic.needsImage && randomMathTopic.imagePrompt) {
+        console.log("Generating image for math topic:", randomMathTopic.name);
+        generatedImage = await generateImage(randomMathTopic.imagePrompt, GEMINI_API_KEY, grade, "math");
       }
 
       systemPrompt = `Bạn là giáo viên Toán lớp ${grade} theo chương trình sách giáo khoa Việt Nam.
       
-CHỦ ĐỀ BÀI TẬP: ${randomTopic.name}
-${randomTopic.examples ? `VÍ DỤ THAM KHẢO: ${randomTopic.examples.join(", ")}` : ""}
-${randomTopic.context ? `NGỮ CẢNH BÀI TOÁN: ${randomTopic.context}` : ""}
+CHỦ ĐỀ BÀI TẬP: ${randomMathTopic.name}
+${randomMathTopic.examples ? `VÍ DỤ THAM KHẢO: ${randomMathTopic.examples.join(", ")}` : ""}
+${randomMathTopic.context ? `NGỮ CẢNH BÀI TOÁN: ${randomMathTopic.context}` : ""}
 
 QUAN TRỌNG cho lớp 3 (Tuệ Anh):
 - Phạm vi tính toán: 0 đến 1000
@@ -524,9 +616,9 @@ QUAN TRỌNG cho lớp 2 (Phúc Khang):
 - Đơn vị đo độ dài: cm
 - Sử dụng bối cảnh gần gũi: trường học, nhà, vườn, đồ dùng học tập`;
 
-      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Toán lớp ${grade} cho ${playerName} theo chủ đề: ${randomTopic.name}
+      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Toán lớp ${grade} cho ${playerName} theo chủ đề: ${randomMathTopic.name}
 
-${randomTopic.context ? `Dựa vào ngữ cảnh: ${randomTopic.context}` : ""}
+${randomMathTopic.context ? `Dựa vào ngữ cảnh: ${randomMathTopic.context}` : ""}
 
 Trả về JSON với format:
 {
@@ -538,90 +630,72 @@ Trả về JSON với format:
 Chỉ trả về JSON, không có text khác.`;
 
     } else {
-      // English prompts riêng cho từng lớp
-      if (grade === 3) {
-        systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 3 chuyên nghiệp. Tạo 1 bài tập Tiếng Anh NÂNG CAO cho học sinh lớp 3:
-Dạng bài: ${randomEnglishTopic}
+      // ENGLISH - BÁM SÁT SÁCH I-LEARN SMART START LỚP 2
 
-QUAN TRỌNG CHO LỚP 3 (Tuệ Anh):
-- Độ khó TRUNG BÌNH đến KHÓ phù hợp lớp 3
-- Câu hỏi đa dạng: điền từ, sắp xếp câu, chọn đáp án đúng, so sánh, ngữ pháp
-- Tạo các dạng bài phong phú:
-  + Điền từ vào chỗ trống (fill in the blank)
-  + Sắp xếp từ thành câu hoàn chỉnh
-  + Chọn từ đúng ngữ pháp (is/are/am, have/has, do/does)
-  + So sánh tính từ (bigger, smaller, more beautiful)
-  + Đọc câu ngắn và trả lời câu hỏi
-  + Ghép từ với nghĩa tiếng Việt
-- Đáp án sai phải là các lỗi thường gặp của học sinh
-- KHÔNG dùng câu hỏi dạng "What is this? (picture of ...)"
-- Giải thích chi tiết bằng tiếng Việt, có ví dụ thêm nếu cần
-- Có thể sử dụng ngữ cảnh thực tế: ở trường, ở nhà, đi chơi, các hoạt động hàng ngày`;
+      // Tạo hình ảnh nếu cần
+      if (randomEnglishTopic.needsImage && randomEnglishTopic.imagePrompt) {
+        console.log("Generating image for English topic:", randomEnglishTopic.name);
+        generatedImage = await generateImage(randomEnglishTopic.imagePrompt, GEMINI_API_KEY, grade, "english");
+      }
 
-        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh NÂNG CAO cho ${playerName} (lớp 3).
+      systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 2 chuyên nghiệp, tạo bài tập THEO SÁCH I-LEARN SMART START.
 
-Chủ đề: ${randomEnglishTopic}
+=== THÔNG TIN CHỦ ĐỀ ===
+Unit: ${randomEnglishTopic.unit}
+Tên bài: ${randomEnglishTopic.name}
+${randomEnglishTopic.vocabulary ? `Từ vựng: ${randomEnglishTopic.vocabulary.join(", ")}` : ""}
+${randomEnglishTopic.structures ? `Cấu trúc câu: ${randomEnglishTopic.structures.join(" / ")}` : ""}
+${randomEnglishTopic.phonics ? `Phonics: ${randomEnglishTopic.phonics.join(", ")}` : ""}
+${randomEnglishTopic.context ? `Ngữ cảnh: ${randomEnglishTopic.context}` : ""}
 
-YÊU CẦU:
-- Câu hỏi phải đủ thách thức cho học sinh lớp 3
-- Đáp án sai phải hợp lý, là các lỗi thường gặp
-- Giải thích chi tiết kèm ví dụ bổ sung
+=== QUY TẮC TẠO BÀI TẬP ===
 
-Trả về JSON với format:
-{
-  "question": "Câu hỏi bằng tiếng Anh (có thể kèm ngữ cảnh ngắn)",
-  "questionVi": "Dịch câu hỏi sang tiếng Việt",
-  "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
-  "correctAnswer": 0,
-  "explanation": "Giải thích chi tiết bằng tiếng Việt, có ví dụ bổ sung"
-}
-Chỉ trả về JSON, không có text khác.`;
-      } else {
-        // NÂNG CẤP BÀI TẬP LỚP 2 (PHÚC KHANG)
-        systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 2 chuyên nghiệp và vui nhộn. Tạo 1 bài tập Tiếng Anh cho học sinh lớp 2:
-Dạng bài: ${randomEnglishTopic}
+1. CHỈ SỬ DỤNG TỪ VỰNG VÀ CẤU TRÚC TRONG CHỦ ĐỀ
+2. DẠNG BÀI ĐA DẠNG (chọn ngẫu nhiên 1 dạng):
+   - Điền từ vào chỗ trống: "I'm ___ Hanoi." (from)
+   - Sắp xếp từ thành câu: "(play / Let's / soccer)" → "Let's play soccer."
+   - Chọn câu trả lời đúng: "How old are you?" → "I'm seven."
+   - Ghép từ với nghĩa: "hungry" = "đói"
+   - Phonics - chọn từ bắt đầu bằng âm: "Which word starts with 'P'?" → "pen"
+   - Chọn từ đúng để hoàn thành câu: "What's ___?" → "that"
+   - Đếm số lượng: "How many circles? (hình 15 vòng tròn)" → "fifteen"
+   - True/False với câu đơn giản
 
-QUAN TRỌNG CHO LỚP 2 (Phúc Khang):
-- Độ khó PHÙ HỢP với học sinh lớp 2 nhưng vẫn có tính thách thức nhẹ
-- Câu hỏi ĐA DẠNG, không lặp lại dạng bài:
-  + Điền từ vào chỗ trống (a/an, is/are, in/on/under)
-  + Sắp xếp từ thành câu đơn giản
-  + Ghép từ tiếng Anh với nghĩa tiếng Việt
-  + Chọn từ đúng để hoàn thành câu
-  + Tìm từ không thuộc nhóm (odd one out)
-  + Đếm và chọn số đúng bằng tiếng Anh
-  + Chọn màu sắc đúng cho đồ vật
-  + Trả lời câu hỏi đơn giản (What is this? How many?)
-- Từ vựng phải PHÙ HỢP lớp 2: động vật, màu sắc, số đếm, đồ vật, gia đình, thức ăn
-- KHÔNG dùng dạng bài "What is this? (picture of ...)" - thay bằng mô tả rõ ràng
-- Đáp án sai phải hợp lý, là các lỗi thường gặp của học sinh lớp 2
-- Giải thích bằng tiếng Việt DỄ HIỂU, có thể thêm ví dụ tương tự
-- Tạo câu hỏi VUI NHỘN, HẤP DẪN để khuyến khích học tập`;
+3. ĐỘ KHÓ PHÙ HỢP LỚP 2:
+   - Câu ngắn gọn, dễ hiểu
+   - Từ vựng đơn giản, quen thuộc
+   - Có hình ảnh minh họa nếu cần
 
-        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName} (lớp 2).
+4. ĐÁP ÁN SAI PHẢI HỢP LÝ:
+   - Là các lỗi thường gặp của học sinh lớp 2
+   - Không quá khác biệt so với đáp án đúng
 
-Chủ đề: ${randomEnglishTopic}
+5. GIẢI THÍCH BẰNG TIẾNG VIỆT:
+   - Dễ hiểu cho trẻ em
+   - Có ví dụ bổ sung nếu cần`;
+
+      userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh lớp 2 cho ${playerName}.
+
+Chủ đề: ${randomEnglishTopic.unit} - ${randomEnglishTopic.name}
 
 YÊU CẦU:
-- Câu hỏi phải ĐA DẠNG và THÚ VỊ cho học sinh lớp 2
-- Sử dụng từ vựng đơn giản, dễ hiểu
-- Đáp án sai phải là các lỗi thường gặp của học sinh
-- Giải thích chi tiết bằng tiếng Việt, dễ hiểu cho trẻ em
+- Bám sát từ vựng và cấu trúc đã cho
+- Tạo dạng bài ĐA DẠNG và THÚ VỊ
+- Phù hợp với học sinh lớp 2
 
 Trả về JSON với format:
 {
   "question": "Câu hỏi bằng tiếng Anh (rõ ràng, dễ hiểu)",
-  "questionVi": "Dịch câu hỏi sang tiếng Việt",
+  "questionVi": "Dịch/hướng dẫn bằng tiếng Việt",
   "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
   "correctAnswer": 0,
-  "explanation": "Giải thích bằng tiếng Việt dễ hiểu, có ví dụ bổ sung nếu cần"
+  "explanation": "Giải thích bằng tiếng Việt dễ hiểu"
 }
 Chỉ trả về JSON, không có text khác.`;
-      }
     }
 
-    // Gọi Gemini API trực tiếp với gemini-2.0-flash
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Gọi Gemini 2.5 Pro API cho chất lượng cao hơn
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro-preview-06-05:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -631,7 +705,7 @@ Chỉ trả về JSON, không có text khác.`;
           parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
         }],
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.8,
           topP: 0.95,
           maxOutputTokens: 1024,
         }
@@ -669,7 +743,9 @@ Chỉ trả về JSON, không có text khác.`;
     
     // Thêm thông tin chủ đề để hiển thị
     if (isMath) {
-      exercise.topicName = randomTopic.name;
+      exercise.topicName = randomMathTopic.name;
+    } else {
+      exercise.topicName = `${randomEnglishTopic.unit} - ${randomEnglishTopic.name}`;
     }
     
     // Shuffle options để đáp án không luôn ở vị trí đầu
