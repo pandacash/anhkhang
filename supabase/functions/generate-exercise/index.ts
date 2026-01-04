@@ -387,13 +387,72 @@ serve(async (req) => {
     const topics = grade === 2 ? mathGrade2Topics : mathGrade3Topics;
     const randomTopic = topics[Math.floor(Math.random() * topics.length)];
     
-    // English topics cho Phúc Khang (lớp 2) và Tuệ Anh (lớp 3)
+    // English topics cho Phúc Khang (lớp 2) - ĐA DẠNG VÀ NÂNG CAO
     const englishGrade2Topics = [
-      "Từ vựng về động vật: dog, cat, bird, fish, elephant, lion, monkey",
-      "Từ vựng về màu sắc: red, blue, green, yellow, orange, pink, purple",
-      "Từ vựng về đồ vật: table, chair, bed, door, window, book, pen",
-      "Số đếm 1-20: one, two, three... twenty",
-      "Điền từ còn thiếu: I ___ a student. (am/is/are)"
+      // Từ vựng cơ bản - đa dạng chủ đề
+      "Từ vựng về động vật nuôi: dog, cat, bird, fish, rabbit, hamster, turtle, goldfish",
+      "Từ vựng về động vật hoang dã: elephant, lion, tiger, monkey, bear, giraffe, zebra, crocodile",
+      "Từ vựng về côn trùng và động vật nhỏ: butterfly, bee, ant, spider, snail, frog, ladybug",
+      "Từ vựng về màu sắc mở rộng: red, blue, green, yellow, orange, pink, purple, brown, black, white, gray",
+      "Từ vựng về đồ vật trong nhà: table, chair, bed, door, window, sofa, lamp, clock, mirror, TV",
+      "Từ vựng về đồ dùng học tập: book, pen, pencil, ruler, eraser, bag, notebook, crayon, scissors, glue",
+      "Từ vựng về đồ chơi: ball, doll, car, robot, teddy bear, kite, puzzle, blocks, bicycle",
+      "Từ vựng về thức ăn: apple, banana, rice, bread, milk, egg, chicken, fish, cake, candy, ice cream",
+      "Từ vựng về đồ uống: water, milk, juice, tea, lemonade",
+      "Từ vựng về trái cây: apple, banana, orange, grape, mango, watermelon, strawberry, pineapple",
+      "Từ vựng về rau củ: carrot, potato, tomato, corn, cucumber, cabbage",
+      "Từ vựng về quần áo: shirt, pants, dress, shoes, hat, socks, jacket, T-shirt, skirt",
+      "Từ vựng về gia đình: mother, father, sister, brother, grandmother, grandfather, baby, family",
+      "Từ vựng về bộ phận cơ thể: head, eyes, ears, nose, mouth, hands, feet, fingers, toes, hair",
+      "Từ vựng về phòng trong nhà: bedroom, bathroom, kitchen, living room, garden",
+      "Từ vựng về thời tiết: sunny, rainy, cloudy, windy, hot, cold, snowy",
+      "Từ vựng về hoạt động: run, jump, swim, read, write, draw, sing, dance, play, eat, drink, sleep",
+      
+      // Số đếm và số thứ tự
+      "Số đếm 1-20: one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve...",
+      "Số đếm 21-50: twenty-one, twenty-two, thirty, forty, fifty",
+      "Số thứ tự: first, second, third, fourth, fifth",
+      
+      // Ngữ pháp cơ bản - điền từ
+      "Điền động từ to be: I ___ a student. (am) / He ___ my friend. (is) / They ___ happy. (are)",
+      "Điền a hoặc an: ___ apple (an), ___ book (a), ___ elephant (an), ___ cat (a), ___ orange (an)",
+      "Điền this hoặc that: ___ is my book. (This - gần) / ___ is your house. (That - xa)",
+      "Điền he, she, it, they: My mother is a teacher. ___ is kind. (She)",
+      "Điền my, your, his, her: This is ___ book. I love ___ family.",
+      
+      // Câu hỏi và trả lời
+      "Câu hỏi What: What is this? It is a ___. / What color is it? It is ___.",
+      "Câu hỏi How many: How many apples? There are ___ apples.",
+      "Câu hỏi Where: Where is the cat? It is on/under/in the ___.",
+      "Câu hỏi Yes/No cơ bản: Is this a dog? Yes, it is. / No, it is not.",
+      "Câu hỏi Can: Can you swim? Yes, I can. / No, I cannot.",
+      
+      // Giới từ vị trí
+      "Giới từ in/on/under: The ball is ___ the table. (on/under/in)",
+      "Giới từ next to/behind/in front of: The dog is ___ the house.",
+      
+      // Sắp xếp từ thành câu
+      "Sắp xếp từ đơn giản: (a / This / is / cat) -> This is a cat.",
+      "Sắp xếp câu hỏi: (your / What / is / name) -> What is your name?",
+      "Sắp xếp câu với màu sắc: (red / The / is / apple) -> The apple is red.",
+      
+      // Chọn từ đúng
+      "Chọn từ đối lập: big - small, hot - cold, happy - sad, tall - short, old - young",
+      "Chọn từ cùng nhóm: apple, banana, orange thuộc nhóm gì? (fruits)",
+      "Tìm từ không cùng nhóm: dog, cat, apple, bird - từ nào khác nhóm? (apple)",
+      
+      // Ghép từ với nghĩa
+      "Ghép từ tiếng Anh với nghĩa tiếng Việt: apple = táo, cat = mèo",
+      "Ghép số với từ: 5 = five, 10 = ten, 12 = twelve",
+      
+      // Đọc câu đơn giản
+      "Đọc câu và trả lời: I have a red ball. What color is the ball?",
+      "Đọc câu và chọn đúng/sai: The cat is big. (True/False based on picture description)",
+      
+      // Chào hỏi và giao tiếp
+      "Chào hỏi: Hello! / Hi! / Good morning! / Good afternoon! / Good night!",
+      "Cảm ơn và xin lỗi: Thank you! / You're welcome! / Sorry! / Excuse me!",
+      "Hỏi tên: What is your name? My name is ___. / How are you? I am fine, thank you."
     ];
     
     const englishGrade3Topics = [
@@ -484,7 +543,7 @@ Chỉ trả về JSON, không có text khác.`;
         systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 3 chuyên nghiệp. Tạo 1 bài tập Tiếng Anh NÂNG CAO cho học sinh lớp 3:
 Dạng bài: ${randomEnglishTopic}
 
-QUAN TRỌNG CHO LỚP 3 (Phúc Khang):
+QUAN TRỌNG CHO LỚP 3 (Tuệ Anh):
 - Độ khó TRUNG BÌNH đến KHÓ phù hợp lớp 3
 - Câu hỏi đa dạng: điền từ, sắp xếp câu, chọn đáp án đúng, so sánh, ngữ pháp
 - Tạo các dạng bài phong phú:
@@ -518,24 +577,44 @@ Trả về JSON với format:
 }
 Chỉ trả về JSON, không có text khác.`;
       } else {
-        systemPrompt = `Bạn là giáo viên Tiếng Anh vui nhộn cho học sinh lớp ${grade}. Tạo 1 bài tập Tiếng Anh:
+        // NÂNG CẤP BÀI TẬP LỚP 2 (PHÚC KHANG)
+        systemPrompt = `Bạn là giáo viên Tiếng Anh lớp 2 chuyên nghiệp và vui nhộn. Tạo 1 bài tập Tiếng Anh cho học sinh lớp 2:
 Dạng bài: ${randomEnglishTopic}
 
-QUAN TRỌNG:
-- Câu hỏi phải phù hợp với trình độ lớp ${grade}
-- Sử dụng từ vựng đơn giản, dễ hiểu
-- KHÔNG dùng dạng bài "What is this? (picture of ...)"
-- Trong explanation, dịch đầy đủ sang tiếng Việt`;
+QUAN TRỌNG CHO LỚP 2 (Phúc Khang):
+- Độ khó PHÙ HỢP với học sinh lớp 2 nhưng vẫn có tính thách thức nhẹ
+- Câu hỏi ĐA DẠNG, không lặp lại dạng bài:
+  + Điền từ vào chỗ trống (a/an, is/are, in/on/under)
+  + Sắp xếp từ thành câu đơn giản
+  + Ghép từ tiếng Anh với nghĩa tiếng Việt
+  + Chọn từ đúng để hoàn thành câu
+  + Tìm từ không thuộc nhóm (odd one out)
+  + Đếm và chọn số đúng bằng tiếng Anh
+  + Chọn màu sắc đúng cho đồ vật
+  + Trả lời câu hỏi đơn giản (What is this? How many?)
+- Từ vựng phải PHÙ HỢP lớp 2: động vật, màu sắc, số đếm, đồ vật, gia đình, thức ăn
+- KHÔNG dùng dạng bài "What is this? (picture of ...)" - thay bằng mô tả rõ ràng
+- Đáp án sai phải hợp lý, là các lỗi thường gặp của học sinh lớp 2
+- Giải thích bằng tiếng Việt DỄ HIỂU, có thể thêm ví dụ tương tự
+- Tạo câu hỏi VUI NHỘN, HẤP DẪN để khuyến khích học tập`;
 
-        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName}.
+        userPrompt = `Tạo 1 câu hỏi trắc nghiệm Tiếng Anh cho ${playerName} (lớp 2).
+
+Chủ đề: ${randomEnglishTopic}
+
+YÊU CẦU:
+- Câu hỏi phải ĐA DẠNG và THÚ VỊ cho học sinh lớp 2
+- Sử dụng từ vựng đơn giản, dễ hiểu
+- Đáp án sai phải là các lỗi thường gặp của học sinh
+- Giải thích chi tiết bằng tiếng Việt, dễ hiểu cho trẻ em
 
 Trả về JSON với format:
 {
-  "question": "Câu hỏi bằng tiếng Anh",
+  "question": "Câu hỏi bằng tiếng Anh (rõ ràng, dễ hiểu)",
   "questionVi": "Dịch câu hỏi sang tiếng Việt",
   "options": ["Đáp án A", "Đáp án B", "Đáp án C", "Đáp án D"],
   "correctAnswer": 0,
-  "explanation": "Giải thích bằng tiếng Việt"
+  "explanation": "Giải thích bằng tiếng Việt dễ hiểu, có ví dụ bổ sung nếu cần"
 }
 Chỉ trả về JSON, không có text khác.`;
       }
