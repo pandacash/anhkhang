@@ -405,7 +405,7 @@ export const ElephantAvatar = ({
             transform: 'translateX(-50%)',
           }}
         >
-          {flyingPets.slice(0, 3).map((pet, index) => (
+          {flyingPets.slice(0, 4).map((pet, index) => (
             <div 
               key={pet.id}
               className="animate-float" 
@@ -431,7 +431,7 @@ export const ElephantAvatar = ({
             transform: 'translateX(-50%)',
           }}
         >
-          {groundPets.slice(0, 4).map((pet, index) => (
+          {groundPets.slice(0, 6).map((pet, index) => (
             <div 
               key={pet.id}
               className="animate-bounce" 
