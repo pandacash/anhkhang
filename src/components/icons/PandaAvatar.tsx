@@ -338,41 +338,57 @@ export const PandaAvatar = ({
         </div>
       )}
       
-      {/* Flying pets - displayed above the avatar */}
-      {flyingPets.map((pet, index) => (
+      {/* Flying pets - displayed above the avatar in a neat row */}
+      {flyingPets.length > 0 && (
         <div 
-          key={pet.id}
-          className="absolute animate-float" 
+          className="absolute flex items-center justify-center gap-1"
           style={{ 
-            top: -size * 0.3 - (index * size * 0.15), 
-            left: `${30 + index * 20}%`,
-            width: size * 0.35, 
-            height: size * 0.35 
+            top: -size * 0.2, 
+            left: '50%',
+            transform: 'translateX(-50%)',
           }}
         >
-          <PetIcon imageKey={pet.image_key} size={size * 0.35} />
+          {flyingPets.slice(0, 3).map((pet, index) => (
+            <div 
+              key={pet.id}
+              className="animate-float" 
+              style={{ 
+                width: size * 0.22, 
+                height: size * 0.22,
+                animationDelay: `${index * 0.2}s`
+              }}
+            >
+              <PetIcon imageKey={pet.image_key} size={size * 0.22} />
+            </div>
+          ))}
         </div>
-      ))}
+      )}
       
-      {/* Ground pets - displayed on the sides */}
-      {groundPets.map((pet, index) => {
-        const isRight = index % 2 === 0;
-        const positionOffset = Math.floor(index / 2) * size * 0.15;
-        return (
-          <div 
-            key={pet.id}
-            className="absolute animate-bounce" 
-            style={{ 
-              bottom: size * 0.05 + positionOffset,
-              [isRight ? 'right' : 'left']: -size * 0.15,
-              width: size * 0.35, 
-              height: size * 0.35 
-            }}
-          >
-            <PetIcon imageKey={pet.image_key} size={size * 0.35} />
-          </div>
-        );
-      })}
+      {/* Ground pets - displayed in a row below the avatar */}
+      {groundPets.length > 0 && (
+        <div 
+          className="absolute flex items-end justify-center gap-0.5"
+          style={{ 
+            bottom: -size * 0.15, 
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          {groundPets.slice(0, 4).map((pet, index) => (
+            <div 
+              key={pet.id}
+              className="animate-bounce" 
+              style={{ 
+                width: size * 0.2, 
+                height: size * 0.2,
+                animationDelay: `${index * 0.15}s`
+              }}
+            >
+              <PetIcon imageKey={pet.image_key} size={size * 0.2} />
+            </div>
+          ))}
+        </div>
+      )}
       
       {selected && (
         <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm font-bold shadow-kid">
