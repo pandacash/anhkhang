@@ -627,7 +627,7 @@ Trả về JSON với format:
   "correctAnswer": 0,
   "explanation": "Giải thích cách làm bài chi tiết, từng bước"
 }
-Chỉ trả về JSON, không có text khác.`;
+Chỉ trả về JSON thuần (không markdown, không code fence), không có text khác.`;
 
     } else {
       // ENGLISH - BÁM SÁT SÁCH I-LEARN SMART START LỚP 2
@@ -691,11 +691,11 @@ Trả về JSON với format:
   "correctAnswer": 0,
   "explanation": "Giải thích bằng tiếng Việt dễ hiểu"
 }
-Chỉ trả về JSON, không có text khác.`;
+Chỉ trả về JSON thuần (không markdown, không code fence), không có text khác.`;
     }
 
-    // Gọi Gemini 2.5 Flash API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+    // Gọi Gemini 2.5 Pro API (tạo bài tập)
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -705,8 +705,8 @@ Chỉ trả về JSON, không có text khác.`;
           parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
         }],
         generationConfig: {
-          temperature: 0.8,
-          topP: 0.95,
+          temperature: 0.3,
+          topP: 0.9,
           maxOutputTokens: 1024,
         }
       }),
@@ -727,13 +727,53 @@ Chỉ trả về JSON, không có text khác.`;
     const data = await response.json();
     const content = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
     
-    // Parse JSON from response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error("Invalid response format");
+    // Parse JSON from response (robust)
+    const cleaned = String(content || "")
+      .replace(/```json\s*/gi, "")
+      .replace(/```/g, "")
+      .trim();
+
+    const extractFirstJsonObject = (s: string): string | null => {
+      const start = s.indexOf("{");
+      if (start < 0) return null;
+
+      let depth = 0;
+      let inString = false;
+      let escape = false;
+
+      for (let i = start; i < s.length; i++) {
+        const ch = s[i];
+        if (inString) {
+          if (escape) {
+            escape = false;
+          } else if (ch === "\\\\") {
+            escape = true;
+          } else if (ch === '"') {
+            inString = false;
+          }
+          continue;
+        }
+
+        if (ch === '"') {
+          inString = true;
+        } else if (ch === "{") {
+          depth++;
+        } else if (ch === "}") {
+          depth--;
+          if (depth === 0) return s.slice(start, i + 1);
+        }
+      }
+      return null;
+    };
+
+    let exercise: any;
+    try {
+      exercise = JSON.parse(cleaned);
+    } catch {
+      const jsonText = extractFirstJsonObject(cleaned);
+      if (!jsonText) throw new Error("Invalid response format");
+      exercise = JSON.parse(jsonText);
     }
-    
-    const exercise = JSON.parse(jsonMatch[0]);
     
     // Thêm hình ảnh nếu có
     if (generatedImage) {
